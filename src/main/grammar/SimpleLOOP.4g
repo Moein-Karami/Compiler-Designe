@@ -129,3 +129,61 @@ assigment
 conditions
 	: (NOT? expr)
 	|
+
+IF: 'if';
+
+EACH: 'each'
+
+INT: 'int';
+BOOL: 'bool';
+SET: 'Set'
+VOID: 'void';
+FPTR: 'fptr';
+
+COMMA: ',';
+
+NOT: '!';
+
+ABS_SIGN: '|';
+
+CLASS: 'class';
+SELF_SMALL_NAME: 'self';
+
+ACCESS_TYPE:
+    'private' | 'public'
+;
+
+RBACK: '[';
+LBACK: ']';
+
+LCURL: '{';
+RCURL: '}';
+
+ARROW: '->'
+
+NEW_LINE = '\n';
+
+BEGIN_COMMENT: '=begin';
+END_COMMENT: '=end';
+
+LT: '<';
+GT: '>';
+EQUAL: '=';
+
+DOT: '.'
+
+
+SHARP_SIGN: '#';
+
+CAP_NAME: 
+	[A-Z] [a-z]+
+	;
+
+NUM:
+    [1-9][0-9]*
+    ;
+
+SMALL_NAME:
+	[a-z]+;
+	;
+
