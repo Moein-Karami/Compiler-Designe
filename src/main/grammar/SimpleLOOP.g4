@@ -187,53 +187,103 @@ return
 	: RETURN expr
 	;
 
-IF: 'if';
+IF
+	: 'if'
+	;
 
-EACH: 'each';
+EACH
+	: 'each'
+	;
 
-INT: 'int';
-BOOL: 'bool';
-SET: 'Set';
-VOID: 'void';
-FPTR: 'fptr';
+INT
+	: 'int'
+	;
+BOOL
+	: 'bool'
+	;
+SET
+	: 'Set'
+	;
+VOID
+	: 'void'
+	;
+FPTR
+	: 'fptr'
+	;
 
-COMMA: ',';
+COMMA
+	: ','
+	;
 
-NOT: '!';
+NOT
+	: '!'
+	;
 
-ABS_SIGN: '|';
+ABS_SIGN
+	: '|'
+	;
 
-CLASS: 'class';
-SELF_SMALL_NAME: 'self';
+CLASS
+	: 'class'
+	;
+SELF_SMALL_NAME
+	: 'self'
+	;
 
-ACCESS_TYPE:
-    'private' | 'public'
-;
+ACCESS_TYPE
+	: 'private'
+	| 'public'
+	;
 
-RBACK: '[';
-LBACK: ']';
+RBACK
+	: '['
+	;
+LBACK
+	: ']'
+	;
 
 LCURL: '{';
 RCURL: '}';
 
-LPAR: '(';
-RPAR: ')';
+LPAR
+	: '('
+	;
+RPAR
+	: ')'
+	;
 
-ARROW: '->'
+ARROW
+	:
+	'->';
 
-NEW_LINE = '\n'+;
+NEW_LINE
+    : '\n'+
+    ;
 
-BEGIN_COMMENT: '=begin';
-END_COMMENT: '=end';
+BEGIN_COMMENT
+	: '=begin'
+	;
+END_COMMENT
+	: '=end'
+	;
 
-LT: '<';
-GT: '>';
-EQUAL: '=';
+LT
+	: '<'
+	;
+GT
+	: '>'
+	;
+EQUAL
+	: '='
+	;
 
-DOT: '.'
+DOT
+	: '.'
+	;
 
-
-SHARP_SIGN: '#';
+SHARP_SIGN
+	: '#'
+	;
 
 CAP_NAME: 
 	[A-Z] [a-z]+
@@ -244,6 +294,6 @@ NUM:
     ;
 
 SMALL_NAME:
-	[a-z]+;
+	[a-z]+
 	;
 
