@@ -99,44 +99,101 @@ func_body
 	;
 
 scop_body
-	: if_state scop_body
-	| for_loop scop_body
-	| function_call scop_body
-	| assigment scop_body
-	| print scop_body
-	| set_op scop_body
+	: line_command NEW_LINE scop_body
+	| NEW_LINE
+	| LCURL NEW_LINE scop_body NEW_LINE RCURL NEW_LINE
+	;
+
+line_command
+	: if_state
+	| for_loop
+	| function_call
+	| assigment
+	| print
+	| ternery_condition
 	;
 
 if_state
-	: IF conditions NEW_LINE line_command NEW_LINE (else + else_if)?
-	| IF conditions LCURL NEW_LINE scop_body RCURL NEW_LINE (else + else_if)?
+	: IF condition NEW_LINE line_command NEW_LINE  (else + else_if)?
+	| IF condition LCURL NEW_LINE scop_body RCURL NEW_LINE (else + else_if)?
+	;
+
+else
+ 	: ELSE condition NEW_LINE line_command NEW_LINE
+    | ELSE condition LCURL NEW_LINE scop_body RCURL NEW_LINE
+	;
+
+else_if
+	: ELSE_IF condition NEW_LINE line_command NEW_LINE  (else + else_if)?
+	| ELSE_IF condition LCURL NEW_LINE scop_body RCURL NEW_LINE (else + else_if)?
+	;
+
+condition
+	: assigment
+	| expr
 	;
 
 for_loop
-	: (SMALL_NAME + sequence) DOT EACH DO ABS_SIGN self_var ABS_SIGN NEW_LINE line_command NEW_LINE
-	| SMALL_NAME + sequence) DOT EACH DO ABS_SIGN self_var ABS_SIGN LCURL NEW_LINE scop_body RCURL NEW_LINE
+	: (SMALL_NAME + sequence) DOT EACH DO ABS_SIGN self_var ABS_SIGN NEW_LINE line_command
+	| (SMALL_NAME + sequence) DOT EACH DO ABS_SIGN self_var ABS_SIGN LCURL NEW_LINE scop_body RCURL NEW_LINE
 	;
 
 function_call
 	: SMALL_NAME LPAR func_input RPAR NEW_LINE
+	| SMALL_NAME DOT SMALL_NAME LPAR func_input RPAR NEW_LINE
 	;
 
 assigment
 	: SMALL_NAME EQUAL expr NEW_LINE
 	| SMALL_NAME EQUAL new NEW_LINE
+	| SMALL_NAME PLUS_PLUS
+	| SMALL_NAME MINUS_MINUS
 	;
 
-conditions
-	: (NOT? expr)
-	|
+print
+	: PRINT LPAR expr RPAR NEW_LINE
+	;
+
+ternery_condition
+	: condition QUESTION_MARK line_command COLON line_command NEW_LINE
+	;
+
+expr
+	: LPAR expr RPAR
+	| (MINUS + NOT) expr
+	| expr (DIVIDE + TIMES) expr
+	| expr (MINUS + PLUS) expr
+	| expr (LT + GT) expr
+	| expr IS_EQUAL expr
+	| expr AND_AND expr
+	| expr OR_OR expr
+	| NUMBER + function_call + SMALL_NAME + ternery_condition + assigment
+	;
+
+sequence
+	: LPAR expr DOT DOT expr RPAR
+	;
+
+new
+	: CAP_NAME DOT LPAR func_input RPAR NEW_LINE
+	;
+
+func_input
+	: ''
+	| expr (COMMA func_input)?
+	;
+
+return
+	: RETURN expr
+	;
 
 IF: 'if';
 
-EACH: 'each'
+EACH: 'each';
 
 INT: 'int';
 BOOL: 'bool';
-SET: 'Set'
+SET: 'Set';
 VOID: 'void';
 FPTR: 'fptr';
 
@@ -159,9 +216,12 @@ LBACK: ']';
 LCURL: '{';
 RCURL: '}';
 
+LPAR: '(';
+RPAR: ')';
+
 ARROW: '->'
 
-NEW_LINE = '\n';
+NEW_LINE = '\n'+;
 
 BEGIN_COMMENT: '=begin';
 END_COMMENT: '=end';
