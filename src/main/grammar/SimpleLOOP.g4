@@ -191,6 +191,17 @@ IF
 	: 'if'
 	;
 
+ELSE
+
+    : 'else'
+    ;
+
+ELSE_IF
+    : 'elsif'
+    ;
+
+
+
 EACH
 	: 'each'
 	;
@@ -198,6 +209,23 @@ EACH
 INT
 	: 'int'
 	;
+
+DIVIDE
+     :'\\'
+     ;
+
+TIMES
+    :'*'
+    ;
+
+PLUS:
+    '+'
+    ;
+
+MINUS:
+    '-'
+    ;
+
 BOOL
 	: 'bool'
 	;
@@ -210,6 +238,22 @@ VOID
 FPTR
 	: 'fptr'
 	;
+
+PLUS_PLUS
+    : '++'
+    ;
+
+MINUS_MINUS
+    : '--'
+    ;
+
+QUESTION_MARK
+    : '?'
+    ;
+
+COLON
+    : ':'
+    ;
 
 COMMA
 	: ','
@@ -285,7 +329,7 @@ SHARP_SIGN
 	: '#'
 	;
 
-CAP_NAME: 
+CAP_NAME:
 	[A-Z] [a-z]+
 	;
 
@@ -297,3 +341,5 @@ SMALL_NAME:
 	[a-z]+
 	;
 
+WS:
+    [ \t\n]+ -> skip;
