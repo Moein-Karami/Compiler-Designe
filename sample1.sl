@@ -4,7 +4,6 @@ class Student {
     private int grade, cost
     public initialize(int grade, int cost=100) {
         self.grade = grade
-
         self.cost = cost
         self.enrollments = Set.new()
         print(self.cost);
