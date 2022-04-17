@@ -77,24 +77,6 @@ public interface SimpleLOOPVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitInit_begin(SimpleLOOPParser.Init_beginContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpleLOOPParser#self_var_dec}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSelf_var_dec(SimpleLOOPParser.Self_var_decContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SimpleLOOPParser#self_var}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSelf_var(SimpleLOOPParser.Self_varContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SimpleLOOPParser#class_body}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitClass_body(SimpleLOOPParser.Class_bodyContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link SimpleLOOPParser#func_dec}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -118,12 +100,6 @@ public interface SimpleLOOPVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFunc_begin(SimpleLOOPParser.Func_beginContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SimpleLOOPParser#func_body}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFunc_body(SimpleLOOPParser.Func_bodyContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SimpleLOOPParser#scop_body}.
 	 * @param ctx the parse tree
@@ -155,12 +131,6 @@ public interface SimpleLOOPVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitElse_if(SimpleLOOPParser.Else_ifContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpleLOOPParser#condition}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCondition(SimpleLOOPParser.ConditionContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link SimpleLOOPParser#for_loop}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -185,17 +155,17 @@ public interface SimpleLOOPVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPrint(SimpleLOOPParser.PrintContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpleLOOPParser#ternery_condition}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTernery_condition(SimpleLOOPParser.Ternery_conditionContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link SimpleLOOPParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitExpr(SimpleLOOPParser.ExprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#expr_prime}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpr_prime(SimpleLOOPParser.Expr_primeContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SimpleLOOPParser#sequence}.
 	 * @param ctx the parse tree

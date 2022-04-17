@@ -5,186 +5,185 @@ simple_loop
     ;
 
 start_prog
-	: var_dec start_prog
-	| comment start_prog
-	| class_dec prog_body
+	: var_dec NEW_LINE start_prog
+	| comment NEW_LINE start_prog
+	| class_dec NEW_LINE prog_body
 	| NEW_LINE start_prog
+	|
 	;
 
 var_dec
-	: (INT + BOOL + CAP_NAME + set_dec + func_var) SMALL_NAME (COMMA SMALL_NAME)* NEW_LINE
-	| (INT + BOOL + CAP_NAME + set_dec) (LBRACK NUM RBRACK)+ SMALL_NAME (COMMA SMALL_NAME)* NEW_LINE
+	: (INT | BOOL | CAP_NAME | set_dec | func_var) SMALL_NAME (COMMA SMALL_NAME)*
+	| (INT | BOOL | CAP_NAME | set_dec) (LBRACK NUM RBRACK)+ SMALL_NAME (COMMA SMALL_NAME)*
 	;
 
 comment
-	: SHARP_SIGN .* NEW_LINE
-	| BEGIN_COMMENT NEW_LINE .* NEW_LINE END_COMMENT NEW_LINE
+	: SHARP_SIGN .*
+	| BEGIN_COMMENT NEW_LINE .* NEW_LINE END_COMMENT
 	;
 
 class_dec
-	: CLASS CAP_NAME (LT CAP_NAME)? L_CURL NEW_LINE begin_class
+	: CLASS CAP_NAME (LT CAP_NAME)? LCURL NEW_LINE begin_class? NEW_LINE RCURL
 	;
 
 prog_body
-	: class_dec prog_body
-	| comment prog_body
+	: class_dec NEW_LINE prog_body
+	| comment NEW_LINE prog_body
+	| NEW_LINE prog_body
+	|
 	;
 
 set_dec
-	: SET LT INT GT SMALL_NAME (COMMA SMALL_NAME)* NEW_LINE
+	: SET LT INT GT SMALL_NAME (COMMA SMALL_NAME)*
 	;
 
 func_var
-	: FPTR T (VOID + INT + BOOL + CAP_NAME + set_dec) ARROW (VOID + INT + BOOL + CAP_NAME + set_dec) SMALL_NAME (COMMA SMALL_NAME)*
+	: FPTR LT (VOID | INT | BOOL | CAP_NAME | set_dec) ARROW (VOID | INT | BOOL | CAP_NAME | set_dec) RT SMALL_NAME (COMMA SMALL_NAME)*
 	;
 
 begin_class
-	: comment begin_class
-	| ACCESS_TYPE var_dec begin_class
-	| init_dec class_body
-	| func_dec class_body
-	| RCURL NEW_LINE NEW_LINE
+	: comment NEW_LINE begin_class
+	| ACCESS_TYPE var_dec NEW_LINE begin_class
+	| init_dec NEW_LINE begin_class
+	| func_dec NEW_LINE begin_class
+	| comment
+	| ACCESS_TYPE var_dec
+	| init_dec
+	| func_dec
 	;
 
 init_dec
-	: ACCESS_TYPE INIT LPAR argumants? RPAR LCURL NEW_LINE init_begin
+	: ACCESS_TYPE INIT LPAR argumants? RPAR LCURL NEW_LINE init_begin? NEW_LINE RCURL
 	;
 
 init_begin
-	: comment init_begin
-    | var_dec init_begin
-    | func_body
-    | self_var_dec
+	: comment NEW_LINE init_begin
+    | var_dec NEW_LINE init_begin
+    | scop_body
+    | comment
+    | var_dec
     ;
-
-self_var_dec
-	: (INT + BOOL + CAP_NAME + set_dec + func_var) self_var (COMMA SMALL_NAME)* NEW_LINE
-    | (INT + BOOL + CAP_NAME + set_dec) (LBRACK NUM RBRACK)+ self_var (COMMA SMALL_NAME)* NEW_LINE
-    ;
-
-self_var
-	: SMALL_NAME
-	| SELF_SMALL_NAME
-	;
-
-class_body
-	: func_dec class_body
-	| RPAR NEW_LINE NEW_LINE
-	;
 
 func_dec
-	: ACCESS_TYPE (VOID + INT + BOOL + set_dec + CAP_NAME) SMALL_NAME LPAR argumants RPAR LCURL NEW_LINE func_begin
+	: ACCESS_TYPE (VOID | INT | BOOL | set_dec | CAP_NAME) SMALL_NAME LPAR argumants RPAR LCURL NEW_LINE func_begin? NEW_LINE RCURL
 	;
 
 argumants
-	: (INT + BOOL + CAP_NAME + set_dec + func_var) SMALL_NAME (COMMA argumants)?
+	: (INT | BOOL | CAP_NAME | set_dec | func_var) SMALL_NAME (COMMA argumants)?
 	| default_argumants
 	;
 
 default_argumants
-	: INT SMALL_NAME EQUAL (NUMBER + SMALL_NAME) (COMMA default_argumants)?
-	| BOOL SMALL_NAME EQUAL (NUMBER + BOOL_VALUE) (COMMA default_argumants)?
+	: INT SMALL_NAME EQUAL (NUM | SMALL_NAME) (COMMA default_argumants)?
+	| BOOL SMALL_NAME EQUAL (NUM | BOOL_VALUE) (COMMA default_argumants)?
 	;
 
 func_begin
-	: comment func_begin
-	| var_dec func_begin
-	| func_body
-	;
-
-func_body
-	: RCURL NEW_LINE
-	| scop_body func_body
-	| my_return func_body
+	: comment NEW_LINE func_begin
+	| var_dec NEW_LINE func_begin
+	| scop_body
+	| comment
+	| var_dec
 	;
 
 scop_body
 	: line_command NEW_LINE scop_body
-	| NEW_LINE
-	| LCURL NEW_LINE scop_body NEW_LINE RCURL NEW_LINE
+	| line_command
 	;
 
 line_command
 	: if_state
 	| for_loop
 	| function_call
-	| assigment
 	| print
-	| ternery_condition
+	| expr
+	| my_return
 	;
 
 if_state
-	: IF condition NEW_LINE line_command NEW_LINE  (my_else + else_if)?
-	| IF condition LCURL NEW_LINE scop_body RCURL NEW_LINE (my_else + else_if)?
+	: IF expr NEW_LINE line_command NEW_LINE  (my_else | else_if)
+	| IF expr LCURL NEW_LINE scop_body? RCURL NEW_LINE (my_else | else_if)
+	| IF expr NEW_LINE line_command
+	| IF expr LCURL NEW_LINE scop_body? RCURL
 	;
 
 my_else
- 	: ELSE condition NEW_LINE line_command NEW_LINE
-    | ELSE condition LCURL NEW_LINE scop_body RCURL NEW_LINE
+ 	: ELSE expr NEW_LINE line_command
+    | ELSE expr LCURL NEW_LINE scop_body? RCURL
 	;
 
 else_if
-	: ELSE_IF condition NEW_LINE line_command NEW_LINE  (my_else + else_if)?
-	| ELSE_IF condition LCURL NEW_LINE scop_body RCURL NEW_LINE (my_else + else_if)?
-	;
-
-condition
-	: assigment
-	| expr
+	: ELSE_IF expr NEW_LINE line_command NEW_LINE  (my_else | else_if)
+	| ELSE_IF expr LCURL NEW_LINE scop_body? RCURL NEW_LINE (my_else | else_if)
+	| ELSE_IF expr NEW_LINE line_command
+	| ELSE_IF expr LCURL NEW_LINE scop_body? RCURL
 	;
 
 for_loop
-	: (SMALL_NAME + sequence) DOT EACH DO ABS_SIGN self_var ABS_SIGN NEW_LINE line_command
-	| (SMALL_NAME + sequence) DOT EACH DO ABS_SIGN self_var ABS_SIGN LCURL NEW_LINE scop_body RCURL NEW_LINE
+	: (SMALL_NAME + sequence) DOT EACH DO ABS_SIGN SMALL_NAME ABS_SIGN NEW_LINE line_command
+	| (SMALL_NAME + sequence) DOT EACH DO ABS_SIGN SMALL_NAME ABS_SIGN LCURL NEW_LINE scop_body? RCURL NEW_LINE
 	;
 
 function_call
-	: SMALL_NAME LPAR func_input RPAR NEW_LINE
-	| SMALL_NAME DOT SMALL_NAME LPAR func_input RPAR NEW_LINE
+	: SMALL_NAME LPAR func_input RPAR
+	| SELF_SMALL_NAME LPAR func_input RPAR
 	;
 
 assigment
-	: SMALL_NAME EQUAL expr NEW_LINE
-	| SMALL_NAME EQUAL my_new NEW_LINE
+	: SMALL_NAME EQUAL expr
+	| SMALL_NAME EQUAL my_new
 	| SMALL_NAME PLUS_PLUS
 	| SMALL_NAME MINUS_MINUS
+	| SELF_SMALL_NAME EQUAL expr
+    | SELF_SMALL_NAME EQUAL my_new
+    | SELF_SMALL_NAME PLUS_PLUS
+    | SELF_SMALL_NAME MINUS_MINUS
 	;
 
 print
-	: PRINT LPAR expr RPAR NEW_LINE
-	;
-
-ternery_condition
-	: condition QUESTION_MARK line_command COLON line_command NEW_LINE
+	: PRINT LPAR expr RPAR
 	;
 
 expr
-	: LPAR expr RPAR
-	| (MINUS + NOT) expr
-	| expr (DIVIDE + TIMES) expr
-	| expr (MINUS + PLUS) expr
-	| expr (LT + GT) expr
-	| expr IS_EQUAL expr
-	| expr AND_AND expr
-	| expr OR_OR expr
-	| NUMBER + function_call + SMALL_NAME + ternery_condition + assigment
+	: LPAR expr RPAR expr_prime
+	| (MINUS | NOT) expr expr_prime
+	| NUMBER expr_prime
+	| function_call expr_prime
+	| SMALL_NAME expr_prime
+	| SELF_SMALL_NAME expr_prime
+	| assigment expr_prime
 	;
 
+expr_prime
+	:  (DIVIDE | TIMES) expr expr_prime
+    |  (MINUS | PLUS) expr expr_prime
+    |  (LT | GT) expr expr_prime
+    |  IS_EQUAL expr expr_prime
+    |  AND_AND expr expr_prime
+    |  OR_OR expr expr_prime
+	|  QUESTION_MARK line_command COLON line_command expr_prime
+	|
+	;
 sequence
 	: LPAR expr DOT DOT expr RPAR
 	;
 
 my_new
-	: CAP_NAME DOT LPAR func_input RPAR NEW_LINE
+	: CAP_NAME DOT NEW_WORD LPAR func_input RPAR
 	;
 
 func_input
 	:
 	| expr (COMMA func_input)?
+	|
 	;
 
 my_return
 	: RETURN expr
+	;
+
+BOOL_VALUE
+	: 'true'|'false'
 	;
 
 IF
@@ -200,7 +199,9 @@ ELSE_IF
     : 'elsif'
     ;
 
-
+INIT:
+	'initialize'
+	;
 
 EACH
 	: 'each'
@@ -208,6 +209,10 @@ EACH
 
 INT
 	: 'int'
+	;
+
+NEW_WORD
+	: 'new'
 	;
 
 DIVIDE
@@ -228,9 +233,6 @@ MINUS:
 
 BOOL
 	: 'bool'
-	;
-SET
-	: 'Set'
 	;
 VOID
 	: 'void'
@@ -271,7 +273,7 @@ CLASS
 	: 'class'
 	;
 SELF_SMALL_NAME
-	: 'self'
+	: 'self.'[a-z]([a-z]|[0-9]|'_')*
 	;
 
 ACCESS_TYPE
@@ -305,8 +307,8 @@ ARROW
 	'->';
 
 NEW_LINE
-    : '\n'+
-    ;
+    : ('\n')+
+    | ';'('\n')+;
 
 BEGIN_COMMENT
 	: '=begin'
@@ -334,25 +336,17 @@ SHARP_SIGN
 	;
 
 CAP_NAME:
-	[A-Z]([a-z]+[0-9]+'_')+
+	[A-Z]([a-z]|[0-9]|'_')*
 	;
 
 NUM:
-    [1-9][0-9]*
+    [0-9]+
     ;
 
 SMALL_NAME:
-	[a-z]([a-z]+[0-9]+'_')+
+	[a-z]([a-z]|[0-9]|'_')*
 	;
 
 WS:
-    [ \t]+ -> skip
+    (' '|'\t') -> skip
     ;
-
-SEMICOLON:
-	';' -> skip
-	;
-
-INIT:
-	'initialize'
-	;

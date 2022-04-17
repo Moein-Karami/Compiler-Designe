@@ -118,36 +118,6 @@ public interface SimpleLOOPListener extends ParseTreeListener {
 	 */
 	void exitInit_begin(SimpleLOOPParser.Init_beginContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpleLOOPParser#self_var_dec}.
-	 * @param ctx the parse tree
-	 */
-	void enterSelf_var_dec(SimpleLOOPParser.Self_var_decContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SimpleLOOPParser#self_var_dec}.
-	 * @param ctx the parse tree
-	 */
-	void exitSelf_var_dec(SimpleLOOPParser.Self_var_decContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SimpleLOOPParser#self_var}.
-	 * @param ctx the parse tree
-	 */
-	void enterSelf_var(SimpleLOOPParser.Self_varContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SimpleLOOPParser#self_var}.
-	 * @param ctx the parse tree
-	 */
-	void exitSelf_var(SimpleLOOPParser.Self_varContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SimpleLOOPParser#class_body}.
-	 * @param ctx the parse tree
-	 */
-	void enterClass_body(SimpleLOOPParser.Class_bodyContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SimpleLOOPParser#class_body}.
-	 * @param ctx the parse tree
-	 */
-	void exitClass_body(SimpleLOOPParser.Class_bodyContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link SimpleLOOPParser#func_dec}.
 	 * @param ctx the parse tree
 	 */
@@ -187,16 +157,6 @@ public interface SimpleLOOPListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFunc_begin(SimpleLOOPParser.Func_beginContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SimpleLOOPParser#func_body}.
-	 * @param ctx the parse tree
-	 */
-	void enterFunc_body(SimpleLOOPParser.Func_bodyContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SimpleLOOPParser#func_body}.
-	 * @param ctx the parse tree
-	 */
-	void exitFunc_body(SimpleLOOPParser.Func_bodyContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link SimpleLOOPParser#scop_body}.
 	 * @param ctx the parse tree
@@ -248,16 +208,6 @@ public interface SimpleLOOPListener extends ParseTreeListener {
 	 */
 	void exitElse_if(SimpleLOOPParser.Else_ifContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpleLOOPParser#condition}.
-	 * @param ctx the parse tree
-	 */
-	void enterCondition(SimpleLOOPParser.ConditionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SimpleLOOPParser#condition}.
-	 * @param ctx the parse tree
-	 */
-	void exitCondition(SimpleLOOPParser.ConditionContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link SimpleLOOPParser#for_loop}.
 	 * @param ctx the parse tree
 	 */
@@ -298,16 +248,6 @@ public interface SimpleLOOPListener extends ParseTreeListener {
 	 */
 	void exitPrint(SimpleLOOPParser.PrintContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpleLOOPParser#ternery_condition}.
-	 * @param ctx the parse tree
-	 */
-	void enterTernery_condition(SimpleLOOPParser.Ternery_conditionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SimpleLOOPParser#ternery_condition}.
-	 * @param ctx the parse tree
-	 */
-	void exitTernery_condition(SimpleLOOPParser.Ternery_conditionContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link SimpleLOOPParser#expr}.
 	 * @param ctx the parse tree
 	 */
@@ -317,6 +257,16 @@ public interface SimpleLOOPListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExpr(SimpleLOOPParser.ExprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#expr_prime}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpr_prime(SimpleLOOPParser.Expr_primeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#expr_prime}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpr_prime(SimpleLOOPParser.Expr_primeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link SimpleLOOPParser#sequence}.
 	 * @param ctx the parse tree

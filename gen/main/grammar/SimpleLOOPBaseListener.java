@@ -148,42 +148,6 @@ public class SimpleLOOPBaseListener implements SimpleLOOPListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSelf_var_dec(SimpleLOOPParser.Self_var_decContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitSelf_var_dec(SimpleLOOPParser.Self_var_decContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterSelf_var(SimpleLOOPParser.Self_varContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitSelf_var(SimpleLOOPParser.Self_varContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterClass_body(SimpleLOOPParser.Class_bodyContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitClass_body(SimpleLOOPParser.Class_bodyContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterFunc_dec(SimpleLOOPParser.Func_decContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -227,18 +191,6 @@ public class SimpleLOOPBaseListener implements SimpleLOOPListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFunc_begin(SimpleLOOPParser.Func_beginContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFunc_body(SimpleLOOPParser.Func_bodyContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFunc_body(SimpleLOOPParser.Func_bodyContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -304,18 +256,6 @@ public class SimpleLOOPBaseListener implements SimpleLOOPListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCondition(SimpleLOOPParser.ConditionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCondition(SimpleLOOPParser.ConditionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterFor_loop(SimpleLOOPParser.For_loopContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -364,18 +304,6 @@ public class SimpleLOOPBaseListener implements SimpleLOOPListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTernery_condition(SimpleLOOPParser.Ternery_conditionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitTernery_condition(SimpleLOOPParser.Ternery_conditionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterExpr(SimpleLOOPParser.ExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -383,6 +311,18 @@ public class SimpleLOOPBaseListener implements SimpleLOOPListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExpr(SimpleLOOPParser.ExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExpr_prime(SimpleLOOPParser.Expr_primeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExpr_prime(SimpleLOOPParser.Expr_primeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
