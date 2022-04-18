@@ -218,16 +218,6 @@ public interface SimpleLOOPListener extends ParseTreeListener {
 	 */
 	void exitFor_loop(SimpleLOOPParser.For_loopContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpleLOOPParser#function_call}.
-	 * @param ctx the parse tree
-	 */
-	void enterFunction_call(SimpleLOOPParser.Function_callContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SimpleLOOPParser#function_call}.
-	 * @param ctx the parse tree
-	 */
-	void exitFunction_call(SimpleLOOPParser.Function_callContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link SimpleLOOPParser#assigment}.
 	 * @param ctx the parse tree
 	 */
@@ -307,4 +297,44 @@ public interface SimpleLOOPListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMy_return(SimpleLOOPParser.My_returnContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#var}.
+	 * @param ctx the parse tree
+	 */
+	void enterVar(SimpleLOOPParser.VarContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#var}.
+	 * @param ctx the parse tree
+	 */
+	void exitVar(SimpleLOOPParser.VarContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#ext}.
+	 * @param ctx the parse tree
+	 */
+	void enterExt(SimpleLOOPParser.ExtContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#ext}.
+	 * @param ctx the parse tree
+	 */
+	void exitExt(SimpleLOOPParser.ExtContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#const_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterConst_expr(SimpleLOOPParser.Const_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#const_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitConst_expr(SimpleLOOPParser.Const_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#const_expr_prime}.
+	 * @param ctx the parse tree
+	 */
+	void enterConst_expr_prime(SimpleLOOPParser.Const_expr_primeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#const_expr_prime}.
+	 * @param ctx the parse tree
+	 */
+	void exitConst_expr_prime(SimpleLOOPParser.Const_expr_primeContext ctx);
 }

@@ -1,59 +1,76 @@
-int total_grade, total_cost;
+Set <int> id;
 
-class Student {
-    private int grade, cost
-    public initialize(int grade, int cost=100) {
-        self.grade = grade
-        self.cost = cost
-        self.enrollments = Set.new()
-        print(self.cost);
+int next_id;
+
+class Error
+    public int[10*2/2] what
+
+class Employee {
+    private int salary, exp, bonus, eid;
+    public initialize(int exp, int bonus, int salary=1000) {
+        self.exp = exp;
+        self.bonus = bonus
+        self.salary = salary
+        self.eid = next_id;
+        id.add(self.eid)
+        next_id++
     }
-    public Set<int> enrollments
-    public void enroll(int cid, int cost) {
-        enrollments.add(cid)
-        self.cost = cost
-        self.cost++
+    public int    get_salary(int[12] months)
+
+    {
+        int idx, i, sum
+        months.each do |idx| {
+            (1-1..30).each do |i|
+                sum = sum + self.salary
+            print(sum < 1200 ? 1200 : (sum+self.bonus))
+        }
     }
-}
-class Course  {
-    private int cid, cost;
-    public void set_cid(int _cid) {
-        self.cid = _cid
-        self.cid++
-    }
-    public int get_cid() {
-        return self.cid
-    }
-    public void set_cost(int cost) {
-        self.cost = self.cost + cost
-    }
-    public int get_cost() {
-        return self.cost
-   }
+
 }
 
 class Main {
+    private bool check_id(int id1, int id2) {
+        return id1 == id2
+    }
     public initialize() {
-        Course crs
         int i
-        Course crs2
-        Student[5] students
-        crs.set_cid(1)
-        crs.set_cost(120)
-        students.each do |i|
-            students[i].enroll(crs.get_cid(), crs.get_cost())
-        if crs.get_cost() < 100 {
-            print(1)
+        fptr<int,int -> bool> is_same_emp;
+        Employee[21-1] emps
+
+        id = Set.new()
+
+
+        (0..(20++)--).each do |i|
+            emps[i].initialize(i, i/10==0 ? 0 : i-5)
+
+        is_same_emp = self.check_id
+        emps.each do |i| {
+            =begin
+             This will find employee with id #10
+            =end
+            if !is_same_emp(i, 10) {
+                print(i)
+            }
+            else {
+                print(1)
+            }
         }
-        elsif crs.get_cost() == 100 {
-            print(2)
-        }
-        elsif crs.get_cost() > 100 {
-            print(3)
-        }
-        crs2.set_cid(crs.get_cid() == 1?  crs.get_cost() < 100 ? 2 : 3  : 4)
-        print(crs2.get_cid())
+    }
+
+    private bool test(bool x, fptr<int->void> fpt) {
+        Error err
+        err.what[0] = -44 * !334 + true * false
+
+        return ((a || b && c) || (a && b)) && (a || cc || df)
+        return a.b.c.f.d()().h[true + !false]
+        print(err.what[0])
     }
 }
 
-
+class Test {
+    private bool assert() {
+        int[100][4-1+5*2+3-2*2+(-1)-_size] check
+        int [4-1+5*2+3-2*2+(-1)-_size] yes
+        #check[0] == yes ? print(yes) : print(0)
+    }
+}

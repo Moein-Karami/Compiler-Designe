@@ -137,12 +137,6 @@ public interface SimpleLOOPVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFor_loop(SimpleLOOPParser.For_loopContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpleLOOPParser#function_call}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFunction_call(SimpleLOOPParser.Function_callContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link SimpleLOOPParser#assigment}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -190,4 +184,28 @@ public interface SimpleLOOPVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitMy_return(SimpleLOOPParser.My_returnContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#var}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVar(SimpleLOOPParser.VarContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#ext}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExt(SimpleLOOPParser.ExtContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#const_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConst_expr(SimpleLOOPParser.Const_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#const_expr_prime}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConst_expr_prime(SimpleLOOPParser.Const_expr_primeContext ctx);
 }
