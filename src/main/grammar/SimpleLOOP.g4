@@ -71,6 +71,7 @@ init_begin
 
 func_dec
 	: ACCESS_TYPE (VOID | INT | BOOL | set_dec | CAP_NAME) SMALL_NAME LPAR argumants? RPAR NEW_LINE* LCURL (NEW_LINE+ func_begin)? NEW_LINE+ RCURL
+	| ACCESS_TYPE (VOID | INT | BOOL | set_dec | CAP_NAME) SMALL_NAME LPAR argumants? RPAR NEW_LINE+ line_command
 	;
 
 argumants
