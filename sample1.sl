@@ -14,7 +14,6 @@ class Student {
         self.cost = cost
         self.cost++
     }
-
 }
 class Course  {
     private int cid, cost;
@@ -23,14 +22,14 @@ class Course  {
         self.cid++
     }
     public int get_cid() {
-            return self.cid
-        }
+        return self.cid
+    }
     public void set_cost(int cost) {
         self.cost = self.cost + cost
     }
     public int get_cost() {
-            return self.cost
-        }
+        return self.cost
+   }
 }
 
 class Main {
@@ -38,8 +37,8 @@ class Main {
         Course crs
         int i
         Course crs2
-               Student[5] students
-    crs.set_cid(1)
+        Student[5] students
+        crs.set_cid(1)
         crs.set_cost(120)
         students.each do |i|
             students[i].enroll(crs.get_cid(), crs.get_cost())

@@ -23,7 +23,7 @@ comment
 	;
 
 class_dec
-	: CLASS CAP_NAME (LT CAP_NAME)? LCURL NEW_LINE begin_class? NEW_LINE RCURL
+	: CLASS CAP_NAME (LT CAP_NAME)? LCURL (NEW_LINE begin_class)? NEW_LINE RCURL
 	;
 
 prog_body
@@ -34,7 +34,7 @@ prog_body
 	;
 
 set_dec
-	: SET LT INT GT SMALL_NAME (COMMA SMALL_NAME)*
+	: SET LT INT GT
 	;
 
 func_var
@@ -53,7 +53,7 @@ begin_class
 	;
 
 init_dec
-	: ACCESS_TYPE INIT LPAR argumants? RPAR LCURL NEW_LINE init_begin? NEW_LINE RCURL
+	: ACCESS_TYPE INIT LPAR argumants? RPAR LCURL (NEW_LINE init_begin)? NEW_LINE RCURL
 	;
 
 init_begin
@@ -65,7 +65,7 @@ init_begin
     ;
 
 func_dec
-	: ACCESS_TYPE (VOID | INT | BOOL | set_dec | CAP_NAME) SMALL_NAME LPAR argumants RPAR LCURL NEW_LINE func_begin? NEW_LINE RCURL
+	: ACCESS_TYPE (VOID | INT | BOOL | set_dec | CAP_NAME) SMALL_NAME LPAR argumants? RPAR LCURL (NEW_LINE func_begin)? NEW_LINE RCURL
 	;
 
 argumants
@@ -121,12 +121,12 @@ else_if
 
 for_loop
 	: (SMALL_NAME + sequence) DOT EACH DO ABS_SIGN SMALL_NAME ABS_SIGN NEW_LINE line_command
-	| (SMALL_NAME + sequence) DOT EACH DO ABS_SIGN SMALL_NAME ABS_SIGN LCURL NEW_LINE scop_body? RCURL NEW_LINE
+	| (SMALL_NAME + sequence) DOT EACH DO ABS_SIGN SMALL_NAME ABS_SIGN LCURL (NEW_LINE scop_body)? RCURL NEW_LINE
 	;
 
 function_call
-	: SMALL_NAME LPAR func_input RPAR
-	| SELF_SMALL_NAME LPAR func_input RPAR
+	: SMALL_NAME DOT SMALL_NAME LPAR func_input? RPAR
+	| SELF_SMALL_NAME DOT SMALL_NAME LPAR func_input? RPAR
 	;
 
 assigment
@@ -169,17 +169,24 @@ sequence
 	;
 
 my_new
-	: CAP_NAME DOT NEW_WORD LPAR func_input RPAR
+	: (CAP_NAME|SET) DOT NEW_WORD LPAR func_input? RPAR
 	;
 
 func_input
 	:
 	| expr (COMMA func_input)?
-	|
 	;
 
 my_return
 	: RETURN expr
+	;
+
+RETURN
+	: 'return'
+	;
+
+PRINT
+	: 'print'
 	;
 
 BOOL_VALUE
@@ -335,6 +342,10 @@ SHARP_SIGN
 	: '#'
 	;
 
+SET
+	: 'Set'
+	;
+
 CAP_NAME:
 	[A-Z]([a-z]|[0-9]|'_')*
 	;
@@ -344,9 +355,9 @@ NUM:
     ;
 
 SMALL_NAME:
-	[a-z]([a-z]|[0-9]|'_')*
+	([a-z]|'_')([a-z]|[0-9]|'_')*
 	;
 
 WS:
-    (' '|'\t') -> skip
+    (' '|'\t'|'\r') -> skip
     ;

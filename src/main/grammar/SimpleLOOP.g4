@@ -65,18 +65,17 @@ init_begin
     ;
 
 func_dec
-	: ACCESS_TYPE (VOID | INT | BOOL | set_dec | CAP_NAME) SMALL_NAME LPAR argumants RPAR LCURL (NEW_LINE func_begin)? NEW_LINE RCURL
+	: ACCESS_TYPE (VOID | INT | BOOL | set_dec | CAP_NAME) SMALL_NAME LPAR argumants? RPAR LCURL (NEW_LINE func_begin)? NEW_LINE RCURL
 	;
 
 argumants
 	: (INT | BOOL | CAP_NAME | set_dec | func_var) SMALL_NAME (COMMA argumants)?
 	| default_argumants
-	|
 	;
 
 default_argumants
-	: INT SMALL_NAME EQUAL (NUM | SMALL_NAME) (COMMA default_argumants)?
-	| BOOL SMALL_NAME EQUAL (NUM | BOOL_VALUE) (COMMA default_argumants)?
+	: INT SMALL_NAME EQUAL (NUM | var) (COMMA default_argumants)?
+	| BOOL SMALL_NAME EQUAL (NUM | BOOL_VALUE | var) (COMMA default_argumants)?
 	;
 
 func_begin
@@ -95,7 +94,6 @@ scop_body
 line_command
 	: if_state
 	| for_loop
-	| function_call
 	| print
 	| expr
 	| my_return
@@ -121,24 +119,24 @@ else_if
 	;
 
 for_loop
-	: (SMALL_NAME + sequence) DOT EACH DO ABS_SIGN SMALL_NAME ABS_SIGN NEW_LINE line_command
-	| (SMALL_NAME + sequence) DOT EACH DO ABS_SIGN SMALL_NAME ABS_SIGN LCURL (NEW_LINE scop_body)? RCURL NEW_LINE
+	: (var | sequence) DOT EACH DO ABS_SIGN var ABS_SIGN NEW_LINE line_command
+	| (var | sequence) DOT EACH DO ABS_SIGN var ABS_SIGN LCURL (NEW_LINE scop_body)? RCURL NEW_LINE
 	;
 
 function_call
-	: SMALL_NAME DOT SMALL_NAME LPAR func_input RPAR
-	| SELF_SMALL_NAME DOT SMALL_NAME LPAR func_input RPAR
+	: (SMALL_ID | SMALL_NAME) DOT (SMALL_ID | SMALL_NAME) LPAR func_input? RPAR
+	| (SELF_SMALL_ID | SELF_SMALL_NAME) LPAR func_input? RPAR
 	;
 
 assigment
-	: SMALL_NAME EQUAL expr
-	| SMALL_NAME EQUAL my_new
-	| SMALL_NAME PLUS_PLUS
-	| SMALL_NAME MINUS_MINUS
-	| SELF_SMALL_NAME EQUAL expr
-    | SELF_SMALL_NAME EQUAL my_new
-    | SELF_SMALL_NAME PLUS_PLUS
-    | SELF_SMALL_NAME MINUS_MINUS
+	: (SMALL_ID | SMALL_NAME) EQUAL expr
+	| (SMALL_ID | SMALL_NAME) EQUAL my_new
+	| (SMALL_ID | SMALL_NAME) PLUS_PLUS
+	| (SMALL_ID | SMALL_NAME) MINUS_MINUS
+	| (SELF_SMALL_ID | SELF_SMALL_NAME) EQUAL expr
+    | (SELF_SMALL_ID | SELF_SMALL_NAME) EQUAL my_new
+    | (SELF_SMALL_ID | SELF_SMALL_NAME) PLUS_PLUS
+    | (SELF_SMALL_ID | SELF_SMALL_NAME) MINUS_MINUS
 	;
 
 print
@@ -148,10 +146,10 @@ print
 expr
 	: LPAR expr RPAR expr_prime
 	| (MINUS | NOT) expr expr_prime
-	| NUMBER expr_prime
+	| NUM expr_prime
 	| function_call expr_prime
-	| SMALL_NAME expr_prime
-	| SELF_SMALL_NAME expr_prime
+	| (SMALL_ID | SMALL_NAME) expr_prime
+	| (SELF_SMALL_ID | SELF_SMALL_NAME) expr_prime
 	| assigment expr_prime
 	;
 
@@ -170,13 +168,12 @@ sequence
 	;
 
 my_new
-	: (CAP_NAME|SET) DOT NEW_WORD LPAR func_input RPAR
+	: (CAP_NAME|SET) DOT NEW_WORD LPAR func_input? RPAR
 	;
 
 func_input
 	:
-	| expr (COMMA func_input)?
-	|
+		expr (COMMA func_input)?
 	;
 
 my_return
@@ -189,6 +186,10 @@ RETURN
 
 PRINT
 	: 'print'
+	;
+
+DO
+	: 'do'
 	;
 
 BOOL_VALUE
@@ -282,19 +283,23 @@ CLASS
 	: 'class'
 	;
 SELF_SMALL_NAME
-	: 'self.'[a-z]([a-z]|[0-9]|'_')*
+	: 'self.'([a-z]'_')([a-z]|[0-9]|'_')*
 	;
+
+SELF_SMALL_ID
+	: 'self.'([a-z]|'_')([a-z]|[0-9]|'_')*('['[0-9]*']')+
+;
 
 ACCESS_TYPE
 	: 'private'
 	| 'public'
 	;
 
-RBACK
-	: '['
-	;
-LBACK
+RBRACK
 	: ']'
+	;
+LBRACK
+	: '['
 	;
 
 LCURL
@@ -360,6 +365,10 @@ SMALL_NAME:
 	([a-z]|'_')([a-z]|[0-9]|'_')*
 	;
 
+SMALL_ID:
+	 ([a-z]|'_')([a-z]|[0-9]|'_')*('['[0-9]+']')+
+;
+
 WS:
-    (' '|'\t'|'\r') -> skip
+    (' '|'\t') -> skip
     ;
