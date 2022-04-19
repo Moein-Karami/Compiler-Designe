@@ -100,6 +100,18 @@ public class SimpleLOOPBaseListener implements SimpleLOOPListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterSet_op(SimpleLOOPParser.Set_opContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSet_op(SimpleLOOPParser.Set_opContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterFunc_var(SimpleLOOPParser.Func_varContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -220,6 +232,18 @@ public class SimpleLOOPBaseListener implements SimpleLOOPListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterFunc_call(SimpleLOOPParser.Func_callContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunc_call(SimpleLOOPParser.Func_callContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterIf_state(SimpleLOOPParser.If_stateContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -268,18 +292,6 @@ public class SimpleLOOPBaseListener implements SimpleLOOPListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssigment(SimpleLOOPParser.AssigmentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAssigment(SimpleLOOPParser.AssigmentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterPrint(SimpleLOOPParser.PrintContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -287,6 +299,18 @@ public class SimpleLOOPBaseListener implements SimpleLOOPListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitPrint(SimpleLOOPParser.PrintContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAssigment(SimpleLOOPParser.AssigmentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAssigment(SimpleLOOPParser.AssigmentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

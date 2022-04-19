@@ -53,6 +53,12 @@ public interface SimpleLOOPVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSet_dec(SimpleLOOPParser.Set_decContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#set_op}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSet_op(SimpleLOOPParser.Set_opContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SimpleLOOPParser#func_var}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -113,6 +119,12 @@ public interface SimpleLOOPVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitLine_command(SimpleLOOPParser.Line_commandContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#func_call}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunc_call(SimpleLOOPParser.Func_callContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SimpleLOOPParser#if_state}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -137,17 +149,17 @@ public interface SimpleLOOPVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFor_loop(SimpleLOOPParser.For_loopContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpleLOOPParser#assigment}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAssigment(SimpleLOOPParser.AssigmentContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link SimpleLOOPParser#print}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitPrint(SimpleLOOPParser.PrintContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#assigment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssigment(SimpleLOOPParser.AssigmentContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SimpleLOOPParser#expr}.
 	 * @param ctx the parse tree

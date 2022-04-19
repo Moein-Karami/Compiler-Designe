@@ -78,6 +78,16 @@ public interface SimpleLOOPListener extends ParseTreeListener {
 	 */
 	void exitSet_dec(SimpleLOOPParser.Set_decContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#set_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterSet_op(SimpleLOOPParser.Set_opContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#set_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitSet_op(SimpleLOOPParser.Set_opContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link SimpleLOOPParser#func_var}.
 	 * @param ctx the parse tree
 	 */
@@ -178,6 +188,16 @@ public interface SimpleLOOPListener extends ParseTreeListener {
 	 */
 	void exitLine_command(SimpleLOOPParser.Line_commandContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#func_call}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunc_call(SimpleLOOPParser.Func_callContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#func_call}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunc_call(SimpleLOOPParser.Func_callContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link SimpleLOOPParser#if_state}.
 	 * @param ctx the parse tree
 	 */
@@ -218,16 +238,6 @@ public interface SimpleLOOPListener extends ParseTreeListener {
 	 */
 	void exitFor_loop(SimpleLOOPParser.For_loopContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpleLOOPParser#assigment}.
-	 * @param ctx the parse tree
-	 */
-	void enterAssigment(SimpleLOOPParser.AssigmentContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SimpleLOOPParser#assigment}.
-	 * @param ctx the parse tree
-	 */
-	void exitAssigment(SimpleLOOPParser.AssigmentContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link SimpleLOOPParser#print}.
 	 * @param ctx the parse tree
 	 */
@@ -237,6 +247,16 @@ public interface SimpleLOOPListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitPrint(SimpleLOOPParser.PrintContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#assigment}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssigment(SimpleLOOPParser.AssigmentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#assigment}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssigment(SimpleLOOPParser.AssigmentContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link SimpleLOOPParser#expr}.
 	 * @param ctx the parse tree

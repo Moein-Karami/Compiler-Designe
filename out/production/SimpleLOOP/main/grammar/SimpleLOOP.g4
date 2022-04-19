@@ -42,6 +42,14 @@ set_dec
 	: SET LT INT GT
 	;
 
+set_op
+	: SET DOT NEW_WORD {System.out.println("NEW");} LPAR func_input? RPAR
+	| var DOT ADD {System.out.println("ADD");} LPAR expr RPAR
+	| var DOT MERGE {System.out.println("MERGE");} LPAR expr RPAR
+	| var DOT INCLUDE {System.out.println("INCLUDE");} LPAR expr RPAR
+	| var DOT DELETE {System.out.println("DELETE");} LPAR expr RPAR
+	;
+
 func_var
 	: FPTR LT (VOID | INT | BOOL | CAP_NAME | set_dec | func_var) (COMMA (VOID | INT | BOOL | CAP_NAME | set_dec | func_var))* ARROW (VOID | INT | BOOL | CAP_NAME | set_dec) GT
 	;
@@ -103,8 +111,17 @@ line_command
 	: if_state
 	| for_loop
 	| print
-	| expr
 	| my_return
+	| func_call
+//	| ternary_condition
+	| assigment
+	| set_op
+	| expr
+	;
+
+func_call
+	: LPAR func_call RPAR
+	| {System.out.println("MethodCall");} var LPAR func_input? RPAR
 	;
 
 if_state
@@ -131,46 +148,101 @@ for_loop
 	|  (var | sequence) DOT EACH DO ABS_SIGN var ABS_SIGN NEW_LINE* {System.out.println("Loop : " + "each");} LCURL (NEW_LINE+ scop_body)? NEW_LINE+ RCURL
 	;
 
-assigment
-	: var  EQUAL expr
-	| var  EQUAL my_new
-	| var {System.out.println("Operator : " + "++");} PLUS_PLUS
-	| var {System.out.println("Operator : " + "--");} MINUS_MINUS
-	| var  EQUAL expr
-    | var EQUAL my_new
-    | var {System.out.println("Operator : " + "++");} PLUS_PLUS
-    | var {System.out.println("Operator : " + "--");} MINUS_MINUS
-	;
-
 print
 	: PRINT {System.out.println("Built-in : " + "print");} LPAR expr RPAR
 	;
 
+//assigment
+//	: var  EQUAL expr {System.out.println("Operator : " + "=");} assigment_prime
+//	| (var  EQUAL expr {System.out.println("Operator : " + "=");} expr_prime expr_prime
+//       	| var expr_prime
+//       	| set_op expr_prime
+//       	| {String sv_token;} (MINUS {sv_token = "Operator : " + "-";}  | NOT {sv_token = "Operator : " + "!";} ) expr expr_prime {System.out.println(sv_token);}
+//       	| (NUM | BOOL_VALUE) expr_prime
+//       	| LPAR expr RPAR expr_prime) (PLUS_PLUS {System.out.println("Operator : " + "++");} | MINUS_MINUS {System.out.println("Operator : " + "--");}) assigment_prime
+//	| ( var expr_prime
+//              	| set_op expr_prime
+//              	| {String sv_token;} (MINUS {sv_token = "Operator : " + "-";}  | NOT {sv_token = "Operator : " + "!";} ) expr expr_prime {System.out.println(sv_token);}
+//              	| (NUM | BOOL_VALUE) expr_prime
+//              	| LPAR expr RPAR expr_prime
+//              	) QUESTION_MARK expr COLON expr ternary_prime expr_prime (PLUS_PLUS {System.out.println("Operator : " + "++");} | MINUS_MINUS {System.out.println("Operator : " + "--");}) assigment_prime
+//	| assigment expr_prime QUESTION_MARK expr COLON expr ternary_prime expr_prime (PLUS_PLUS {System.out.println("Operator : " + "++");} | MINUS_MINUS {System.out.println("Operator : " + "--");})
+//	;
+//
+//assigment_prime
+//	: expr_prime QUESTION_MARK expr COLON expr ternary_prime expr_prime (PLUS_PLUS {System.out.println("Operator : " + "++");} | MINUS_MINUS {System.out.println("Operator : " + "--");}) assigment_prime
+//	|
+//	;
+//
+//expr
+//	: var  EQUAL expr {System.out.println("Operator : " + "=");} expr_prime
+//	| ternary_condition expr_prime
+//	| var expr_prime
+//	| set_op expr_prime
+//	| {String sv_token;} (MINUS {sv_token = "Operator : " + "-";}  | NOT {sv_token = "Operator : " + "!";} ) expr expr_prime {System.out.println(sv_token);}
+//	| (NUM | BOOL_VALUE) expr_prime
+//	| LPAR expr RPAR expr_prime
+//	;
+//
+//expr_prime
+//    : OR_OR expr expr_prime {System.out.println("Operator : " + "||");}
+//	| AND_AND expr expr_prime {System.out.println("Operator : " + "&&");}
+//	| IS_EQUAL expr expr_prime {System.out.println("Operator : " + "==");}
+//	| {String sv_token;} (LT {sv_token = "Operator : " + "<";}  | GT {sv_token = "Operator : " + ">";} ) expr expr_prime {System.out.println(sv_token);}
+//	| {String sv_token;} (MINUS {sv_token = "Operator : " + "-";}  | PLUS {sv_token = "Operator : " + "+";} ) expr expr_prime {System.out.println(sv_token);}
+//	| {String sv_token;} (DIVIDE {sv_token = "Operator : " + "/";}  | TIMES {sv_token = "Operator : " + "*";} )  expr expr_prime {System.out.println(sv_token);}
+//	| expr {System.out.println("Operator : " + "++");} PLUS_PLUS expr_prime
+//    | expr {System.out.println("Operator : " + "--");} MINUS_MINUS expr_prime
+//    |
+//	;
+//
+//ternary_condition
+//	: ( assigment expr_prime
+//       	| var expr_prime
+//       	| set_op expr_prime
+//       	| {String sv_token;} (MINUS {sv_token = "Operator : " + "-";}  | NOT {sv_token = "Operator : " + "!";} ) expr expr_prime {System.out.println(sv_token);}
+//       	| (NUM | BOOL_VALUE) expr_prime
+//       	| LPAR expr RPAR expr_prime
+//       	) QUESTION_MARK expr COLON expr ternary_prime
+//    ;
+//
+//ternary_prime
+//	: expr_prime QUESTION_MARK expr COLON expr {System.out.println("Operator : :?");} ternary_prime
+//	|
+//	;
+
+assigment
+	: var EQUAL expr {System.out.println("Operator : =");}
+	| expr (PLUS_PLUS {System.out.println("Operator : ++");} | MINUS_MINUS {System.out.println("Operator : --");})
+	;
+
 expr
-	: assigment expr_prime {System.out.println("Operator : " + "=");}
+	: var EQUAL expr {System.out.println("Operator : =");} expr_prime
 	| var expr_prime
-	| {String sv_token;} (MINUS {sv_token = "Operator : " + "-";}  | NOT {sv_token = "Operator : " + "!";} ) expr expr_prime {System.out.println(sv_token);}
-	| LPAR expr RPAR expr_prime
+	| set_op expr_prime
+	| {String sv_token;} (MINUS {sv_token = "Operator : " + "-";}  | NOT {sv_token = "Operator : " + "!";} ) expr {System.out.println(sv_token);} expr_prime
 	| (NUM | BOOL_VALUE) expr_prime
+	| LPAR expr RPAR expr_prime
 	;
 
 expr_prime
-    : QUESTION_MARK  expr COLON expr expr_prime {System.out.println("Operator : " + "?:");}
-	| OR_OR expr expr_prime {System.out.println("Operator : " + "||");}
-	| AND_AND expr expr_prime {System.out.println("Operator : " + "&&");}
-	| IS_EQUAL expr expr_prime {System.out.println("Operator : " + "==");}
-	| {String sv_token;} (LT {sv_token = "Operator : " + "<";}  | GT {sv_token = "Operator : " + ">";} ) expr expr_prime {System.out.println(sv_token);}
-	| {String sv_token;} (MINUS {sv_token = "Operator : " + "-";}  | PLUS {sv_token = "Operator : " + "+";} ) expr expr_prime {System.out.println(sv_token);}
-	| {String sv_token;} (DIVIDE {sv_token = "Operator : " + "/";}  | TIMES {sv_token = "Operator : " + "*";} )  expr expr_prime {System.out.println(sv_token);}
-	| {String sv_token;} (MINUS_MINUS {sv_token = "Operator : " + "--";} | PLUS_PLUS {sv_token = "Operator : " + "++";})  expr_prime {System.out.println(sv_token);}
+	: QUESTION_MARK expr COLON expr {System.out.println("Operator : ?:");} expr_prime
+	| OR_OR expr {System.out.println("Operator : ||");} expr_prime
+	| AND_AND expr {System.out.println("Operator : &&");} expr_prime
+	| IS_EQUAL expr {System.out.println("Operator : ==");} expr_prime
+	| {String sv_token;} (LT {sv_token = "Operator : " + "<";}  | GT {sv_token = "Operator : " + ">";} ) expr {System.out.println(sv_token);} expr_prime
+    | {String sv_token;} (MINUS {sv_token = "Operator : " + "-";}  | PLUS {sv_token = "Operator : " + "+";} ) expr {System.out.println(sv_token);} expr_prime
+    | {String sv_token;} (DIVIDE {sv_token = "Operator : " + "/";}  | TIMES {sv_token = "Operator : " + "*";} )  expr {System.out.println(sv_token);} expr_prime
+	| (PLUS_PLUS {System.out.println("Operator : ++");} | MINUS_MINUS {System.out.println("Operator : --");}) expr_prime
 	|
 	;
+
 sequence
 	: LPAR expr DOT DOT expr RPAR
 	;
 
 my_new
-	: (CAP_NAME|SET) DOT NEW_WORD LPAR func_input? RPAR
+	: CAP_NAME DOT NEW_WORD LPAR func_input? RPAR
 	;
 
 func_input
@@ -402,6 +474,19 @@ CAP_NAME:
 NUM:
     [0-9]+
     ;
+
+ADD
+	: 'add'
+	;
+MERGE
+	: 'merge'
+	;
+INCLUDE
+	: 'include'
+	;
+DELETE
+	: 'delete'
+	;
 
 SMALL_NAME:
 	([a-z]|'_')([a-z]|[0-9]|'_')*
