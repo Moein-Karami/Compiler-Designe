@@ -1,7 +1,7 @@
 grammar SimpleLOOP;
 
-simple_loop
-    : start_prog? ';'? EOF
+simpleLoop
+    : start_prog? EOF
     ;
 
 start_prog
@@ -26,7 +26,7 @@ comment
 
 class_dec
 	: CLASS CAP_NAME {System.out.println("ClassDec : " + $CAP_NAME.text); String class_before = $CAP_NAME.text;} (LT CAP_NAME  {System.out.println("Inheritance : " + class_before + " < " + $CAP_NAME.text );})? NEW_LINE* LCURL (NEW_LINE+ begin_class)? NEW_LINE+ RCURL
-	| CLASS CAP_NAME {System.out.println("ClassDec : " + $CAP_NAME.text); String class_before = $CAP_NAME.text;} (LT CAP_NAME  {System.out.println("Inheritance : " + class_before + " < " + $CAP_NAME.text );})? NEW_LINE* (comment | ACCESS_TYPE var_dec | ACCESS_TYPE init_dec | ACCESS_TYPE func_dec)
+	| CLASS CAP_NAME {System.out.println("ClassDec : " + $CAP_NAME.text); String class_before = $CAP_NAME.text;} (LT CAP_NAME  {System.out.println("Inheritance : " + class_before + " < " + $CAP_NAME.text );})? NEW_LINE* (comment | ACCESS_TYPE var_dec | init_dec | func_dec)?
 	;
 
 prog_body
@@ -113,8 +113,6 @@ line_command
 	| print
 	| my_return
 	| func_call
-//	| ternary_condition
-	| assigment
 	| set_op
 	| expr
 	;
@@ -122,6 +120,7 @@ line_command
 func_call
 	: LPAR func_call RPAR
 	| {System.out.println("MethodCall");} var LPAR func_input? RPAR
+	| {System.out.println("MethodCall");} var DOT INIT LPAR func_input? RPAR
 	;
 
 if_state
@@ -209,33 +208,84 @@ print
 //ternary_prime
 //	: expr_prime QUESTION_MARK expr COLON expr {System.out.println("Operator : :?");} ternary_prime
 //	|
-//	;
-
-assigment
-	: var EQUAL expr {System.out.println("Operator : =");}
-	| expr (PLUS_PLUS {System.out.println("Operator : ++");} | MINUS_MINUS {System.out.println("Operator : --");})
-	;
+//
 
 expr
-	: var EQUAL expr {System.out.println("Operator : =");} expr_prime
-	| var expr_prime
-	| set_op expr_prime
-	| {String sv_token;} (MINUS {sv_token = "Operator : " + "-";}  | NOT {sv_token = "Operator : " + "!";} ) expr {System.out.println(sv_token);} expr_prime
-	| (NUM | BOOL_VALUE) expr_prime
-	| LPAR expr RPAR expr_prime
-	;
+    : expr EQUAL ternery_expr {System.out.println("Operator : =");}
+    | ternery_expr
+    ;
 
-expr_prime
-	: QUESTION_MARK expr COLON expr {System.out.println("Operator : ?:");} expr_prime
-	| OR_OR expr {System.out.println("Operator : ||");} expr_prime
-	| AND_AND expr {System.out.println("Operator : &&");} expr_prime
-	| IS_EQUAL expr {System.out.println("Operator : ==");} expr_prime
-	| {String sv_token;} (LT {sv_token = "Operator : " + "<";}  | GT {sv_token = "Operator : " + ">";} ) expr {System.out.println(sv_token);} expr_prime
-    | {String sv_token;} (MINUS {sv_token = "Operator : " + "-";}  | PLUS {sv_token = "Operator : " + "+";} ) expr {System.out.println(sv_token);} expr_prime
-    | {String sv_token;} (DIVIDE {sv_token = "Operator : " + "/";}  | TIMES {sv_token = "Operator : " + "*";} )  expr {System.out.println(sv_token);} expr_prime
-	| (PLUS_PLUS {System.out.println("Operator : ++");} | MINUS_MINUS {System.out.println("Operator : --");}) expr_prime
-	|
-	;
+ternery_expr
+    : ternery_expr QUESTION_MARK ternery_expr COLON or_or_expr {System.out.println("Operator : ?:");}
+    | or_or_expr
+    ;
+
+or_or_expr
+    : or_or_expr OR_OR and_and_expr {System.out.println("Operator : ||");}
+    | and_and_expr
+    ;
+
+and_and_expr
+    :   and_and_expr AND_AND is_equal_expr {System.out.println("Operator : &&");}
+    |    is_equal_expr
+    ;
+
+is_equal_expr
+    :   is_equal_expr IS_EQUAL comp_expr {System.out.println("Operator : ==");}
+    | comp_expr
+    ;
+
+comp_expr
+    :   comp_expr LT sn_expr {System.out.println("Operator : <");}
+    |   comp_expr GT sn_expr {System.out.println("Operator : >");}
+    | sn_expr
+    ;
+
+sn_expr
+    :  sn_expr PLUS md_expr {System.out.println("Operator : +");}
+    | sn_expr MINUS md_expr {System.out.println("Operator : -");}
+    | md_expr
+    ;
+
+md_expr
+    :   md_expr TIMES single_expr {System.out.println("Operator : *");}
+    | md_expr DIVIDE single_expr {System.out.println("Operator : /");}
+    | single_expr
+    ;
+
+single_expr
+    :   NOT single_expr {System.out.println("Operator : !");}
+    | MINUS single_expr {System.out.println("Operator : -");}
+    | inneg_expr
+    ;
+
+inneg_expr
+    : inneg_expr PLUS_PLUS {System.out.println("Operator : ++");}
+    | inneg_expr MINUS_MINUS {System.out.println("Operator : --");}
+    | arr_expr
+    ;
+
+arr_expr
+    : arr_expr  LBRACK dot_expr RBRACK
+    | dot_expr
+    | LBRACK dot_expr RBRACK
+    ;
+
+dot_expr:
+      set_op
+    | dot_expr DOT par_expr
+    | par_expr
+    ;
+
+par_expr:
+    LPAR expr RPAR
+    | name_expr
+    | par_expr LPAR RPAR
+    ;
+
+name_expr
+    :   NEW_WORD | BOOL | STRING | SMALL_NAME | CAP_NAME | SET | VAR_DEC | NUM | var | BOOL_VALUE
+    ;
 
 sequence
 	: LPAR expr DOT DOT expr RPAR
@@ -430,7 +480,7 @@ ARROW
 
 NEW_LINE
     : [\n\r]
-    | ';'[\n\r]
+    | ';'
     ;
 
 BEGIN_COMMENT

@@ -11,11 +11,11 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface SimpleLOOPVisitor<T> extends ParseTreeVisitor<T> {
 	/**
-	 * Visit a parse tree produced by {@link SimpleLOOPParser#simple_loop}.
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#simpleLoop}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSimple_loop(SimpleLOOPParser.Simple_loopContext ctx);
+	T visitSimpleLoop(SimpleLOOPParser.SimpleLoopContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SimpleLOOPParser#start_prog}.
 	 * @param ctx the parse tree
@@ -155,23 +155,89 @@ public interface SimpleLOOPVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPrint(SimpleLOOPParser.PrintContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpleLOOPParser#assigment}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAssigment(SimpleLOOPParser.AssigmentContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link SimpleLOOPParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitExpr(SimpleLOOPParser.ExprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpleLOOPParser#expr_prime}.
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#ternery_expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitExpr_prime(SimpleLOOPParser.Expr_primeContext ctx);
+	T visitTernery_expr(SimpleLOOPParser.Ternery_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#or_or_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOr_or_expr(SimpleLOOPParser.Or_or_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#and_and_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAnd_and_expr(SimpleLOOPParser.And_and_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#is_equal_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIs_equal_expr(SimpleLOOPParser.Is_equal_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#comp_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitComp_expr(SimpleLOOPParser.Comp_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#sn_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSn_expr(SimpleLOOPParser.Sn_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#md_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMd_expr(SimpleLOOPParser.Md_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#single_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSingle_expr(SimpleLOOPParser.Single_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#inneg_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInneg_expr(SimpleLOOPParser.Inneg_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#arr_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArr_expr(SimpleLOOPParser.Arr_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#dot_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDot_expr(SimpleLOOPParser.Dot_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#par_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPar_expr(SimpleLOOPParser.Par_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#name_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitName_expr(SimpleLOOPParser.Name_exprContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SimpleLOOPParser#sequence}.
 	 * @param ctx the parse tree

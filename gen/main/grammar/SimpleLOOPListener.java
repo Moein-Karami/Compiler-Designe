@@ -8,15 +8,15 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface SimpleLOOPListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link SimpleLOOPParser#simple_loop}.
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#simpleLoop}.
 	 * @param ctx the parse tree
 	 */
-	void enterSimple_loop(SimpleLOOPParser.Simple_loopContext ctx);
+	void enterSimpleLoop(SimpleLOOPParser.SimpleLoopContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SimpleLOOPParser#simple_loop}.
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#simpleLoop}.
 	 * @param ctx the parse tree
 	 */
-	void exitSimple_loop(SimpleLOOPParser.Simple_loopContext ctx);
+	void exitSimpleLoop(SimpleLOOPParser.SimpleLoopContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link SimpleLOOPParser#start_prog}.
 	 * @param ctx the parse tree
@@ -248,16 +248,6 @@ public interface SimpleLOOPListener extends ParseTreeListener {
 	 */
 	void exitPrint(SimpleLOOPParser.PrintContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpleLOOPParser#assigment}.
-	 * @param ctx the parse tree
-	 */
-	void enterAssigment(SimpleLOOPParser.AssigmentContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SimpleLOOPParser#assigment}.
-	 * @param ctx the parse tree
-	 */
-	void exitAssigment(SimpleLOOPParser.AssigmentContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link SimpleLOOPParser#expr}.
 	 * @param ctx the parse tree
 	 */
@@ -268,15 +258,135 @@ public interface SimpleLOOPListener extends ParseTreeListener {
 	 */
 	void exitExpr(SimpleLOOPParser.ExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpleLOOPParser#expr_prime}.
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#ternery_expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpr_prime(SimpleLOOPParser.Expr_primeContext ctx);
+	void enterTernery_expr(SimpleLOOPParser.Ternery_exprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SimpleLOOPParser#expr_prime}.
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#ternery_expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpr_prime(SimpleLOOPParser.Expr_primeContext ctx);
+	void exitTernery_expr(SimpleLOOPParser.Ternery_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#or_or_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterOr_or_expr(SimpleLOOPParser.Or_or_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#or_or_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitOr_or_expr(SimpleLOOPParser.Or_or_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#and_and_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterAnd_and_expr(SimpleLOOPParser.And_and_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#and_and_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitAnd_and_expr(SimpleLOOPParser.And_and_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#is_equal_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterIs_equal_expr(SimpleLOOPParser.Is_equal_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#is_equal_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitIs_equal_expr(SimpleLOOPParser.Is_equal_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#comp_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterComp_expr(SimpleLOOPParser.Comp_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#comp_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitComp_expr(SimpleLOOPParser.Comp_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#sn_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterSn_expr(SimpleLOOPParser.Sn_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#sn_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitSn_expr(SimpleLOOPParser.Sn_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#md_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterMd_expr(SimpleLOOPParser.Md_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#md_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitMd_expr(SimpleLOOPParser.Md_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#single_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterSingle_expr(SimpleLOOPParser.Single_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#single_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitSingle_expr(SimpleLOOPParser.Single_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#inneg_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterInneg_expr(SimpleLOOPParser.Inneg_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#inneg_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitInneg_expr(SimpleLOOPParser.Inneg_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#arr_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterArr_expr(SimpleLOOPParser.Arr_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#arr_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitArr_expr(SimpleLOOPParser.Arr_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#dot_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterDot_expr(SimpleLOOPParser.Dot_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#dot_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitDot_expr(SimpleLOOPParser.Dot_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#par_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterPar_expr(SimpleLOOPParser.Par_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#par_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitPar_expr(SimpleLOOPParser.Par_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#name_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterName_expr(SimpleLOOPParser.Name_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#name_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitName_expr(SimpleLOOPParser.Name_exprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link SimpleLOOPParser#sequence}.
 	 * @param ctx the parse tree

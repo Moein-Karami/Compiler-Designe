@@ -16,13 +16,13 @@ public class SimpleLOOPBaseListener implements SimpleLOOPListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSimple_loop(SimpleLOOPParser.Simple_loopContext ctx) { }
+	@Override public void enterSimpleLoop(SimpleLOOPParser.SimpleLoopContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSimple_loop(SimpleLOOPParser.Simple_loopContext ctx) { }
+	@Override public void exitSimpleLoop(SimpleLOOPParser.SimpleLoopContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -304,18 +304,6 @@ public class SimpleLOOPBaseListener implements SimpleLOOPListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssigment(SimpleLOOPParser.AssigmentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAssigment(SimpleLOOPParser.AssigmentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterExpr(SimpleLOOPParser.ExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -328,13 +316,157 @@ public class SimpleLOOPBaseListener implements SimpleLOOPListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpr_prime(SimpleLOOPParser.Expr_primeContext ctx) { }
+	@Override public void enterTernery_expr(SimpleLOOPParser.Ternery_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpr_prime(SimpleLOOPParser.Expr_primeContext ctx) { }
+	@Override public void exitTernery_expr(SimpleLOOPParser.Ternery_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterOr_or_expr(SimpleLOOPParser.Or_or_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitOr_or_expr(SimpleLOOPParser.Or_or_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAnd_and_expr(SimpleLOOPParser.And_and_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAnd_and_expr(SimpleLOOPParser.And_and_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIs_equal_expr(SimpleLOOPParser.Is_equal_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIs_equal_expr(SimpleLOOPParser.Is_equal_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterComp_expr(SimpleLOOPParser.Comp_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitComp_expr(SimpleLOOPParser.Comp_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSn_expr(SimpleLOOPParser.Sn_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSn_expr(SimpleLOOPParser.Sn_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMd_expr(SimpleLOOPParser.Md_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMd_expr(SimpleLOOPParser.Md_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSingle_expr(SimpleLOOPParser.Single_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSingle_expr(SimpleLOOPParser.Single_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterInneg_expr(SimpleLOOPParser.Inneg_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitInneg_expr(SimpleLOOPParser.Inneg_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterArr_expr(SimpleLOOPParser.Arr_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArr_expr(SimpleLOOPParser.Arr_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDot_expr(SimpleLOOPParser.Dot_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDot_expr(SimpleLOOPParser.Dot_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPar_expr(SimpleLOOPParser.Par_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPar_expr(SimpleLOOPParser.Par_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterName_expr(SimpleLOOPParser.Name_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitName_expr(SimpleLOOPParser.Name_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
