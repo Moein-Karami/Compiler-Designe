@@ -5,36 +5,36 @@ simpleLoop
     ;
 
 start_prog
-	: var_dec NEW_LINE+ start_prog
+	: var_dec comment? NEW_LINE+ start_prog
 	| comment NEW_LINE+ start_prog
-	| class_dec NEW_LINE+ prog_body
+	| class_dec comment? NEW_LINE+ prog_body
 	| NEW_LINE+ start_prog
-	| var_dec
+	| var_dec comment?
 	| comment
 	| class_dec
 	|
 	;
 
 var_dec
-	: (INT | BOOL | CAP_NAME | set_dec | func_var) (LBRACK expr RBRACK)* SMALL_NAME {System.out.println("VarDec : " + $SMALL_NAME.text);} (COMMA SMALL_NAME {System.out.println("VarDec : " + $SMALL_NAME.text);} )*
+	: (INT | BOOL | CAP_NAME | set_dec | func_var) (LBRACK expr RBRACK)* SMALL_NAME {System.out.println("VarDec : " + $SMALL_NAME.text);} (COMMA SMALL_NAME {System.out.println("VarDec : " + $SMALL_NAME.text);} comment?)* comment?
 	;
 
 comment
 	: SHARP_SIGN .*
-	| BEGIN_COMMENT NEW_LINE+ .* NEW_LINE+ END_COMMENT
+	| BEGIN_COMMENT NEW_LINE* (~(BEGIN_COMMENT | END_COMMENT))* NEW_LINE* END_COMMENT
 	;
 
 class_dec
-	: CLASS CAP_NAME {System.out.println("ClassDec : " + $CAP_NAME.text); String class_before = $CAP_NAME.text;} (LT CAP_NAME  {System.out.println("Inheritance : " + class_before + " < " + $CAP_NAME.text );})? NEW_LINE* LCURL (NEW_LINE+ begin_class)? NEW_LINE+ RCURL
-	| CLASS CAP_NAME {System.out.println("ClassDec : " + $CAP_NAME.text); String class_before = $CAP_NAME.text;} (LT CAP_NAME  {System.out.println("Inheritance : " + class_before + " < " + $CAP_NAME.text );})? NEW_LINE* (comment | ACCESS_TYPE var_dec | init_dec | func_dec)?
+	: CLASS CAP_NAME {System.out.println("ClassDec : " + $CAP_NAME.text); String class_before = $CAP_NAME.text;} (LT CAP_NAME  {System.out.println("Inheritance : " + class_before + " < " + $CAP_NAME.text );})? NEW_LINE* LCURL (NEW_LINE+ begin_class comment?)? NEW_LINE+ RCURL
+	| CLASS CAP_NAME {System.out.println("ClassDec : " + $CAP_NAME.text); String class_before = $CAP_NAME.text;} (LT CAP_NAME  {System.out.println("Inheritance : " + class_before + " < " + $CAP_NAME.text );})? NEW_LINE* (comment | ACCESS_TYPE var_dec | init_dec | func_dec)? comment?
 	;
 
 prog_body
-	: class_dec NEW_LINE+ prog_body
-	| comment NEW_LINE+ prog_body
-	| NEW_LINE+ prog_body
-	| class_dec
-	| comment
+	: class_dec NEW_LINE+ prog_body comment?
+	| comment NEW_LINE+ prog_body comment?
+	| NEW_LINE+ prog_body comment?
+	| class_dec comment?
+	| comment comment?
 	|
 	;
 
@@ -43,78 +43,84 @@ set_dec
 	;
 
 set_op
-	: SET DOT NEW_WORD {System.out.println("NEW");} LPAR func_input? RPAR
+	: SET DOT NEW_WORD {System.out.println("NEW");} LPAR loop_arr RPAR
 	| var DOT ADD {System.out.println("ADD");} LPAR expr RPAR
-	| var DOT MERGE {System.out.println("MERGE");} LPAR expr RPAR
+	| var DOT MERGE {System.out.println("MERGE");} LPAR loop_arr RPAR
 	| var DOT INCLUDE {System.out.println("INCLUDE");} LPAR expr RPAR
 	| var DOT DELETE {System.out.println("DELETE");} LPAR expr RPAR
 	;
 
+loop_arr
+    : LPAR loop_arr RPAR
+    | func_input?
+    ;
+
 func_var
-	: FPTR LT (VOID | INT | BOOL | CAP_NAME | set_dec | func_var) (COMMA (VOID | INT | BOOL | CAP_NAME | set_dec | func_var))* ARROW (VOID | INT | BOOL | CAP_NAME | set_dec) GT
+	: FPTR LT (VOID | INT | BOOL | CAP_NAME | set_dec | func_var) (COMMA (VOID | INT | BOOL | CAP_NAME | set_dec | func_var))* ARROW (VOID | INT | BOOL | CAP_NAME | set_dec | func_var) GT comment?
 	;
 
 begin_class
-	: comment NEW_LINE+ begin_class
-	| ACCESS_TYPE var_dec NEW_LINE+ begin_class
-	| init_dec NEW_LINE+ begin_class
-	| func_dec NEW_LINE+ begin_class
+	: comment NEW_LINE+ begin_class comment?
+	| ACCESS_TYPE var_dec NEW_LINE+ begin_class comment?
+	| init_dec NEW_LINE+ begin_class comment?
+	| func_dec NEW_LINE+ begin_class comment?
 	| comment
-	| ACCESS_TYPE var_dec
-	| init_dec
-	| func_dec
+	| ACCESS_TYPE var_dec comment?
+	| init_dec comment?
+	| func_dec comment?
 	;
 
 init_dec
-	: ACCESS_TYPE INIT LPAR argumants? RPAR NEW_LINE* LCURL (NEW_LINE+ init_begin)? NEW_LINE+ RCURL
+	: ACCESS_TYPE INIT LPAR argumants? RPAR NEW_LINE* LCURL (NEW_LINE+ init_begin)? NEW_LINE+ RCURL |
+	    ACCESS_TYPE INIT LPAR argumants? RPAR NEW_LINE+ line_command
 	;
 
 init_begin
-	: comment NEW_LINE+ init_begin
-    | var_dec NEW_LINE+ init_begin
-    | scop_body
-    | comment
-    | var_dec
+	: comment NEW_LINE+ init_begin comment?
+    | var_dec NEW_LINE+ init_begin comment?
+    | scop_body comment?
+    | comment comment?
+    | var_dec comment?
     ;
 
 func_dec
-	: ACCESS_TYPE (VOID | INT | BOOL | set_dec | CAP_NAME) SMALL_NAME {System.out.println("MethodDec : " + $SMALL_NAME.text);} LPAR argumants? RPAR NEW_LINE* LCURL (NEW_LINE+ func_begin)? NEW_LINE+ RCURL
-	| ACCESS_TYPE (VOID | INT | BOOL | set_dec | CAP_NAME) SMALL_NAME {System.out.println("MethodDec : " + $SMALL_NAME.text);} LPAR argumants? RPAR NEW_LINE+ line_command
+	: ACCESS_TYPE (VOID | INT | BOOL | set_dec | CAP_NAME | func_var)? (LBRACK expr RBRACK)* SMALL_NAME {System.out.println("MethodDec : " + $SMALL_NAME.text);} LPAR argumants? RPAR NEW_LINE* LCURL (NEW_LINE+ func_begin)? NEW_LINE+ RCURL
+	| ACCESS_TYPE (VOID | INT | BOOL | set_dec | CAP_NAME | func_var)? (LBRACK expr RBRACK)* SMALL_NAME {System.out.println("MethodDec : " + $SMALL_NAME.text);} LPAR argumants? RPAR NEW_LINE+ line_command
 	;
 
 argumants
-	: (INT | BOOL | CAP_NAME | set_dec | func_var) (LBRACK expr RBRACK)* SMALL_NAME {System.out.println("ArgumentDec : " + $SMALL_NAME.text);} (COMMA argumants)?
+	: (INT | BOOL | CAP_NAME | set_dec | func_var | VOID) (LBRACK expr RBRACK)* SMALL_NAME {System.out.println("ArgumentDec : " + $SMALL_NAME.text);} (COMMA argumants)?
 	| default_argumants
 	;
 
 default_argumants
-	: INT SMALL_NAME EQUAL {System.out.println("ArgumentDec : " + $SMALL_NAME.text);} expr (COMMA default_argumants)?
-	| BOOL SMALL_NAME EQUAL {System.out.println("ArgumentDec : " + $SMALL_NAME.text);} expr (COMMA default_argumants)?
+	: (INT | BOOL | CAP_NAME | set_dec | func_var | VOID) (LBRACK expr RBRACK)* SMALL_NAME EQUAL {System.out.println("ArgumentDec : " + $SMALL_NAME.text);} expr (COMMA default_argumants)?
+	| (INT | BOOL | CAP_NAME | set_dec | func_var | VOID) (LBRACK expr RBRACK)* SMALL_NAME EQUAL {System.out.println("ArgumentDec : " + $SMALL_NAME.text);} expr (COMMA default_argumants)?
 	;
 
 func_begin
-	: comment NEW_LINE+ func_begin
-	| var_dec NEW_LINE+ func_begin
-	| scop_body
+	: comment NEW_LINE+ func_begin comment?
+	| var_dec NEW_LINE+ func_begin comment?
+	| scop_body comment?
 	| comment
-	| var_dec
+	| var_dec comment?
 	;
 
 scop_body
-	: comment NEW_LINE+ scop_body
-	| line_command NEW_LINE+ scop_body
-	| line_command
+	: comment NEW_LINE+ scop_body comment?
+	| line_command NEW_LINE+ scop_body comment?
+	| line_command comment?
 	| comment
 	;
 
 line_command
-	: if_state
-	| for_loop
-	| print
-	| my_return
-	| func_call
-	| set_op
-	| expr
+	: if_state comment?
+	| for_loop comment?
+	| print comment?
+	| my_return comment?
+	| func_call comment?
+	| set_op comment?
+	| expr comment?
 	;
 
 func_call
@@ -211,7 +217,7 @@ print
 //
 
 expr
-    : expr EQUAL ternery_expr {System.out.println("Operator : =");}
+    : ternery_expr EQUAL expr {System.out.println("Operator : =");}
     | ternery_expr
     ;
 
@@ -284,7 +290,7 @@ par_expr:
     ;
 
 name_expr
-    :   NEW_WORD | BOOL | STRING | SMALL_NAME | CAP_NAME | SET | VAR_DEC | NUM | var | BOOL_VALUE
+    :   NEW_WORD | BOOL | STRING | SMALL_NAME | CAP_NAME | SET | VAR_DEC | NUM | var | BOOL_VALUE | func_var
     ;
 
 sequence
@@ -340,6 +346,10 @@ const_expr_prime
 
 WS:
     [ \t]-> skip
+    ;
+
+ONELINE_COMMENT
+    :   '#' ~[\r\n]* -> skip
     ;
 
 RETURN
@@ -445,7 +455,7 @@ CLASS
 	: 'class'
 	;
 SELF_SMALL_NAME
-	: 'self.'([a-z]'_')([a-z]|[0-9]|'_')*
+	: 'self.'([a-z]'_')([a-z]|[0-9]|'_'| [A-Z])*
 	;
 
 ACCESS_TYPE
@@ -518,7 +528,7 @@ SET
 	;
 
 CAP_NAME:
-	[A-Z]([a-z]|[0-9]|'_')*
+	[A-Z]([a-z]|[0-9]|'_' | [A-Z])*
 	;
 
 NUM:
@@ -539,7 +549,7 @@ DELETE
 	;
 
 SMALL_NAME:
-	([a-z]|'_')([a-z]|[0-9]|'_')*
+	([a-z]|'_')([a-z]|[0-9]|'_'| [A-Z])*
 	;
 
 AND_AND:
@@ -549,3 +559,5 @@ AND_AND:
 OR_OR:
 	'||'
 	;
+
+Unknown :  ;
