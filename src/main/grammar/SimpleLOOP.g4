@@ -56,7 +56,7 @@ loop_arr
     ;
 
 func_var
-	: FPTR LT (VOID | INT | BOOL | CAP_NAME | set_dec | func_var) (COMMA (VOID | INT | BOOL | CAP_NAME | set_dec | func_var))* ARROW (VOID | INT | BOOL | CAP_NAME | set_dec | func_var) GT comment?
+	: FPTR LT (VOID | ((INT | BOOL | CAP_NAME | set_dec | func_var) (LBRACK expr RBRACK)*)) (COMMA (VOID | ((INT | BOOL | CAP_NAME | set_dec | func_var) (LBRACK expr RBRACK)*)))* ARROW (VOID | ((INT | BOOL | CAP_NAME | set_dec | func_var) (LBRACK expr RBRACK)*) ) GT comment?
 	;
 
 begin_class

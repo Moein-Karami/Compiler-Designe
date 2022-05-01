@@ -59,6 +59,12 @@ public interface SimpleLOOPVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSet_op(SimpleLOOPParser.Set_opContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SimpleLOOPParser#loop_arr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLoop_arr(SimpleLOOPParser.Loop_arrContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SimpleLOOPParser#func_var}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

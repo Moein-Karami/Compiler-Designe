@@ -88,6 +88,16 @@ public interface SimpleLOOPListener extends ParseTreeListener {
 	 */
 	void exitSet_op(SimpleLOOPParser.Set_opContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link SimpleLOOPParser#loop_arr}.
+	 * @param ctx the parse tree
+	 */
+	void enterLoop_arr(SimpleLOOPParser.Loop_arrContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SimpleLOOPParser#loop_arr}.
+	 * @param ctx the parse tree
+	 */
+	void exitLoop_arr(SimpleLOOPParser.Loop_arrContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link SimpleLOOPParser#func_var}.
 	 * @param ctx the parse tree
 	 */
