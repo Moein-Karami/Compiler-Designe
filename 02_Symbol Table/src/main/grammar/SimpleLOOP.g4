@@ -144,31 +144,37 @@ printStatement
     PRINT LPAR expression RPAR;
 
 //todo
-methodCallStmt
+methodCallStmt returns [MethodCallStmt methodCallStmt_ret]
     :
-    accessExpression (DOT (INITIALIZE | identifier))*
+    ae = accessExpression {ObjectMemberAccess oma($ae.accessExpression_ret);}
+    (DOT (INITIALIZE | identifier))*
     ((LPAR methodArgs RPAR));
 
 //todo
-returnStatement
+returnStatement returns [ReturnStmt returnStatement_ret]
     :
-    RETURN (expression)?;
+    RETURN {$returnStatement_ret = new ReturnStmt(); $returnStatement.setLine($RETURN.getLine());}
+    (ex = expression {{$returnStatement_ret.setReturnedExpr($ex.expression_ret);}})?;
 
 //todo
-assignmentStatement
+assignmentStatement returns [AssignmentStmt assignmentStatement_ret]
     :
-    orExpression ASSIGN expression;
+    oe = orExpression ASSIGN ex = expression{$assignmentStatement_ret = new AssignmentStmt($oe.orExpression_ret, $ex.expression_ret);
+    $assignmentStatement_ret.setLine($ASSIGN.getLine());};
 
-//todo
+//todo???????????????????????????????????????????
 loopStatement
     :
     ((accessExpression) | (LPAR expression DOT DOT expression RPAR)) DOT EACH DO BAR identifier BAR
     body;
 
 //todo
-expression
-    :
-    ternaryExpression (ASSIGN expression)? (DOT inc=INCLUDE LPAR oe=orExpression RPAR)?;
+expression returns [Expression expression_ret]
+    : te = ternaryExpression {$expression_ret = $te.ternaryExpression_ret;}
+    (ASSIGN ex = expression {$expression_ret = new BinaryExpression($expression_ret, $ex.expression_ret, BinaryOperator.assign);
+    $expression_ret.setLine($ASSIGN.getLine());})?
+    (DOT inc=INCLUDE LPAR oe = orExpression RPAR {$expression_ret = new SetInclude($expression_ret, oe.orExpression_ret);
+    $expression_ret.setLine($INCLUDE.getLine());})?;
 
 //todo
 ternaryExpression returns [Expression ternaryExpression_ret]
