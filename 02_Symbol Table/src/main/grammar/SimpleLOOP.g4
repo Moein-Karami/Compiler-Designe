@@ -117,38 +117,42 @@ varDecStatement
     type identifier (COMMA identifier)*;
 
 //todo
-ifStatement
+ifStatement returns [Conditional]
     :
     IF condition body
     (elsifStatement)*
     (elseStatement)?;
 
 //todo
-elsifStatement
+elsifStatement returns [ElsifStmt elsifStatement_ret]
     :
-     NEWLINE* ELSIF condition body;
+     NEWLINE* ELSIF cn = condition b = body {$elsifStatement_ret = new ElsifStmt($cn.condition_ret, $b.body_ret);
+     $elsifStatement_ret.setLine($ELSIF.getLine());};
 
 //todo
-condition
+condition returns [Expression condition_ret]
     :
-    (LPAR expression RPAR) | (expression);
+    (LPAR ex = expression {$condition_ret = $ex.expression_ret;} RPAR) | (ex2 = expression {$condition_ret = ex2.expression_ret});
 
 //todo
-elseStatement
+elseStatement returns [BlockStmt elseStatement_ret]
     :
-    NEWLINE* ELSE body;
+    NEWLINE* ELSE b = body {$elseStatement_ret = $b.body_ret;};
 
 //todo
-printStatement
+printStatement returns [PrintStmt printStatement_ret]
     :
-    PRINT LPAR expression RPAR;
+    PRINT LPAR ex = expression {$printStatement_ret = new PrintStmt($ex.expression_ret);
+    $printStatement_ret.setLine($PRINT.getLine());} RPAR;
 
 //todo
 methodCallStmt returns [MethodCallStmt methodCallStmt_ret]
-    :
-    ae = accessExpression {ObjectMemberAccess oma($ae.accessExpression_ret);}
-    (DOT (INITIALIZE | identifier))*
-    ((LPAR methodArgs RPAR));
+    : {Expression ex;}
+    ae = accessExpression {ex = $ae;}
+    (DOT (INITIALIZE {ex = new ObjectMemberAccess(ex, new Identifier($INITIALIZE.getText()));} | id = identifier
+    {ex = new ObjectMemberAccess(ex, $id.identifier_ret);}))*
+    ((LPAR ma = methodArgs {$methodCallStmt_ret = new MethodCallStmt(new MethodCall(ex, $ma.methodArgs));
+    $methodCallStmt_ret.setLine($LPAR.getLine());} RPAR));
 
 //todo
 returnStatement returns [ReturnStmt returnStatement_ret]
@@ -162,10 +166,11 @@ assignmentStatement returns [AssignmentStmt assignmentStatement_ret]
     oe = orExpression ASSIGN ex = expression{$assignmentStatement_ret = new AssignmentStmt($oe.orExpression_ret, $ex.expression_ret);
     $assignmentStatement_ret.setLine($ASSIGN.getLine());};
 
-//todo???????????????????????????????????????????
-loopStatement
-    :
-    ((accessExpression) | (LPAR expression DOT DOT expression RPAR)) DOT EACH DO BAR identifier BAR
+//todo
+loopStatement returns [EachStmt loopStatement_ret]
+    :{Expression ex;}
+    ((ae = accessExpression{ex = $ae.accessExpression_ret;}) | (LPAR ex1 = expression DOT DOT ex2 = expression {ex = new RangeExpression($ex1.expression_ret, $ex2.expression_ret);}
+     RPAR)) DOT EACH DO BAR id = identifier {$loopStatement_ret = new EachStmt($id.identifier_ret, ex); $loopStatement_ret.setLine($EACH.getLine());} BAR
     body;
 
 //todo
