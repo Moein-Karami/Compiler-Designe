@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class ArrayType extends Type {
     private Type elementType;
-    private ArrayList<Integer> dimensions;
+    private ArrayList<Expression> dimensions;
 
     public ArrayType(Type elementType, ArrayList<Integer> dimensions) {
         this.elementType = elementType;

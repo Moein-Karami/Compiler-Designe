@@ -10,6 +10,10 @@ public class ConstructorDeclaration extends MethodDeclaration{
     }
 
     @Override
+    public Identifier getMethodName() {
+        return new Identifier("initialize");
+    }
+    @Override
     public String toString() {
         return "ConstructorDeclaration";
     }
