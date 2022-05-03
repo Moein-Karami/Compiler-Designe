@@ -58,70 +58,78 @@ methodBody
     (LBRACE NEWLINE+ (varDecStatement NEWLINE+)* (singleStatement NEWLINE+)* RBRACE)
     | ((varDecStatement) | (s=singleStatement));
 
-//todo
-methodArgsDec
-    : LPAR (argDec ((ASSIGN orExpression) | (COMMA argDec)*) (COMMA arg=argDec ASSIGN orExpression)*)? RPAR ;
+//todo???????????????????????????????????????????? fek konam ghalate
+methodArgsDec returns [ArrayList<VariableDeclaration> methodArgsDec_ret]
+    : {$methodArgsDec_ret = new ArrayList<VariableDeclaration>();}
+    LPAR (ad = argDec {$methodArgsDec_ret.add($ad.argDec_ret);} ((ASSIGN orExpression) | (COMMA ad2 = argDec
+    {$methodArgsDec_ret.add($ad2.argDec_ret);} )*) (COMMA arg = argDec {$methodArgsDec_ret.add($arg.argDec_ret);} ASSIGN orExpression)*)? RPAR ;
 
 //todo
-argDec
-    : type identifier;
+argDec returns [VariableDeclaration argDec_ret]
+    : tp = type id = identifier {$argDec_ret = new VariableDeclaration($id.identifier_ret, $tp.type_ret);};
 
 //todo
-methodArgs
+methodArgs returns [ArrayList<Expression> methodArgs_ret]
+    :{$methodArgs_ret = new ArrayList<Expression>();}
+    (e1 = expression{$methodArgs_ret.add($e1.expression_ret);} (COMMA e2 = expression
+    {$methodArgs_ret.add($e2.expression_ret);})*)?;
+
+//todo
+body returns [Statement body_ret]
     :
-    (expression (COMMA e2=expression)*)?;
+     (bs = blockStatement {$body_ret = $bs.blockStatement_ret;}| (NEWLINE+ ss = singleStatement {$body_ret = $ss.singleStatement_ret;}));
 
 //todo
-body
-    :
-     (blockStatement | (NEWLINE+ singleStatement));
+blockStatement returns [BlockStmt blockStatement_ret]
+    : {$blockStatement_ret = new BlockStmt();}
+    LBRACE NEWLINE+ (ss = singleStatement {$blockStatement_ret.addStatement($ss.singleStatement_ret);} NEWLINE+)* RBRACE;
 
 //todo
-blockStatement
+singleStatement returns [Statement singleStatement_ret]
     :
-    LBRACE NEWLINE+ (singleStatement NEWLINE+)* RBRACE;
-
-//todo
-singleStatement
-    :
-    ifStatement
-    | printStatement
-    | methodCallStmt
-    | returnStatement
-    | assignmentStatement
-    | loopStatement
-    | addStatement
-    | mergeStatement
-    | deleteStatement
+    if = ifStatement {$singleStatement_ret = $if.ifStatement_ret;}
+    | pr = printStatement {$singleStatement_ret = $pr.printStatement_ret;}
+    | mc = methodCallStmt {$singleStatement_ret = $mc.methosCallStmt_ret;}
+    | rs = returnStatement {$singleStatement_ret = $rs.returnStatement_ret;}
+    | as = assignmentStatement {$singleStatement_ret = $as.assignmentStatement_ret;}
+    | ls = loopStatement {$singleStatement_ret = $ls.loopStatement_ret;}
+    | ad = addStatement {$singleStatement_ret = $ad.addStatement_ret;}
+    | ms = mergeStatement {$singleStatement_ret = $ms.mergeStatement_ret;}
+    | ds = deleteStatement {$singleStatement_ret = $ds.deleteStatemetn_ret;}
     ;
 
 //todo
-addStatement
+addStatement returns [SetAdd addStatement_ret]
     :
-    expression DOT ADD LPAR orExpression RPAR;
+    ex = expression DOT ADD LPAR oe = orExpression RPAR {$addStatement_ret = new SetAdd($ex.expression_ret, $oe.orExpression_ret);
+    $addStatement_ret.setLine($ADD.getLine());};
 
 //todo
-mergeStatement
-    :
-    expression DOT MERGE LPAR orExpression
-    (COMMA orExpression)* RPAR;
+mergeStatement returns [SetMerge mergeStatement_ret]
+    :{ArrayList<Expression> tmp = new ArrayList<Expression>();}
+    ex = expression DOT MERGE LPAR ox = orExpression {tmp.add($ox.orExpression_ret);}
+    (COMMA oe = orExpression {tmp.add($oe.orExpression_ret);})* RPAR {$mergeStatement_ret = new SetMerge($ex.expression_ret,
+    tmp); $mergeStatement.setLine($MERGE.getLine());};
 
 //todo
-deleteStatement
+deleteStatement returns [SetDelete deleteStatement_ret]
     :
-    expression DOT DELETE LPAR orExpression RPAR;
+    ex = expression DOT DELETE LPAR oe = orExpression RPAR {$deleteStatement_ret = new SetDelete($ex.expression_ret,
+    $oe.orExpression_ret); $deleteStatement_ret.setLine($DELETE.getLine());};
 
 //todo
-varDecStatement
-    :
-    type identifier (COMMA identifier)*;
+varDecStatement returns [ArrayList<VariableDeclaration> varDecStatement_ret]
+    : {$varDecStatement_ret = new ArrayList<VariableDeclaration>();}
+    tp = type id = identifier {$varDecStatement_ret.add(new VariableDeclaration($id.identifier_ret, $tp.type_ret);}
+    (COMMA id2 = identifier {$varDexStatement_ret.add(newVariableDeclaration($id2.identifier_ret, $tp.type_ret);})*;
 
 //todo
-ifStatement returns [Conditional]
+ifStatement returns [ConditionalStmt ifStatement_ret]
     :
-    IF condition body
-    (elsifStatement)*
-    (elseStatement)?;
+    IF cn = condition bd = body {$ifStatement_ret = new ConditionalStmt($cn.condition_ret, $bd.body_ret);
+    $ifStatement_ret.setLine($IF.getLine());}
+    (eif = elsifStatement {$ifStatement_ret.addElsif($eif.elsifStatement_ret);})*
+    (es = elseStatement {$ifStatement_ret.setElseBody($es.elseStatement_ret);})?;
 
 //todo
 elsifStatement returns [ElsifStmt elsifStatement_ret]
