@@ -35,28 +35,41 @@ program returns[Program programRet]:
     (c = classDeclaration NEWLINE+ {$programRet.addClass($c.classDeclarationRet);})*;
 
 //todo
-constructor: PUBLIC init = INITIALIZE
-      methodArgsDec NEWLINE* methodBody;
+constructor returns [ConstructorDeclaration constructor_ret]
+	:{$constructor_ret = new ConstructorDeclaration(); $constructor_ret.setPrivate(FALSE);} PUBLIC init = INITIALIZE
+	{$constructor_ret.setLine($INITIALIZE.getLine()); $constructor_ret.setMethodName(new Identifier($INITIALIZE.getText());}
+	ma = methodArgsDec NEWLINE* mb = methodBody {$constructor_ret.setArgs($ma.methodArgsDec);
+	$constructor_ret.setBody($mb.methodBody_ret.getBody()); $constructor_ret.setLocalVars($mb.getLocalVars());};
       
 //todo
-classDeclaration
-    : CLASS class_identifier (LESS_THAN class_identifier)?
-    NEWLINE* ((LBRACE NEWLINE+ (field_decleration NEWLINE+)+ RBRACE) | (field_decleration));
+classDeclaration returns [ClassDeclaration classDeclaration_ret]
+    : CLASS ci = class_identifier{$classDeclaration_ret = newClassDeclaration($ci.class_identifier_ret);
+    $classDeclaration_ret.setLine($CLASS.getLine());} (LESS_THAN pci = class_identifier
+    {$classDeclaration_ret.setParentClassName($pci.class_identifier_ret);})?
+    NEWLINE* ((LBRACE NEWLINE+ (fd = field_decleration {$classDeclaration_ret.addField($fd.field_decleration_ret);}
+    NEWLINE+)+ RBRACE) | (fd2 = field_decleration {$classDeclaration_ret.addField($fd2.field_decleration_ret);}));
 
 //todo
-field_decleration
+field_decleration returns [FieldDeclaration field_decleration_ret]
     :
-    ((( (PUBLIC | PRIVATE) (varDecStatement | method)) | constructor));
+    ((({boolean bl;} (PUBLIC {bl = FALSE;}| PRIVATE{bl = TRUE}) {Declaration dl;}(vd = varDecStatement {dl = $vd.varDecStatement_ret;}|
+    me = method {dl = $me.method_ret;}) {$field_decleration_ret = new FieldDeclaration(dl, bl);}) | cn = constructor
+    {$field_decleration_ret = $cn.constructor_ret;}));
 
 //todo
-method
-    : (type | VOID) identifier methodArgsDec NEWLINE* methodBody;
+method returns [MethodDeclaration method_ret]
+    : {Type tp;}(tmp = type {tp = $tmp.type_ret;}|
+    VOID {tp = new Type($VOID.gitText());}) id = identifier ma = methodArgsDec NEWLINE* mb = methodBody
+    {$method_ret = $mb.methodBody_ret; $method_ret.setMethodName($id.identifier_ret); $method_ret.setReturnType(tp);
+    $method_ret.setLine($id.identifier_ret.getLine()); $method_ret.setArgs($ma.methodArgsDec);};
 
 //todo
-methodBody
-    :
-    (LBRACE NEWLINE+ (varDecStatement NEWLINE+)* (singleStatement NEWLINE+)* RBRACE)
-    | ((varDecStatement) | (s=singleStatement));
+methodBody returns [MethodDeclaration methodBody_ret]
+    : {$methodBody_ret = new MethodDeclaration();}
+    (LBRACE NEWLINE+ (vd = varDecStatement {$methodBody_ret.addLocalVar($vd.varDecStatement_ret);} NEWLINE+)*
+    (ss = singleStatement {$methodBody_ret.addBodyStatement($ss.singleStatement_ret);} NEWLINE+)* RBRACE)
+    | {$methodBody_ret = new MethodDeclaration();} ((vd = varDecStatement {$methodBody_ret.addLocalVar($vd.varDecStatement_ret);}) |
+    (ss = singleStatement {$methodBody_ret.addBodyStatement($ss.singleStatement_ret);}));
 
 //todo???????????????????????????????????????????? fek konam ghalate
 methodArgsDec returns [ArrayList<VariableDeclaration> methodArgsDec_ret]
