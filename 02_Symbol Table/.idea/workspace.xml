@@ -2,28 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e0173348-4689-4780-8d23-8f16b0f92db1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/antlr_4_9_2_complete.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/antlr_4_9_2_complete.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/ast/nodes/declaration/classDec/classMembersDec/ConstructorDeclaration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ast/nodes/declaration/classDec/classMembersDec/ConstructorDeclaration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/ast/types/array/ArrayType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ast/types/array/ArrayType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/main/SimpleLOOPCompiler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/main/SimpleLOOPCompiler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/main/grammar/SimpleLOOP.g4" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/main/grammar/SimpleLOOP.g4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/main/visitor/name/ASTTreePrinter.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/main/visitor/name/ASTTreePrinter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/SimpleLOOPCompiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/SimpleLOOPCompiler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/grammar/SimpleLOOP.g4" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/grammar/SimpleLOOP.g4" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/visitor/IVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/visitor/IVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parsers/SimpleLOOP.interp" beforeDir="false" afterPath="$PROJECT_DIR$/src/parsers/SimpleLOOP.interp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parsers/SimpleLOOP.tokens" beforeDir="false" afterPath="$PROJECT_DIR$/src/parsers/SimpleLOOP.tokens" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parsers/SimpleLOOPBaseListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parsers/SimpleLOOPBaseListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parsers/SimpleLOOPBaseVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parsers/SimpleLOOPBaseVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parsers/SimpleLOOPLexer.interp" beforeDir="false" afterPath="$PROJECT_DIR$/src/parsers/SimpleLOOPLexer.interp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parsers/SimpleLOOPLexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parsers/SimpleLOOPLexer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parsers/SimpleLOOPLexer.tokens" beforeDir="false" afterPath="$PROJECT_DIR$/src/parsers/SimpleLOOPLexer.tokens" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parsers/SimpleLOOPListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parsers/SimpleLOOPListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/visitor/name/ASTTreePrinter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/visitor/name/ASTTreePrinter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/parsers/SimpleLOOPParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parsers/SimpleLOOPParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parsers/SimpleLOOPVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parsers/SimpleLOOPVisitor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,5 +64,16 @@
       <updated>1651664236036</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

@@ -29,26 +29,30 @@ public class ASTTreePrinter extends Visitor<Void> {
         return null;
     }
     @Override
-    public Void visit(ClassDeclaration classDeclaration) {
-        //todo
+    public Void visit(ClassDeclaration classDeclaration){
+        messagePrinter(classDeclaration.getLine(), classDeclaration.toString());
+        for (FieldDeclaration fields : classDeclaration.getFields())
+            fields.accept(this);
+        for (MethodDeclaration methods: classDeclaration.getMethods())
+            methods.accept(this);
         return null;
     }
 
     @Override
     public Void visit(ConstructorDeclaration constructorDeclaration) {
-        //todo
+        messagePrinter(constructorDeclaration.getLine(), constructorDeclaration.toString());
         return null;
     }
 
     @Override
     public Void visit(MethodDeclaration methodDeclaration) {
-        //todo
+        messagePrinter(methodDeclaration.getLine(), methodDeclaration.toString());
         return null;
     }
 
     @Override
     public Void visit(FieldDeclaration fieldDeclaration) {
-        //todo
+        messagePrinter(fieldDeclaration.getLine(), fieldDeclaration.toString());
         return null;
     }
 

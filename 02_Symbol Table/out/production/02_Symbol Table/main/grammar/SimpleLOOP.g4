@@ -85,6 +85,7 @@ field_decleration returns [Declaration field_decleration_ret]
         ArrayList<VariableDeclaration> var_all = $vd.varDecStatement_ret;
         dl = var_all.get(0);
         $field_decleration_ret = new FieldDeclaration(dl, bl);
+        $field_decleration_ret.setLine(dl.getLine());
     }|
     me = method {$field_decleration_ret = $me.method_ret;})) | cn = constructor
     {$field_decleration_ret = $cn.constructor_ret;}) NEWLINE+;
@@ -173,9 +174,20 @@ deleteStatement returns [SetDelete deleteStatement_ret]
 //todo
 varDecStatement returns [ArrayList<VariableDeclaration> varDecStatement_ret]
     : {$varDecStatement_ret = new ArrayList<VariableDeclaration>();}
-    tp = type id = identifier {$varDecStatement_ret.add(new VariableDeclaration($id.identifier_ret, $tp.type_ret));}
-    (COMMA id2 = identifier {$varDecStatement_ret.add(new VariableDeclaration($id2.identifier_ret, $tp.type_ret));})*;
-
+    tp = type id = identifier
+    {
+        VariableDeclaration tmp1;
+        tmp1 = new VariableDeclaration($id.identifier_ret, $tp.type_ret);
+        tmp1.setLine($id.identifier_ret.getLine());
+        $varDecStatement_ret.add(tmp1);
+   }
+    (COMMA id2 = identifier {
+        VariableDeclaration tmp2;
+        tmp2 = new VariableDeclaration($id.identifier_ret, $tp.type_ret);
+        tmp2.setLine($id.identifier_ret.getLine());
+        $varDecStatement_ret.add(tmp2);
+    }
+    )*;
 //todo
 ifStatement returns [ConditionalStmt ifStatement_ret]
     :

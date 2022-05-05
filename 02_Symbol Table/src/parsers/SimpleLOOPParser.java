@@ -739,6 +739,7 @@ public class SimpleLOOPParser extends Parser {
 					        ArrayList<VariableDeclaration> var_all = ((Field_declerationContext)_localctx).vd.varDecStatement_ret;
 					        dl = var_all.get(0);
 					        ((Field_declerationContext)_localctx).field_decleration_ret =  new FieldDeclaration(dl, bl);
+					        _localctx.field_decleration_ret.setLine(dl.getLine());
 					    
 					}
 					break;
@@ -2041,7 +2042,12 @@ public class SimpleLOOPParser extends Parser {
 			((VarDecStatementContext)_localctx).tp = type();
 			setState(441);
 			((VarDecStatementContext)_localctx).id = identifier();
-			_localctx.varDecStatement_ret.add(new VariableDeclaration(((VarDecStatementContext)_localctx).id.identifier_ret, ((VarDecStatementContext)_localctx).tp.type_ret));
+
+			        VariableDeclaration tmp1;
+			        tmp1 = new VariableDeclaration(((VarDecStatementContext)_localctx).id.identifier_ret, ((VarDecStatementContext)_localctx).tp.type_ret);
+			        tmp1.setLine(((VarDecStatementContext)_localctx).id.identifier_ret.getLine());
+			        _localctx.varDecStatement_ret.add(tmp1);
+			   
 			setState(449);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -2052,7 +2058,12 @@ public class SimpleLOOPParser extends Parser {
 				match(COMMA);
 				setState(444);
 				((VarDecStatementContext)_localctx).id2 = identifier();
-				_localctx.varDecStatement_ret.add(new VariableDeclaration(((VarDecStatementContext)_localctx).id2.identifier_ret, ((VarDecStatementContext)_localctx).tp.type_ret));
+
+				        VariableDeclaration tmp2;
+				        tmp2 = new VariableDeclaration(((VarDecStatementContext)_localctx).id.identifier_ret, ((VarDecStatementContext)_localctx).tp.type_ret);
+				        tmp2.setLine(((VarDecStatementContext)_localctx).id.identifier_ret.getLine());
+				        _localctx.varDecStatement_ret.add(tmp2);
+				    
 				}
 				}
 				setState(451);
