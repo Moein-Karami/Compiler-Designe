@@ -1,6 +1,7 @@
 package main.ast.nodes.declaration.classDec.classMembersDec;
 
 import main.visitor.IVisitor;
+import main.ast.nodes.expression.Identifier;
 
 //line -> INITIALIZE
 public class ConstructorDeclaration extends MethodDeclaration{
@@ -22,4 +23,5 @@ public class ConstructorDeclaration extends MethodDeclaration{
     public <T> T accept(IVisitor<T> visitor) {
         return visitor.visit(this);
     }
+
 }

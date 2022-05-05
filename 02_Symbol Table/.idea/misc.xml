@@ -6,7 +6,7 @@
         <PerGrammarGenerationSettings>
           <option name="fileName" value="$PROJECT_DIR$/src/main/grammar/SimpleLOOP.g4" />
           <option name="autoGen" value="true" />
-          <option name="outputDir" value="E:\UT\S6\TA\Compiler\SimpleLOOP-Compiler\src" />
+          <option name="outputDir" value="C:\Users\AryanSM\Desktop\Aryan\University\Compiler\Compiler-Designe\02_Symbol Table\src" />
           <option name="libDir" value="" />
           <option name="encoding" value="" />
           <option name="pkg" value="parsers" />
@@ -16,7 +16,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="openjdk-18" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
