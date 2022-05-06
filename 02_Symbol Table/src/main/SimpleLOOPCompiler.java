@@ -89,6 +89,6 @@ public class SimpleLOOPCompiler {
         Program program = simpleLOOPParser.simpleLOOP().simpleLOOPProgram;
 
         ASTTreePrinter astTreePrinter = new ASTTreePrinter();
-        astTreePrinter.visit(program);
+        program.accept(astTreePrinter);
     }
 }
