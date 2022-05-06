@@ -49,60 +49,72 @@ classDeclaration returns [ClassDeclaration classDeclaration_ret]
     {$classDeclaration_ret.setParentClassName($pci.class_identifier_ret);})?
     NEWLINE* ((LBRACE NEWLINE+ (fd = field_decleration
     {
+        for (Declaration declerations: $fd.field_decleration_ret)
+        {
             FieldDeclaration new_fd;
             ConstructorDeclaration new2_fd;
             MethodDeclaration new3_fd;
-            if($fd.field_decleration_ret instanceof FieldDeclaration)
+            if(declerations instanceof FieldDeclaration)
             {
-                new_fd = (FieldDeclaration)$fd.field_decleration_ret;
+                new_fd = (FieldDeclaration)declerations;
                 $classDeclaration_ret.addField(new_fd);
              }
-            if($fd.field_decleration_ret instanceof ConstructorDeclaration)
+            if(declerations instanceof ConstructorDeclaration)
             {
-                new2_fd = (ConstructorDeclaration)$fd.field_decleration_ret;
+                new2_fd = (ConstructorDeclaration)declerations;
                 $classDeclaration_ret.setConstructor(new2_fd);
             }
-            if($fd.field_decleration_ret instanceof MethodDeclaration)
+            if(declerations instanceof MethodDeclaration)
             {
-                new3_fd = (MethodDeclaration)$fd.field_decleration_ret;
+                new3_fd = (MethodDeclaration)declerations;
                 $classDeclaration_ret.addMethod(new3_fd);
             }
         }
+    }
     )+ RBRACE)
     | fd2 = field_decleration
-    {
+   {
+   for (Declaration declerations: $fd2.field_decleration_ret)
+   {
         FieldDeclaration new_fd2;
         ConstructorDeclaration new2_fd2;
         MethodDeclaration new3_fd2;
-        if($fd2.field_decleration_ret instanceof FieldDeclaration)
+        if(declerations instanceof FieldDeclaration)
         {
-            new_fd2 = (FieldDeclaration)$fd2.field_decleration_ret;
+            new_fd2 = (FieldDeclaration)declerations;
             $classDeclaration_ret.addField(new_fd2);
         }
-        if($fd2.field_decleration_ret instanceof ConstructorDeclaration)
+        if(declerations instanceof ConstructorDeclaration)
         {
-            new2_fd2 = (ConstructorDeclaration)$fd2.field_decleration_ret;
+            new2_fd2 = (ConstructorDeclaration)declerations;
             $classDeclaration_ret.setConstructor(new2_fd2);
         }
-        if($fd2.field_decleration_ret instanceof MethodDeclaration)
+        if(declerations instanceof MethodDeclaration)
         {
-            new3_fd2 = (MethodDeclaration)$fd.field_decleration_ret;
+            new3_fd2 = (MethodDeclaration)declerations;
             $classDeclaration_ret.addMethod(new3_fd2);
         }
+     }
     })NEWLINE*;
 
 //todo
-field_decleration returns [Declaration field_decleration_ret]
+field_decleration returns [ArrayList<Declaration> field_decleration_ret]
     :
+    {       $field_decleration_ret = new ArrayList<Declaration>();
+    }
     (({boolean bl;} (PUBLIC {bl = false;}| PRIVATE{bl = true;}) ({VariableDeclaration dl;}vd = varDecStatement
     {
-        ArrayList<VariableDeclaration> var_all = $vd.varDecStatement_ret;
-        dl = var_all.get(0);
-        $field_decleration_ret = new FieldDeclaration(dl, bl);
-        $field_decleration_ret.setLine(dl.getLine());
+       for (VariableDeclaration variables : $vd.varDecStatement_ret)
+       {
+            dl = variables;
+
+            FieldDeclaration fd_new = new FieldDeclaration(dl, bl);
+            fd_new.setLine(dl.getLine());
+            $field_decleration_ret.add(fd_new);
+       }
     }|
-    me = method {$field_decleration_ret = $me.method_ret;})) | cn = constructor
-    {$field_decleration_ret = $cn.constructor_ret;}) NEWLINE+;
+    me = method {$field_decleration_ret.add($me.method_ret);})) | cn = constructor
+    {$field_decleration_ret.add($cn.constructor_ret);}) NEWLINE+;
 
 //todo
 method returns [MethodDeclaration method_ret]
@@ -240,7 +252,11 @@ printStatement returns [PrintStmt printStatement_ret]
 methodCallStmt returns [MethodCallStmt methodCallStmt_ret]
     : {Expression ex;}
     ae = accessExpression {ex = $ae.accessExpression_ret;}
-    (DOT (INITIALIZE {ex = new ObjectMemberAccess(ex, new Identifier($INITIALIZE.getText()));} | id = identifier
+    (DOT (INITIALIZE {
+    Identifier id_temp = new Identifier($INITIALIZE.getText());
+    id_temp.setLine($INITIALIZE.getLine());
+    ex = new ObjectMemberAccess(ex, id_temp);
+    } | id = identifier
     {ex = new ObjectMemberAccess(ex, $id.identifier_ret);}))*
     ((LPAR ma = methodArgs {$methodCallStmt_ret = new MethodCallStmt(new MethodCall(ex, $ma.methodArgs_ret));
     $methodCallStmt_ret.setLine($LPAR.getLine());} RPAR));
