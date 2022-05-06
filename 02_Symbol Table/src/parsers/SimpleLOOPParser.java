@@ -568,7 +568,7 @@ public class SimpleLOOPParser extends Parser {
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==NEWLINE );
-				setState(175); 
+				setState(177); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
@@ -576,29 +576,35 @@ public class SimpleLOOPParser extends Parser {
 					{
 					setState(174);
 					((ClassDeclarationContext)_localctx).fd = field_decleration();
+
+					            FieldDeclaration new_fd;
+					            ConstructorDeclaration new2_fd;
+					            MethodDeclaration new3_fd;
+					            if(((ClassDeclarationContext)_localctx).fd.field_decleration_ret instanceof FieldDeclaration)
+					            {
+					                new_fd = (FieldDeclaration)((ClassDeclarationContext)_localctx).fd.field_decleration_ret;
+					                _localctx.classDeclaration_ret.addField(new_fd);
+					             }
+					            if(((ClassDeclarationContext)_localctx).fd.field_decleration_ret instanceof ConstructorDeclaration)
+					            {
+					                new2_fd = (ConstructorDeclaration)((ClassDeclarationContext)_localctx).fd.field_decleration_ret;
+					                _localctx.classDeclaration_ret.setConstructor(new2_fd);
+					            }
+					            if(((ClassDeclarationContext)_localctx).fd.field_decleration_ret instanceof MethodDeclaration)
+					            {
+					                new3_fd = (MethodDeclaration)((ClassDeclarationContext)_localctx).fd.field_decleration_ret;
+					                _localctx.classDeclaration_ret.addMethod(new3_fd);
+					            }
+					        
 					}
 					}
-					setState(177); 
+					setState(179); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==PUBLIC || _la==PRIVATE );
-				setState(179);
+				setState(181);
 				match(RBRACE);
 				}
-
-				        FieldDeclaration new_fd;
-				        ConstructorDeclaration new2_fd;
-				        if(((ClassDeclarationContext)_localctx).fd.field_decleration_ret instanceof FieldDeclaration)
-				        {
-				            new_fd = (FieldDeclaration)((ClassDeclarationContext)_localctx).fd.field_decleration_ret;
-				            _localctx.classDeclaration_ret.addField(new_fd);
-				         }
-				        if(((ClassDeclarationContext)_localctx).fd.field_decleration_ret instanceof ConstructorDeclaration)
-				        {
-				            new2_fd = (ConstructorDeclaration)((ClassDeclarationContext)_localctx).fd.field_decleration_ret;
-				            _localctx.classDeclaration_ret.setConstructor(new2_fd);
-				        }
-				    
 				}
 				break;
 			case PUBLIC:
@@ -609,6 +615,7 @@ public class SimpleLOOPParser extends Parser {
 
 				        FieldDeclaration new_fd2;
 				        ConstructorDeclaration new2_fd2;
+				        MethodDeclaration new3_fd2;
 				        if(((ClassDeclarationContext)_localctx).fd2.field_decleration_ret instanceof FieldDeclaration)
 				        {
 				            new_fd2 = (FieldDeclaration)((ClassDeclarationContext)_localctx).fd2.field_decleration_ret;
@@ -618,6 +625,11 @@ public class SimpleLOOPParser extends Parser {
 				        {
 				            new2_fd2 = (ConstructorDeclaration)((ClassDeclarationContext)_localctx).fd2.field_decleration_ret;
 				            _localctx.classDeclaration_ret.setConstructor(new2_fd2);
+				        }
+				        if(((ClassDeclarationContext)_localctx).fd2.field_decleration_ret instanceof MethodDeclaration)
+				        {
+				            new3_fd2 = (MethodDeclaration)((ClassDeclarationContext)_localctx).fd.field_decleration_ret;
+				            _localctx.classDeclaration_ret.addMethod(new3_fd2);
 				        }
 				    
 				}
@@ -890,7 +902,7 @@ public class SimpleLOOPParser extends Parser {
 			setState(236);
 			((MethodContext)_localctx).mb = methodBody();
 			((MethodContext)_localctx).method_ret =  ((MethodContext)_localctx).mb.methodBody_ret; _localctx.method_ret.setMethodName(((MethodContext)_localctx).id.identifier_ret); _localctx.method_ret.setReturnType(tp);
-			    _localctx.method_ret.setLine(((MethodContext)_localctx).id.identifier_ret.getLine()); _localctx.method_ret.setArgs(((MethodContext)_localctx).ma.methodArgsDec_ret);
+			    _localctx.method_ret.setLine(((MethodContext)_localctx).id.identifier_ret.getLine());_localctx.method_ret.setArgs(((MethodContext)_localctx).ma.methodArgsDec_ret);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1328,7 +1340,10 @@ public class SimpleLOOPParser extends Parser {
 			((ArgDecContext)_localctx).tp = type();
 			setState(324);
 			((ArgDecContext)_localctx).id = identifier();
-			((ArgDecContext)_localctx).argDec_ret =  new VariableDeclaration(((ArgDecContext)_localctx).id.identifier_ret, ((ArgDecContext)_localctx).tp.type_ret);
+
+			        ((ArgDecContext)_localctx).argDec_ret =  new VariableDeclaration(((ArgDecContext)_localctx).id.identifier_ret, ((ArgDecContext)_localctx).tp.type_ret);
+			        _localctx.argDec_ret.setLine(((ArgDecContext)_localctx).id.identifier_ret.getLine());
+			    
 			}
 		}
 		catch (RecognitionException re) {
@@ -4834,7 +4849,7 @@ public class SimpleLOOPParser extends Parser {
 		"\3\u0084\3\3\3\3\7\3\u0089\n\3\f\3\16\3\u008c\13\3\3\4\3\4\3\4\3\4\3\4"+
 		"\3\4\7\4\u0094\n\4\f\4\16\4\u0097\13\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\5"+
 		"\3\5\3\5\5\5\u00a3\n\5\3\5\7\5\u00a6\n\5\f\5\16\5\u00a9\13\5\3\5\3\5\6"+
-		"\5\u00ad\n\5\r\5\16\5\u00ae\3\5\6\5\u00b2\n\5\r\5\16\5\u00b3\3\5\3\5\3"+
+		"\5\u00ad\n\5\r\5\16\5\u00ae\3\5\3\5\3\5\6\5\u00b4\n\5\r\5\16\5\u00b5\3"+
 		"\5\3\5\3\5\3\5\3\5\5\5\u00bd\n\5\3\5\7\5\u00c0\n\5\f\5\16\5\u00c3\13\5"+
 		"\3\6\3\6\3\6\3\6\3\6\5\6\u00ca\n\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\5\6\u00d3"+
 		"\n\6\3\6\3\6\3\6\5\6\u00d8\n\6\3\6\6\6\u00db\n\6\r\6\16\6\u00dc\3\7\3"+
@@ -4917,9 +4932,9 @@ public class SimpleLOOPParser extends Parser {
 		"\2\2\u00a7\u00a5\3\2\2\2\u00a7\u00a8\3\2\2\2\u00a8\u00bc\3\2\2\2\u00a9"+
 		"\u00a7\3\2\2\2\u00aa\u00ac\7\65\2\2\u00ab\u00ad\7:\2\2\u00ac\u00ab\3\2"+
 		"\2\2\u00ad\u00ae\3\2\2\2\u00ae\u00ac\3\2\2\2\u00ae\u00af\3\2\2\2\u00af"+
-		"\u00b1\3\2\2\2\u00b0\u00b2\5\n\6\2\u00b1\u00b0\3\2\2\2\u00b2\u00b3\3\2"+
-		"\2\2\u00b3\u00b1\3\2\2\2\u00b3\u00b4\3\2\2\2\u00b4\u00b5\3\2\2\2\u00b5"+
-		"\u00b6\7\66\2\2\u00b6\u00b7\3\2\2\2\u00b7\u00b8\b\5\1\2\u00b8\u00bd\3"+
+		"\u00b3\3\2\2\2\u00b0\u00b1\5\n\6\2\u00b1\u00b2\b\5\1\2\u00b2\u00b4\3\2"+
+		"\2\2\u00b3\u00b0\3\2\2\2\u00b4\u00b5\3\2\2\2\u00b5\u00b3\3\2\2\2\u00b5"+
+		"\u00b6\3\2\2\2\u00b6\u00b7\3\2\2\2\u00b7\u00b8\7\66\2\2\u00b8\u00bd\3"+
 		"\2\2\2\u00b9\u00ba\5\n\6\2\u00ba\u00bb\b\5\1\2\u00bb\u00bd\3\2\2\2\u00bc"+
 		"\u00aa\3\2\2\2\u00bc\u00b9\3\2\2\2\u00bd\u00c1\3\2\2\2\u00be\u00c0\7:"+
 		"\2\2\u00bf\u00be\3\2\2\2\u00c0\u00c3\3\2\2\2\u00c1\u00bf\3\2\2\2\u00c1"+
@@ -5139,7 +5154,7 @@ public class SimpleLOOPParser extends Parser {
 		"\2\2\u0365\u0366\7\33\2\2\u0366]\3\2\2\2\u0367\u0368\7,\2\2\u0368\u0369"+
 		"\7\34\2\2\u0369\u036a\7)\2\2\u036a\u036b\7\33\2\2\u036b\u036c\b\60\1\2"+
 		"\u036c_\3\2\2\2\u036d\u036e\7;\2\2\u036e\u036f\b\61\1\2\u036fa\3\2\2\2"+
-		"Uemw}\u0084\u008a\u0095\u00a2\u00a7\u00ae\u00b3\u00bc\u00c1\u00c9\u00d2"+
+		"Uemw}\u0084\u008a\u0095\u00a2\u00a7\u00ae\u00b5\u00bc\u00c1\u00c9\u00d2"+
 		"\u00d7\u00dc\u00e4\u00eb\u00f6\u00fd\u0101\u0109\u010d\u0117\u011f\u0121"+
 		"\u0123\u0131\u0134\u013e\u0141\u0152\u0155\u015d\u0162\u0169\u0170\u0174"+
 		"\u0194\u01ab\u01c3\u01cf\u01d5\u01da\u01ea\u01ef\u0205\u0209\u0216\u0229"+

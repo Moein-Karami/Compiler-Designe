@@ -1,7 +1,10 @@
-class Person {
+int x
+class Person < Student{
   private int name
+  private int x
   private int age
   public initialize(int name, int age) {
+    int x;
     self.name = name;
     self.age = age;
   }
@@ -9,6 +12,14 @@ class Person {
     print(self.name);
 
   }
+}
+
+class Person {
+    private int name
+    private int x
+    public int getName(){
+        return self.name;
+    }
 }
 
 class Student < Person {
@@ -24,14 +35,19 @@ class Student < Person {
     self.sid = sid;
   }
   public int getTotalCredits() {
-  	int i
+  	int sid
     int sum
     Course current
     int i
 
 
-     sum = sum + current.credits;
+    sum = sum + current.credits;
 
+  }
+  private int showName(){
+        int x;
+        bool i
+        int[10] x
   }
   public void updateSid(int sid) {
     self.sid = sid;
@@ -43,7 +59,7 @@ class Course {
   private int name
   private Person instructor
   private int credits
-  public initialize(int cid, int name) {
+  public initialize(int cid, int name, int cid) {
     self.cid = cid;
     self.name = name;
   }

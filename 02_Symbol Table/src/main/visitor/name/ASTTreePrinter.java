@@ -31,6 +31,7 @@ public class ASTTreePrinter extends Visitor<Void> {
     @Override
     public Void visit(ClassDeclaration classDeclaration){
         messagePrinter(classDeclaration.getLine(), classDeclaration.toString());
+
         for (FieldDeclaration fields : classDeclaration.getFields())
             fields.accept(this);
         for (MethodDeclaration methods: classDeclaration.getMethods())
@@ -41,12 +42,24 @@ public class ASTTreePrinter extends Visitor<Void> {
     @Override
     public Void visit(ConstructorDeclaration constructorDeclaration) {
         messagePrinter(constructorDeclaration.getLine(), constructorDeclaration.toString());
+        for (VariableDeclaration variables : constructorDeclaration.getArgs())
+            variables.accept(this);
+        for (VariableDeclaration variables: constructorDeclaration.getLocalVars())
+            variables.accept(this);
+        for (Statement statements: constructorDeclaration.getBody())
+            statements.accept(this);
         return null;
     }
 
     @Override
     public Void visit(MethodDeclaration methodDeclaration) {
         messagePrinter(methodDeclaration.getLine(), methodDeclaration.toString());
+        for (VariableDeclaration variables : methodDeclaration.getArgs())
+            variables.accept(this);
+        for (VariableDeclaration variables: methodDeclaration.getLocalVars())
+            variables.accept(this);
+        for (Statement statements: methodDeclaration.getBody())
+            statements.accept(this);
         return null;
     }
 
@@ -58,49 +71,47 @@ public class ASTTreePrinter extends Visitor<Void> {
 
     @Override
     public Void visit(VariableDeclaration varDeclaration) {
-        //todo
+        messagePrinter(varDeclaration.getLine(), varDeclaration.toString());
         return null;
     }
 
     @Override
     public Void visit(AssignmentStmt assignmentStmt) {
-        //todo
+        messagePrinter(assignmentStmt.getLine(), assignmentStmt.toString());
         return null;
     }
 
     @Override
     public Void visit(BlockStmt blockStmt) {
-        //todo
+        messagePrinter(blockStmt.getLine(), blockStmt.toString());
         return null;
     }
 
     @Override
     public Void visit(ConditionalStmt conditionalStmt) {
-        //todo
+        messagePrinter(conditionalStmt.getLine(), conditionalStmt.toString());
         return null;
     }
 
     @Override
     public Void visit(ElsifStmt elsifStmt) {
-        //todo
+        messagePrinter(elsifStmt.getLine(), elsifStmt.toString());
         return null;
     }
 
     @Override
     public Void visit(MethodCallStmt methodCallStmt) {
-        //todo
+        messagePrinter(methodCallStmt.getLine(), methodCallStmt.toString());
         return null;
     }
 
     @Override
     public Void visit(PrintStmt print) {
-        //todo
         return null;
     }
 
     @Override
     public Void visit(ReturnStmt returnStmt) {
-        //todo
         return null;
     }
 

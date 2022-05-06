@@ -47,24 +47,33 @@ classDeclaration returns [ClassDeclaration classDeclaration_ret]
     : CLASS ci = class_identifier{$classDeclaration_ret = new ClassDeclaration($ci.class_identifier_ret);
     $classDeclaration_ret.setLine($CLASS.getLine());} (LESS_THAN pci = class_identifier
     {$classDeclaration_ret.setParentClassName($pci.class_identifier_ret);})?
-    NEWLINE* ((LBRACE NEWLINE+ fd = field_decleration+ RBRACE) {
-        FieldDeclaration new_fd;
-        ConstructorDeclaration new2_fd;
-        if($fd.field_decleration_ret instanceof FieldDeclaration)
-        {
-            new_fd = (FieldDeclaration)$fd.field_decleration_ret;
-            $classDeclaration_ret.addField(new_fd);
-         }
-        if($fd.field_decleration_ret instanceof ConstructorDeclaration)
-        {
-            new2_fd = (ConstructorDeclaration)$fd.field_decleration_ret;
-            $classDeclaration_ret.setConstructor(new2_fd);
+    NEWLINE* ((LBRACE NEWLINE+ (fd = field_decleration
+    {
+            FieldDeclaration new_fd;
+            ConstructorDeclaration new2_fd;
+            MethodDeclaration new3_fd;
+            if($fd.field_decleration_ret instanceof FieldDeclaration)
+            {
+                new_fd = (FieldDeclaration)$fd.field_decleration_ret;
+                $classDeclaration_ret.addField(new_fd);
+             }
+            if($fd.field_decleration_ret instanceof ConstructorDeclaration)
+            {
+                new2_fd = (ConstructorDeclaration)$fd.field_decleration_ret;
+                $classDeclaration_ret.setConstructor(new2_fd);
+            }
+            if($fd.field_decleration_ret instanceof MethodDeclaration)
+            {
+                new3_fd = (MethodDeclaration)$fd.field_decleration_ret;
+                $classDeclaration_ret.addMethod(new3_fd);
+            }
         }
-    }
+    )+ RBRACE)
     | fd2 = field_decleration
     {
         FieldDeclaration new_fd2;
         ConstructorDeclaration new2_fd2;
+        MethodDeclaration new3_fd2;
         if($fd2.field_decleration_ret instanceof FieldDeclaration)
         {
             new_fd2 = (FieldDeclaration)$fd2.field_decleration_ret;
@@ -74,6 +83,11 @@ classDeclaration returns [ClassDeclaration classDeclaration_ret]
         {
             new2_fd2 = (ConstructorDeclaration)$fd2.field_decleration_ret;
             $classDeclaration_ret.setConstructor(new2_fd2);
+        }
+        if($fd2.field_decleration_ret instanceof MethodDeclaration)
+        {
+            new3_fd2 = (MethodDeclaration)$fd.field_decleration_ret;
+            $classDeclaration_ret.addMethod(new3_fd2);
         }
     })NEWLINE*;
 
@@ -93,9 +107,10 @@ field_decleration returns [Declaration field_decleration_ret]
 //todo
 method returns [MethodDeclaration method_ret]
     : {Type tp;}(tmp = type {tp = $tmp.type_ret;}|
-    VOID {tp = new NoType();}) id = identifier ma = methodArgsDec NEWLINE* mb = methodBody
+    VOID {tp = new NoType();}) id = identifier ma = methodArgsDec
+    NEWLINE* mb = methodBody
     {$method_ret = $mb.methodBody_ret; $method_ret.setMethodName($id.identifier_ret); $method_ret.setReturnType(tp);
-    $method_ret.setLine($id.identifier_ret.getLine()); $method_ret.setArgs($ma.methodArgsDec_ret);};
+    $method_ret.setLine($id.identifier_ret.getLine());$method_ret.setArgs($ma.methodArgsDec_ret);};
 
 //todo
 methodBody returns [MethodDeclaration methodBody_ret]
@@ -120,7 +135,10 @@ methodArgsDec returns [ArrayList<VariableDeclaration> methodArgsDec_ret]
 
 //todo
 argDec returns [VariableDeclaration argDec_ret]
-    : tp = type id = identifier {$argDec_ret = new VariableDeclaration($id.identifier_ret, $tp.type_ret);};
+    : tp = type id = identifier {
+        $argDec_ret = new VariableDeclaration($id.identifier_ret, $tp.type_ret);
+        $argDec_ret.setLine($id.identifier_ret.getLine());
+    };
 
 //todo
 methodArgs returns [ArrayList<Expression> methodArgs_ret]

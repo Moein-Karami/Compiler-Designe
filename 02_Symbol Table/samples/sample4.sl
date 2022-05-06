@@ -1,3 +1,4 @@
+int x;
 class Bookstore {
     public initialize (int id) {
         self.id = id
@@ -27,10 +28,11 @@ class Bookstore {
     }
 
     public fptr<void -> void> fp;
+
 }
 
 
-class Book {
+class Book{
     private int price;
     private int id;
     public initialize (int price, int id) {
@@ -46,6 +48,20 @@ class Book {
         return self.price;
     }
 
+}
+
+class Page < Book {
+    private int number
+
+
+    public int getNumber(){
+        number = x
+        return number
+    }
+
+    private int printNumber(){
+        print(x++)
+    }
 }
 
 class Main {
