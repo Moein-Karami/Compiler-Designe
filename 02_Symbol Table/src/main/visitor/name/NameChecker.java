@@ -101,14 +101,17 @@ public class NameChecker extends Visitor<Void> {
         if (err == false){
             for (ClassDeclaration classDeclaration : program.getClasses()) {
                 String child_name = classDeclaration.getClassName().getName();
-                if (par_pattern.isSecondNodeAncestorOf(child_name, curr_cls_name)) {
-                    try{
-                        ClassSymbolTableItem child_item = (ClassSymbolTableItem) SymbolTable.root.getItem(ClassSymbolTableItem.START_KEY + child_name, true);
-                        SymbolTable child_table = child_item.getClassSymbolTable();
-                        child_table.getItem(FieldSymbolTableItem.START_KEY + methodDeclaration.getMethodName().getName(), true);
-                        methodDeclaration.addError(new MethodNameConflictWithField(methodDeclaration.getLine(), methodDeclaration.getMethodName().getName()));
-                        break;
-                    } catch (ItemNotFoundException good) {}
+                if (par_pattern != null) {
+                    if (par_pattern.isSecondNodeAncestorOf(child_name, curr_cls_name)) {
+                        try {
+                            ClassSymbolTableItem child_item = (ClassSymbolTableItem) SymbolTable.root.getItem(ClassSymbolTableItem.START_KEY + child_name, true);
+                            SymbolTable child_table = child_item.getClassSymbolTable();
+                            child_table.getItem(FieldSymbolTableItem.START_KEY + methodDeclaration.getMethodName().getName(), true);
+                            methodDeclaration.addError(new MethodNameConflictWithField(methodDeclaration.getLine(), methodDeclaration.getMethodName().getName()));
+                            break;
+                        } catch (ItemNotFoundException good) {
+                        }
+                    }
                 }
             }
         }
