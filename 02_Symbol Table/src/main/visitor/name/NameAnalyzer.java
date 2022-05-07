@@ -18,6 +18,8 @@ import main.symbolTable.exceptions.ItemAlreadyExistsException;
 import main.symbolTable.items.*;
 import main.visitor.*;
 
+import java.util.HashMap;
+
 public class RandomString {
     // function to generate a random string of length n
     static String getAlphaNumericString(int n)
@@ -52,7 +54,7 @@ public class NameAnalyzer extends Visitor<Void> {
 
     public static Stack<SymbolTable> symbol_stack = new Stack<>();
 
-    private map<String, ClassSymbolTableItem> class_symbol_map = new map<>();
+    private Map<String, ClassSymbolTableItem> class_symbol_map = new HashMap<>();
 
     @Override
     public Void visit(Program program) {
@@ -80,7 +82,17 @@ public class NameAnalyzer extends Visitor<Void> {
 
         for (ClassDeclaration cls : classes)
         {
-            cls.accept(this);
+            ClassSymbolTableItem cls_item = new ClassSymbolTableItem(cls);
+            try
+            {
+                SymbolTable.root.put(cls_item);
+            }
+            catch (ItemAlreadyExistsException err)
+            {
+                cls.setClassName(new Identifier(RandomString.getAlphaNumericString(25)));
+                SymbolTable.root.put(cls_item);
+            }
+            class_symbol_map.put(cls.getClassName().getName(), cls_item);
         }
 
         for (ClassDeclaration cls : classes)
