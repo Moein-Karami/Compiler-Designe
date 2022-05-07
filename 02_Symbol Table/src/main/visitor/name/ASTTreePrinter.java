@@ -267,8 +267,9 @@ public class ASTTreePrinter extends Visitor<Void> {
 
     @Override
     public Void visit(MethodCall methodCall) {
-        messagePrinter(methodCall.getLine(), methodCall.toString());
         Expression exp1 = methodCall.getInstance();
+        if(!(exp1 instanceof NewClassInstance))
+            messagePrinter(methodCall.getLine(), methodCall.toString());
         if(exp1 != null) {
             exp1.accept(this);
         }

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6481457-34b5-453c-b4ee-076c796453f7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/visitor/name/ErrorPrinter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/main/compileError/nameError/ClassRedefinition.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/main/compileError/nameError/ClassRedefinition.class" afterDir="false" />
+    <list default="true" id="3deceabf-88d7-4158-9c61-26adbddda57b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/main/SimpleLOOPCompiler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/main/SimpleLOOPCompiler.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/main/grammar/SimpleLOOP.g4" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/main/grammar/SimpleLOOP.g4" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/main/symbolTable/items/ClassSymbolTableItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/main/symbolTable/items/ClassSymbolTableItem.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/parsers/SimpleLOOP.tokens" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/parsers/SimpleLOOP.tokens" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/parsers/SimpleLOOPLexer.tokens" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/parsers/SimpleLOOPLexer.tokens" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/SimpleLOOPCompiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/SimpleLOOPCompiler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/compileError/nameError/ClassRedefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/compileError/nameError/ClassRedefinition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/visitor/name/NameChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/visitor/name/NameChecker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/visitor/name/NameCollector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/visitor/name/NameCollector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/main/visitor/name/ASTTreePrinter.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/main/visitor/name/ASTTreePrinter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/parsers/SimpleLOOPParser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/parsers/SimpleLOOPParser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/samples/sample1.sl" beforeDir="false" afterPath="$PROJECT_DIR$/samples/sample1.sl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/grammar/SimpleLOOP.g4" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/grammar/SimpleLOOP.g4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/visitor/name/ASTTreePrinter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/visitor/name/ASTTreePrinter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parsers/SimpleLOOP.interp" beforeDir="false" afterPath="$PROJECT_DIR$/src/parsers/SimpleLOOP.interp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parsers/SimpleLOOPParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/parsers/SimpleLOOPParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +31,7 @@
     <configuration name="SimpleLOOP" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="main.SimpleLOOP" />
       <module name="02_Symbol Table" />
-      <option name="PROGRAM_PARAMETERS" value="samples/sample3.sl" />
+      <option name="PROGRAM_PARAMETERS" value="samples/sample1.sl" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
