@@ -30,7 +30,7 @@ public class NameChecker extends Visitor<Void> {
 
     Program program;
 
-    public NmaeChecker(Graph<String> par_pattern) {
+    public NameChecker(Graph<String> par_pattern) {
         this.par_pattern = par_pattern;
     }
 
@@ -49,6 +49,7 @@ public class NameChecker extends Visitor<Void> {
             this.curr_cls_name = cls.getClassName().getName();
             cls.accept(this);
         }
+        return null;
     }
 
     @Override
@@ -62,9 +63,9 @@ public class NameChecker extends Visitor<Void> {
         for (FieldDeclaration field : classDeclaration.getFields()) {
             field.accept(this);
         }
-        if (classDeclaration.getConstructor() != null) {
-            classDeclaration.getConstructor().accept(this);
-        }
+//        if (classDeclaration.getConstructor() != null) {
+//            classDeclaration.getConstructor().accept(this);
+//        }
         for (MethodDeclaration method : classDeclaration.getMethods()) {
             method.accept(this);
         }
@@ -82,7 +83,7 @@ public class NameChecker extends Visitor<Void> {
         if (!methodDeclaration.hasError()) {
             try{
                 SymbolTable cls_table = this.get_curr_cls_symbol_table();
-                cls_table.getItem(MethodSymbolTableItem.START_KEY + methodDeclaration.getMethodName().getName()), false);
+                cls_table.getItem(MethodSymbolTableItem.START_KEY + methodDeclaration.getMethodName().getName(), false);
                 methodDeclaration.addError(new MethodRedefinition(methodDeclaration.getLine(), methodDeclaration.getMethodName().getName()));
             } catch (ItemNotFoundException good) { }
 

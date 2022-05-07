@@ -49,18 +49,19 @@ public class NameCollector extends Visitor<Void> {
         try {
             SymbolTable.root.put(cls_item);
         } catch (ItemAlreadyExistsException err) {
-            ClassRedefinition error = new ClassRedefinition(classDeclaration);
+
+            ClassRedefinition error = new ClassRedefinition(classDeclaration.getLine(), classDeclaration.getClassName().getName());
             classDeclaration.addError(error);
             error.handle_error(classDeclaration);
         }
 
         for (FieldDeclaration field : classDeclaration.getFields()){
-            field.accept(this)
+            field.accept(this);
         }
 
-        if (classDeclaration.getClassName() != null) {
-            classDeclaration.getConstructor().accept(this);
-        }
+//        if (classDeclaration.getClassName() != null) {
+//            classDeclaration.getConstructor().accept(this);
+//        }
 
         for (MethodDeclaration method : classDeclaration.getMethods()){
             method.accept(this);
@@ -112,15 +113,15 @@ public class NameCollector extends Visitor<Void> {
 
     @Override
     public Void visit(VariableDeclaration varDeclaration) {
-        LocalVariableSymbolTableItem var_item(varDeclaration);
+        LocalVariableSymbolTableItem var_item = new LocalVariableSymbolTableItem(varDeclaration);
         try {
-            SymbolTable.root.getItem(var_item.getKey(), true);
+            SymbolTable.root.getItem(GlobalVariableSymbolTableItem.START_KEY + varDeclaration.getVarName().getName(), true);
             varDeclaration.addError(new LocalVarConflictWithGlobalVar(varDeclaration.getLine(), varDeclaration.getVarName().getName()));
         } catch (ItemNotFoundException good_err) {
             try {
                 SymbolTable.top.put(new LocalVariableSymbolTableItem(varDeclaration));
             } catch (ItemAlreadyExistsException err) {
-                varDeclaration.addError(new LocalVarRedefinition(varDeclaration.getLine()), varDeclaration.getVarName().getName());
+                varDeclaration.addError(new LocalVarRedefinition(varDeclaration.getLine(), varDeclaration.getVarName().getName()));
             }
         }
         return null;

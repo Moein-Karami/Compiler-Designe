@@ -21,6 +21,5 @@ public class ClassRedefinition extends CompileError {
         } catch (ItemAlreadyExistsException err) {
             this.handle_error(cls);
         }
-        return null;
     }
 }

@@ -256,10 +256,15 @@ methodCallStmt returns [MethodCallStmt methodCallStmt_ret]
     Identifier id_temp = new Identifier($INITIALIZE.getText());
     id_temp.setLine($INITIALIZE.getLine());
     ex = new ObjectMemberAccess(ex, id_temp);
+    ex.setLine(id_temp.getLine());
     } | id = identifier
-    {ex = new ObjectMemberAccess(ex, $id.identifier_ret);}))*
+    {ex = new ObjectMemberAccess(ex, $id.identifier_ret);
+        ex.setLine($IDENTIFIER.getLine))
+    }))*
     ((LPAR ma = methodArgs {$methodCallStmt_ret = new MethodCallStmt(new MethodCall(ex, $ma.methodArgs_ret));
-    $methodCallStmt_ret.setLine($LPAR.getLine());} RPAR));
+    $methodCallStmt_ret.setLine($LPAR.getLine());
+    $methodCallStmt_ret.setLine($IDENTIFIER);
+    } RPAR));
 
 //todo
 returnStatement returns [ReturnStmt returnStatement_ret]

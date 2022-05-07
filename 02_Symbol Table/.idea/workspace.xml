@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d6481457-34b5-453c-b4ee-076c796453f7" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/visitor/name/ErrorPrinter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/main/compileError/nameError/ClassRedefinition.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/main/compileError/nameError/ClassRedefinition.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/main/grammar/SimpleLOOP.g4" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/main/grammar/SimpleLOOP.g4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/main/symbolTable/items/ClassSymbolTableItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/main/symbolTable/items/ClassSymbolTableItem.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/parsers/SimpleLOOP.tokens" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/parsers/SimpleLOOP.tokens" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/parsers/SimpleLOOPLexer.tokens" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/parsers/SimpleLOOPLexer.tokens" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/SimpleLOOPCompiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/SimpleLOOPCompiler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/compileError/nameError/ClassRedefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/compileError/nameError/ClassRedefinition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/visitor/name/NameChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/visitor/name/NameChecker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/visitor/name/NameCollector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/visitor/name/NameCollector.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="main.visitor.name" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="SimpleLOOP" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="main.SimpleLOOP" />
+      <module name="02_Symbol Table" />
+      <option name="PROGRAM_PARAMETERS" value="samples/sample3.sl" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="TaskManager">
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
