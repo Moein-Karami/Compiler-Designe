@@ -38,7 +38,11 @@ program returns[Program programRet]:
 //todo
 constructor returns [ConstructorDeclaration constructor_ret]
 	:{$constructor_ret = new ConstructorDeclaration();} PUBLIC INITIALIZE
-	{$constructor_ret.setLine($INITIALIZE.getLine()); $constructor_ret.setMethodName(new Identifier($INITIALIZE.getText()));}
+	{$constructor_ret.setLine($INITIALIZE.getLine());
+	    Identifier new_id = new Identifier($INITIALIZE.getText());
+	    new_id.setLine($INITIALIZE.getLine());
+	    $constructor_ret.setMethodName(new_id);
+	}
 	ma = methodArgsDec NEWLINE* mb = methodBody {$constructor_ret.setArgs($ma.methodArgsDec_ret);
 	$constructor_ret.setBody($mb.methodBody_ret.getBody()); $constructor_ret.setLocalVars($mb.methodBody_ret.getLocalVars());};
       
@@ -130,16 +134,21 @@ methodBody returns [MethodDeclaration methodBody_ret]
     (LBRACE NEWLINE+ (vd = varDecStatement {
           for (VariableDeclaration varDec: $vd.varDecStatement_ret)
                 $methodBody_ret.addLocalVar(varDec);
-
+        $methodBody_ret.setLine($LBRACE.getLine());
     } NEWLINE+)*
     (ss = singleStatement {$methodBody_ret.addBodyStatement($ss.singleStatement_ret);} NEWLINE+)* RBRACE)
     | {$methodBody_ret = new MethodDeclaration();} ((vd = varDecStatement {
         for (VariableDeclaration varDec: $vd.varDecStatement_ret)
+        {
             $methodBody_ret.addLocalVar(varDec);
-    }NEWLINE+) |
-    (ss = singleStatement {$methodBody_ret.addBodyStatement($ss.singleStatement_ret);}) NEWLINE+);
+            $methodBody_ret.setLine(varDec.getLine());
+         }
 
-//todo???????????????????????????????????????????? fek konam ghalate
+    }NEWLINE+) |
+    (ss = singleStatement {$methodBody_ret.addBodyStatement($ss.singleStatement_ret);$methodBody_ret.setLine($ss.singleStatement_ret.getLine());
+}) NEWLINE+);
+
+
 methodArgsDec returns [ArrayList<VariableDeclaration> methodArgsDec_ret]
     : {$methodArgsDec_ret = new ArrayList<VariableDeclaration>();}
     LPAR (ad = argDec {$methodArgsDec_ret.add($ad.argDec_ret);} ((ASSIGN orExpression) | (COMMA ad2 = argDec
@@ -166,7 +175,7 @@ body returns [Statement body_ret]
 //todo
 blockStatement returns [BlockStmt blockStatement_ret]
     : {$blockStatement_ret = new BlockStmt();}
-    LBRACE NEWLINE+ (ss = singleStatement {$blockStatement_ret.addStatement($ss.singleStatement_ret);} NEWLINE+)* RBRACE;
+    LBRACE {$blockStatement_ret.setLine($LBRACE.getLine());}NEWLINE+ (ss = singleStatement {$blockStatement_ret.addStatement($ss.singleStatement_ret);} NEWLINE+)* RBRACE ;
 
 //todo
 singleStatement returns [Statement singleStatement_ret]
@@ -256,10 +265,19 @@ methodCallStmt returns [MethodCallStmt methodCallStmt_ret]
     Identifier id_temp = new Identifier($INITIALIZE.getText());
     id_temp.setLine($INITIALIZE.getLine());
     ex = new ObjectMemberAccess(ex, id_temp);
+    ex.setLine(id_temp.getLine());
     } | id = identifier
-    {ex = new ObjectMemberAccess(ex, $id.identifier_ret);}))*
-    ((LPAR ma = methodArgs {$methodCallStmt_ret = new MethodCallStmt(new MethodCall(ex, $ma.methodArgs_ret));
-    $methodCallStmt_ret.setLine($LPAR.getLine());} RPAR));
+    {
+
+        ex = new ObjectMemberAccess(ex, $id.identifier_ret);
+        ex.setLine($id.identifier_ret.getLine());
+    }))*
+    ((LPAR ma = methodArgs {
+        MethodCall mt_call = new MethodCall(ex, $ma.methodArgs_ret);
+        mt_call.setLine($LPAR.getLine());
+        $methodCallStmt_ret = new MethodCallStmt(mt_call);
+        $methodCallStmt_ret.setLine($LPAR.getLine());
+    } RPAR));
 
 //todo
 returnStatement returns [ReturnStmt returnStatement_ret]
@@ -278,7 +296,7 @@ loopStatement returns [EachStmt loopStatement_ret]
     :{Expression ex_val = null;}
     ((ae = accessExpression{ex_val = $ae.accessExpression_ret;}) | (LPAR ex1 = expression DOT DOT ex2 = expression {ex_val = new RangeExpression($ex1.expression_ret, $ex2.expression_ret);}
      RPAR)) DOT EACH DO BAR id = identifier {$loopStatement_ret = new EachStmt($id.identifier_ret, ex_val); $loopStatement_ret.setLine($EACH.getLine());} BAR
-    body;
+    body {$loopStatement_ret.setBody($body.body_ret);};
 
 //todo
 expression returns [Expression expression_ret]
@@ -363,10 +381,10 @@ accessExpression returns [Expression accessExpression_ret]
     :
     {Identifier id;} oe = otherExpression {$accessExpression_ret = $oe.otherExpression_ret;}
     ((LPAR ma = methodArgs {$accessExpression_ret = new MethodCall($oe.otherExpression_ret, $ma.methodArgs_ret);
-    $accessExpression_ret.setLine($LPAR.getLine());} RPAR) | ((DOT  (i = identifier {id = $i.identifier_ret;}
+    $accessExpression_ret.setLine($LPAR.getLine());} RPAR) | ((DOT  (i = identifier {System.out.println($i.identifier_ret.toString());$accessExpression_ret = new ObjectMemberAccess($accessExpression_ret, $i.identifier_ret); $accessExpression_ret.setLine($i.identifier_ret.getLine());}
     | NEW {id = new Identifier($NEW.getText()); id.setLine($NEW.getLine());}
     | INITIALIZE {id = new Identifier($INITIALIZE.getText()); id.setLine($INITIALIZE.getLine());}))
-    {$accessExpression_ret = new ObjectMemberAccess($accessExpression_ret, id); $accessExpression_ret.setLine(id.getLine());}))*
+    ))*
     ((DOT (i2 = identifier {$accessExpression_ret = new ObjectMemberAccess($accessExpression_ret, $i2.identifier_ret);
     $accessExpression_ret.setLine($i2.identifier_ret.getLine());}))
     | (LBRACK ex = expression {$accessExpression_ret = new ArrayAccessByIndex($accessExpression_ret, $ex.expression_ret);
@@ -446,11 +464,14 @@ fptr_type returns [FptrType fptr_type_ret]
 set_type returns[SetType set_type_ret]
     :
     SET LESS_THAN (INT) GREATER_THAN
-    {$set_type_ret = new SetType();};
+    {$set_type_ret = new SetType();
+    };
 
 int_value returns[IntValue int_value_ret]:
 	INT_VALUE
-	{$int_value_ret = new IntValue(Integer.parseInt($INT_VALUE.getText()));} ;
+	{$int_value_ret = new IntValue(Integer.parseInt($INT_VALUE.getText()));
+	    $int_value_ret.setLine($INT_VALUE.getLine());
+	} ;
 
 
 LINE_BREAK: ('//\n') -> skip;

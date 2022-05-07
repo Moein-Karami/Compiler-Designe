@@ -47,9 +47,9 @@ public class ASTTreePrinter extends Visitor<Void> {
 
     @Override
     public Void visit(ConstructorDeclaration constructorDeclaration) {
-        Identifier new_id = constructorDeclaration.getMethodName();
-        if (new_id != null)
-            new_id.accept(this);
+//        Identifier new_id = constructorDeclaration.getMethodName();
+//        if (new_id != null)
+//            new_id.accept(this);
         messagePrinter(constructorDeclaration.getLine(), constructorDeclaration.toString());
         for (VariableDeclaration variables : constructorDeclaration.getArgs())
             variables.accept(this);
@@ -195,11 +195,14 @@ public class ASTTreePrinter extends Visitor<Void> {
     public Void visit(BinaryExpression binaryExpression) {
         messagePrinter(binaryExpression.getLine(), binaryExpression.toString());
         Expression exp1 = binaryExpression.getFirstOperand();
-        if(exp1 != null)
+        if (exp1 != null) {
             exp1.accept(this);
+        }
         Expression exp2 = binaryExpression.getSecondOperand();
         if(exp2 != null)
+        {
             exp2.accept(this);
+        }
 //        BinaryOperator oper_exp = binaryExpression.getBinaryOperator();
 //        if(oper_exp != null)
 //            oper_exp.accept(this);
@@ -264,8 +267,9 @@ public class ASTTreePrinter extends Visitor<Void> {
     public Void visit(MethodCall methodCall) {
         messagePrinter(methodCall.getLine(), methodCall.toString());
         Expression exp1 = methodCall.getInstance();
-        if(exp1 != null)
+        if(exp1 != null) {
             exp1.accept(this);
+        }
         ArrayList<Expression> exp2_arr = methodCall.getArgs();
         for(Expression exp2: exp2_arr)
         {
