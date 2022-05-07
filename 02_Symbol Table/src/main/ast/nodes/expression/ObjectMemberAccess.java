@@ -12,6 +12,7 @@ public class ObjectMemberAccess extends Expression{
         this.memberName = memberName;
     }
 
+
     public Expression getInstance() {
         return instance;
     }

@@ -240,8 +240,10 @@ public class ASTTreePrinter extends Visitor<Void> {
         if(exp1 != null)
             exp1.accept(this);
         Identifier id_member = objectOrListMemberAccess.getMemberName();
-        if(id_member != null)
+
+        if(id_member != null) {
             id_member.accept(this);
+        }
         return null;
     }
 

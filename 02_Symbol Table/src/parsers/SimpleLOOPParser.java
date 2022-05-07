@@ -3832,10 +3832,10 @@ public class SimpleLOOPParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			Identifier id;
+			Identifier id; Expression temp;
 			setState(703);
 			((AccessExpressionContext)_localctx).oe = otherExpression();
-			((AccessExpressionContext)_localctx).accessExpression_ret =  ((AccessExpressionContext)_localctx).oe.otherExpression_ret;
+			temp = ((AccessExpressionContext)_localctx).oe.otherExpression_ret;
 			setState(722);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,69,_ctx);
@@ -3852,8 +3852,8 @@ public class SimpleLOOPParser extends Parser {
 						((AccessExpressionContext)_localctx).LPAR = match(LPAR);
 						setState(706);
 						((AccessExpressionContext)_localctx).ma = methodArgs();
-						((AccessExpressionContext)_localctx).accessExpression_ret =  new MethodCall(((AccessExpressionContext)_localctx).oe.otherExpression_ret, ((AccessExpressionContext)_localctx).ma.methodArgs_ret);
-						    _localctx.accessExpression_ret.setLine(((AccessExpressionContext)_localctx).LPAR.getLine());
+						temp = new MethodCall(((AccessExpressionContext)_localctx).oe.otherExpression_ret, ((AccessExpressionContext)_localctx).ma.methodArgs_ret);
+						    temp.setLine(((AccessExpressionContext)_localctx).LPAR.getLine());
 						setState(708);
 						match(RPAR);
 						}
@@ -3872,7 +3872,7 @@ public class SimpleLOOPParser extends Parser {
 							{
 							setState(711);
 							((AccessExpressionContext)_localctx).i = identifier();
-							System.out.println(((AccessExpressionContext)_localctx).i.identifier_ret.toString());((AccessExpressionContext)_localctx).accessExpression_ret =  new ObjectMemberAccess(_localctx.accessExpression_ret, ((AccessExpressionContext)_localctx).i.identifier_ret); _localctx.accessExpression_ret.setLine(((AccessExpressionContext)_localctx).i.identifier_ret.getLine());
+							temp= new ObjectMemberAccess(temp, ((AccessExpressionContext)_localctx).i.identifier_ret); temp.setLine(((AccessExpressionContext)_localctx).i.identifier_ret.getLine());
 							}
 							break;
 						case NEW:
@@ -3922,7 +3922,7 @@ public class SimpleLOOPParser extends Parser {
 						{
 						setState(726);
 						((AccessExpressionContext)_localctx).i2 = identifier();
-						((AccessExpressionContext)_localctx).accessExpression_ret =  new ObjectMemberAccess(_localctx.accessExpression_ret, ((AccessExpressionContext)_localctx).i2.identifier_ret);
+						((AccessExpressionContext)_localctx).accessExpression_ret =  new ObjectMemberAccess(temp, ((AccessExpressionContext)_localctx).i2.identifier_ret);
 						    _localctx.accessExpression_ret.setLine(((AccessExpressionContext)_localctx).i2.identifier_ret.getLine());
 						}
 						}
@@ -3935,7 +3935,7 @@ public class SimpleLOOPParser extends Parser {
 						((AccessExpressionContext)_localctx).LBRACK = match(LBRACK);
 						setState(730);
 						((AccessExpressionContext)_localctx).ex = expression();
-						((AccessExpressionContext)_localctx).accessExpression_ret =  new ArrayAccessByIndex(_localctx.accessExpression_ret, ((AccessExpressionContext)_localctx).ex.expression_ret);
+						((AccessExpressionContext)_localctx).accessExpression_ret =  new ArrayAccessByIndex(temp, ((AccessExpressionContext)_localctx).ex.expression_ret);
 						     _localctx.accessExpression_ret.setLine(((AccessExpressionContext)_localctx).LBRACK.getLine());
 						setState(732);
 						match(RBRACK);

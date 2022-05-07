@@ -379,15 +379,15 @@ postUnaryExpression returns [Expression postUnaryExpression_ret]
 //todo
 accessExpression returns [Expression accessExpression_ret]
     :
-    {Identifier id;} oe = otherExpression {$accessExpression_ret = $oe.otherExpression_ret;}
-    ((LPAR ma = methodArgs {$accessExpression_ret = new MethodCall($oe.otherExpression_ret, $ma.methodArgs_ret);
-    $accessExpression_ret.setLine($LPAR.getLine());} RPAR) | ((DOT  (i = identifier {System.out.println($i.identifier_ret.toString());$accessExpression_ret = new ObjectMemberAccess($accessExpression_ret, $i.identifier_ret); $accessExpression_ret.setLine($i.identifier_ret.getLine());}
+    {Identifier id; Expression temp;} oe = otherExpression {temp = $oe.otherExpression_ret;}
+    ((LPAR ma = methodArgs {temp = new MethodCall($oe.otherExpression_ret, $ma.methodArgs_ret);
+    temp.setLine($LPAR.getLine());} RPAR) | ((DOT  (i = identifier {temp= new ObjectMemberAccess(temp, $i.identifier_ret); temp.setLine($i.identifier_ret.getLine());}
     | NEW {id = new Identifier($NEW.getText()); id.setLine($NEW.getLine());}
     | INITIALIZE {id = new Identifier($INITIALIZE.getText()); id.setLine($INITIALIZE.getLine());}))
     ))*
-    ((DOT (i2 = identifier {$accessExpression_ret = new ObjectMemberAccess($accessExpression_ret, $i2.identifier_ret);
+    ((DOT (i2 = identifier {$accessExpression_ret = new ObjectMemberAccess(temp, $i2.identifier_ret);
     $accessExpression_ret.setLine($i2.identifier_ret.getLine());}))
-    | (LBRACK ex = expression {$accessExpression_ret = new ArrayAccessByIndex($accessExpression_ret, $ex.expression_ret);
+    | (LBRACK ex = expression {$accessExpression_ret = new ArrayAccessByIndex(temp, $ex.expression_ret);
      $accessExpression_ret.setLine($LBRACK.getLine());} RBRACK))*;
 
 //todo
