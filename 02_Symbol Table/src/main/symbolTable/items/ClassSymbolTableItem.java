@@ -6,7 +6,7 @@ import main.symbolTable.SymbolTable;
 
 public class ClassSymbolTableItem extends SymbolTableItem {
     public static final String START_KEY = "Class_";
-    private SymbolTable classSymbolTable;
+    public SymbolTable classSymbolTable;
     private ClassDeclaration classDeclaration;
 
     public ClassSymbolTableItem(ClassDeclaration classDeclaration) {

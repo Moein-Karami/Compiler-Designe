@@ -88,7 +88,13 @@ public class SimpleLOOPCompiler {
 
         Program program = simpleLOOPParser.simpleLOOP().simpleLOOPProgram;
 
-        ASTTreePrinter astTreePrinter = new ASTTreePrinter();
-        program.accept(astTreePrinter);
+        NameAnalyzer name_analyzer = new NameAnalyzer(program);
+        name_analyzer.analyze();
+        ErrorPrinter error_printer = new ErrorPrinter();
+        program.accept(error_printer);
+        if (error_printer.has_error == false) {
+            ASTTreePrinter astTreePrinter = new ASTTreePrinter();
+            program.accept(astTreePrinter);
+        }
     }
 }
