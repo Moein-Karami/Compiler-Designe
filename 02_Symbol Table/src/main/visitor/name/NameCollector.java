@@ -93,8 +93,9 @@ public class NameCollector extends Visitor<Void> {
         for (VariableDeclaration var : methodDeclaration.getArgs()) {
             var.accept(this);
         }
-
+//        System.out.println(methodDeclaration.getMethodName().getName());
         for (VariableDeclaration var : methodDeclaration.getLocalVars()) {
+//            System.out.println(var.getVarName().getName());
             var.accept(this);
         }
         SymbolTable.pop();

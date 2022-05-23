@@ -118,7 +118,7 @@ field_decleration returns [ArrayList<Declaration> field_decleration_ret]
        }
     }|
     me = method {$field_decleration_ret.add($me.method_ret);})) | cn = constructor
-    {$field_decleration_ret.add($cn.constructor_ret);}) NEWLINE+;
+    {$field_decleration_ret.add($cn.constructor_ret);}) NEWLINE*;
 
 //todo
 method returns [MethodDeclaration method_ret]
@@ -222,8 +222,8 @@ varDecStatement returns [ArrayList<VariableDeclaration> varDecStatement_ret]
    }
     (COMMA id2 = identifier {
         VariableDeclaration tmp2;
-        tmp2 = new VariableDeclaration($id.identifier_ret, $tp.type_ret);
-        tmp2.setLine($id.identifier_ret.getLine());
+        tmp2 = new VariableDeclaration($id2.identifier_ret, $tp.type_ret);
+        tmp2.setLine($id2.identifier_ret.getLine());
         $varDecStatement_ret.add(tmp2);
     }
     )*;

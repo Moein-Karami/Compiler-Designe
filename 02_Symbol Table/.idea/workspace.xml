@@ -3,10 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="3deceabf-88d7-4158-9c61-26adbddda57b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/main/SimpleLOOPCompiler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/main/SimpleLOOPCompiler.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/main/grammar/SimpleLOOP.g4" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/main/grammar/SimpleLOOP.g4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/02_Symbol Table/main/visitor/name/NameCollector.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/02_Symbol Table/main/visitor/name/NameCollector.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/samples/sample1.sl" beforeDir="false" afterPath="$PROJECT_DIR$/samples/sample1.sl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/visitor/name/NameChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/visitor/name/NameChecker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/samples/sample2.sl" beforeDir="false" afterPath="$PROJECT_DIR$/samples/sample2.sl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/grammar/SimpleLOOP.g4" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/grammar/SimpleLOOP.g4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/visitor/name/NameCollector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/visitor/name/NameCollector.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,22 +33,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="main.visitor.name" />
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="main.SimpleLOOP" type="Application" factoryName="Application" nameIsGenerated="true">
+    <configuration name="SimpleLOOP" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="main.SimpleLOOP" />
       <module name="02_Symbol Table" />
-      <option name="PROGRAM_PARAMETERS" value="samples/sample4.sl" />
+      <option name="PROGRAM_PARAMETERS" value="samples/sample2.sl" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -54,6 +59,13 @@
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3deceabf-88d7-4158-9c61-26adbddda57b" name="Changes" comment="" />
+      <created>1651958387118</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1651958387118</updated>
+    </task>
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
