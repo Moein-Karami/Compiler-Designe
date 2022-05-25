@@ -1,57 +1,54 @@
-class Bookstore {
-    public initialize (int id) {
+int x
+class Student {
+    private int id
+    private Course[10] courses
+    private int course_num
+    public initialize(int id) {
+        self.course_num = 0
         self.id = id
-        self.fp = self.setAvailableBooks
     }
-
-    private int id;
-    private Address address;
-    private Book[100] books;
-    private void setAvailableBooks() {
-        Book book;
-        int i
-        i = 0;
-        self.books.each do |book| {
-            book = Book.new(1000 * i + (i / 2), i++);
-            books[i - 1] = book;
-        }
-    }
-    public bool isBookAffordable(int id, int maxPrice) {
-         self.books.each do |book| {
-            if(book.getId() == id) {
-                if (book.getPrice() < maxPrice)
-                    return true;
-            }
-        }
-        return false;
-    }
-
-    public fptr<void -> void> fp;
+    public bool coursePassed(int id) {
+    Course c
+    x()
+    x.each do |c|
+        if c.getId() == id
+            if c.getGrade() > 10
+                return true
+            else
+                return false
+    self.courses.each do |id|
+        return 0
+    return 1
 }
-
-
-class Book{
-    private int price;
-    private int id;
-    public initialize (int price, int id) {
-        self.price = price;
-        self.id = id;
+public void addCourse(int id, int grade) {
+    Course newCourse
+    newCourse = Course.new(id)
+    self.courses[self.course_num] = newCourse
     }
-
-    public int getId() {
-        return self.id;
-    }
-
-    public int getPrice() {
-        return self.price;
-    }
-
 }
-
-class Main < X{
+class Course < Main {
+    private int grade
+    private int id
+    public initialize(int id, int grade) {
+        self.id = id
+        self.grade = grade
+    }
+    public int getGrade()
+        return self.grade
+    public int getId()
+        return self.id
+}
+class Main {
+    private int[0] a
+    public Set <int> ss
     public initialize() {
-        Bookstore bookstore;
-        bookstore = Bookstore.new(4 / 1 && 5 + 20);
-        bookstore.fp();
+        Student s
+        x = 1 + true
+        self.ss = Set.new((true,2,3))
+        s = Student.new(810198433)
+        s.addCourse(810110, 15)
+        s.addCourse(810114, 9)
+        s.addCourse(810134, 14)
+        print(s.coursePassed(810114))
     }
 }

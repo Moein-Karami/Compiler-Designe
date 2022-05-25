@@ -28,11 +28,15 @@ public class SimpleLOOPCompiler {
         NameAnalyzer nameAnalyzer = new NameAnalyzer(program);
         nameAnalyzer.analyze();
 
-        Graph<String> classHierarchy = nameAnalyzer.getClassHierarchy();
-        TypeChecker typeChecker = new TypeChecker(classHierarchy);
-        program.accept(typeChecker);
-
         int numberOfErrors = program.accept(errorReporter);
+
+        if(numberOfErrors == 0) {
+            Graph<String> classHierarchy = nameAnalyzer.getClassHierarchy();
+            TypeChecker typeChecker = new TypeChecker(classHierarchy);
+            program.accept(typeChecker);
+        }
+
+        numberOfErrors = program.accept(errorReporter) + numberOfErrors;
         if(numberOfErrors == 0)
             program.accept(astTreePrinter);
 
