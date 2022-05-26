@@ -5,6 +5,7 @@ import main.ast.nodes.declaration.classDec.ClassDeclaration;
 import main.ast.nodes.declaration.classDec.classMembersDec.MethodDeclaration;
 import main.ast.nodes.expression.*;
 import main.ast.nodes.expression.operators.BinaryOperator;
+import main.ast.nodes.expression.operators.TernaryOperator;
 import main.ast.nodes.expression.operators.UnaryOperator;
 import main.ast.nodes.expression.values.NullValue;
 import main.ast.nodes.expression.values.SetValue;
@@ -20,6 +21,7 @@ import main.ast.types.primitives.ClassType;
 import main.ast.types.primitives.IntType;
 import main.ast.types.primitives.VoidType;
 import main.ast.types.set.SetType;
+import main.compileError.CompileError;
 import main.compileError.typeError.*;
 import main.symbolTable.SymbolTable;
 import main.symbolTable.exceptions.ItemNotFoundException;
@@ -31,6 +33,7 @@ import main.symbolTable.utils.graph.Graph;
 import main.visitor.Visitor;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class ExpressionTypeChecker extends Visitor<Type> {
     private Graph<String> classHierarchy;
@@ -42,6 +45,13 @@ public class ExpressionTypeChecker extends Visitor<Type> {
     public ClassDeclaration curr_class;
 
     public MethodDeclaration curr_method;
+
+    public boolean is_lval(Expression expression) {
+        Type exp_type = expression.accept(this);
+        if (expression instanceof Identifier || expression instanceof ObjectMemberAccess || expression instanceof ArrayAccessByIndex)
+            return is_subtype(exp_type, new IntType());
+        return false;
+    }
 
     public boolean is_subtype_multiple(ArrayList<Type> first, ArrayList<Type> second) {
         if(first.size() != second.size())
@@ -315,7 +325,7 @@ public class ExpressionTypeChecker extends Visitor<Type> {
         if (instance_type instanceof NoType)
             return new NoType();
         if (!(instance_type instanceof ClassType)){
-            objectOrListMemberAccess.addError(new AccessOnNonClass(objectMemberAccess.getLine()));
+            objectMemberAccess.addError(new AccessOnNonClass(objectMemberAccess.getLine()));
             return new NoType();
         }
         String class_name = ((ClassType) instance_type).getClassName().getName();
@@ -342,7 +352,7 @@ public class ExpressionTypeChecker extends Visitor<Type> {
                     return new FptrType(new ArrayList<>(), new VoidType());
                 }
                 else {
-                    objectMemberAccess.addError(new MemberNotAvailableInClass(objectMemberAccess.getLine(), member_name.getName(), class_name););
+                    objectMemberAccess.addError(new MemberNotAvailableInClass(objectMemberAccess.getLine(), member_name.getName(), class_name));
                     return new NoType();
                 }
             }
@@ -351,55 +361,111 @@ public class ExpressionTypeChecker extends Visitor<Type> {
 
     @Override
     public Type visit(SetNew setNew) {
-        //Todo
-        return null;
+        ArrayList<Expression> args = setNew.getArgs();
+        boolean err = false;
+        for (Expression exp : args) {
+            Type tp = exp.accept(this);
+            if (tp instanceof NoType)
+                err = true;
+            if (!(tp instanceof IntType))
+            {
+                setNew.addError(new NewInputNotSet(setNew.getLine()));
+                return new NoType();
+            }
+        }
+        if (err)
+            return new NoType();
+        return new SetType();
     }
 
     @Override
     public Type visit(SetInclude setInclude) {
-        //Todo
-        return null;
+        Expression instance = setInclude.getSetArg();
+        Expression arg = setInclude.getElementArg();
+        Type instance_type = instance.accept(this);
+        Type arg_type = arg.accept(this);
+        if (instance_type instanceof NoType)
+            return new NoType();
+        if (!(instance_type instanceof SetType)){
+            return new NoType();
+        }
+        if (arg_type instanceof NoType)
+            return new NoType();
+        if (!(arg_type instanceof IntType)){
+            setInclude.addError(new SetIncludeInputNotInt(setInclude.getLine()));
+            return new NoType();
+        }
+        return new BoolType();
     }
 
     @Override
     public Type visit(RangeExpression rangeExpression) {
-        //Todo
-        return null;
+        Expression left = rangeExpression.getLeftExpression();
+        Expression right = rangeExpression.getRightExpression();
+        Type left_type = left.accept(this);
+        Type right_type = right.accept(this);
+        if (left_type instanceof NoType || right_type instanceof NoType)
+            return new NoType();
+        if (!(left_type instanceof IntType && right_type instanceof IntType)) {
+            rangeExpression.addError(new EachRangeNotInt(rangeExpression.getLine()));
+            return new NoType();
+        }
+        return new ArrayType(new IntType(), new ArrayList<Expression>());
     }
 
     @Override
     public Type visit(TernaryExpression ternaryExpression) {
-        //Todo
-        return null;
+        Expression cond = ternaryExpression.getCondition();
+        Expression first = ternaryExpression.getTrueExpression();
+        Expression second = ternaryExpression.getFalseExpression();
+        Type cond_type = cond.accept(this);
+        Type first_type = first.accept(this);
+        Type second_type = second.accept(this);
+        boolean err = cond_type instanceof NoType || first_type instanceof NoType || second_type instanceof NoType;
+
+        if (is_subtype(cond_type, new BoolType())){
+            if ((!(first_type instanceof NoType)) && (!(second_type instanceof NoType))) {
+                if (!(is_subtype(first_type, second_type) && is_subtype(second_type, first_type))){
+                    err = true;
+                    ternaryExpression.addError(new UnsupportedOperandType(ternaryExpression.getLine(), TernaryOperator.ternary.name()));
+                }
+            }
+        } else {
+            err = true;
+            ternaryExpression.addError(new UnsupportedOperandType(ternaryExpression.getLine(), TernaryOperator.ternary.name()));
+        }
+        if (err)
+            return new NoType();
+        if (!(first_type instanceof NoType))
+            return first_type;
+        return second_type;
     }
 
     @Override
     public Type visit(IntValue intValue) {
-        //Todo
-        return null;
+        return new IntType();
     }
 
     @Override
     public Type visit(BoolValue boolValue) {
-        //Todo
-        return null;
+        return new BoolType();
     }
 
     @Override
     public Type visit(SelfClass selfClass) {
-        //todo
-        return null;
+        return new ClassType(curr_class.getClassName());
     }
 
     @Override
     public Type visit(SetValue setValue) {
-        //todo
-        return null;
+        Type tp = setValue.accept(this);
+        if (is_valid(tp, setValue))
+            return tp;
+        return new NoType();
     }
 
     @Override
     public Type visit(NullValue nullValue) {
-        //todo
-        return null;
+        return new NullType();
     }
 }
