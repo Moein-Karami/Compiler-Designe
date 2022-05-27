@@ -30,6 +30,7 @@ import main.symbolTable.items.FieldSymbolTableItem;
 import main.symbolTable.items.LocalVariableSymbolTableItem;
 import main.symbolTable.items.MethodSymbolTableItem;
 import main.symbolTable.utils.graph.Graph;
+import main.util.ArgPair;
 import main.visitor.Visitor;
 
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public class ExpressionTypeChecker extends Visitor<Type> {
         else if(first instanceof ArrayType) {
             if(!(second instanceof ArrayType))
                 return false;
-            return ((ArrayType) first).getType().toString().equals(((ArrayType) second).getType().toString());
+            return is_subtype(((ArrayType) first).getType(), ((ArrayType) second).getType());
         }
         return false;
     }
@@ -251,11 +252,24 @@ public class ExpressionTypeChecker extends Visitor<Type> {
         ArrayList<Type> given_args = new ArrayList<>();
         for (Expression arg : methodCall.getArgs())
             given_args.add(arg.accept(this));
-
         ArrayList<Type> args = ((FptrType) instance).getArgumentsTypes();
         Type ret = ((FptrType) instance).getReturnType();
-        if (is_subtype_multiple(given_args, args))
-            return ret;
+        if (!(methodCall.getInstance() instanceof ObjectMemberAccess)){
+            if (is_subtype_multiple(given_args, args))
+                return ret;
+        }
+        else{
+            int defs = this.get_number_of_defaults((ObjectMemberAccess) methodCall.getInstance());
+            boolean check = is_subtype_multiple(given_args, args);
+            while (defs > 0) {
+                defs--;
+                args.remove(args.size() - 1);
+                check |= is_subtype_multiple(given_args, args);
+            }
+            if (check)
+                return ret;
+        }
+
         methodCall.addError(new MethodCallNotMatchDefinition(methodCall.getLine()));
         return new NoType();
     }
@@ -356,6 +370,39 @@ public class ExpressionTypeChecker extends Visitor<Type> {
                     return new NoType();
                 }
             }
+        }
+    }
+
+    public int get_number_of_defaults(ObjectMemberAccess objectMemberAccess) {
+        Expression instance = objectMemberAccess.getInstance();
+        Identifier member_name = objectMemberAccess.getMemberName();
+        Type instance_type = instance.accept(this);
+
+        String class_name = ((ClassType) instance_type).getClassName().getName();
+        ClassSymbolTableItem class_item;
+        SymbolTable class_table;
+        try {
+            class_item = (ClassSymbolTableItem) SymbolTable.root.getItem(ClassSymbolTableItem.START_KEY + class_name, true);
+            class_table = class_item.getClassSymbolTable();
+            try {
+                MethodSymbolTableItem method_item = (MethodSymbolTableItem) class_table.getItem(MethodSymbolTableItem.START_KEY + member_name.getName(), true);
+                MethodDeclaration method = method_item.getMethodDeclaration();
+                int ret = 0;
+                for (ArgPair arg_pair : method.getArgs()){
+                    if (arg_pair.getDefaultValue() == null)
+                        ret++;
+                }
+                return ret;
+            } catch (ItemNotFoundException no_method) {
+                if(member_name.getName().equals(class_name)) {
+                    return 0;
+                }
+                else {
+                    return 0;
+                }
+            }
+        } catch (ItemNotFoundException e) {
+            return 0;
         }
     }
 
