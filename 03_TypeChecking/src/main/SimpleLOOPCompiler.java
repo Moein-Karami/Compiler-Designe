@@ -28,7 +28,7 @@ public class SimpleLOOPCompiler {
         NameAnalyzer nameAnalyzer = new NameAnalyzer(program);
         nameAnalyzer.analyze();
 
-        int numberOfErrors = program.accept(errorReporter);
+//        int numberOfErrors = program.accept(errorReporter);
 
 //        if(numberOfErrors == 0) {
             Graph<String> classHierarchy = nameAnalyzer.getClassHierarchy();
@@ -36,7 +36,7 @@ public class SimpleLOOPCompiler {
             program.accept(typeChecker);
 //        }
 
-        numberOfErrors = program.accept(errorReporter) + numberOfErrors;
+        int numberOfErrors = program.accept(errorReporter);
         if(numberOfErrors == 0)
             program.accept(astTreePrinter);
 

@@ -15,6 +15,7 @@ import main.ast.nodes.statement.*;
 import main.ast.nodes.statement.set.*;
 import main.ast.types.NoType;
 import main.ast.types.Type;
+import main.ast.types.array.ArrayType;
 import main.ast.types.primitives.BoolType;
 import main.ast.types.primitives.ClassType;
 import main.ast.types.primitives.IntType;
@@ -25,7 +26,7 @@ import main.symbolTable.utils.graph.Graph;
 import main.util.ArgPair;
 import main.visitor.*;
 
-import javax.lang.model.type.ArrayType;
+import java.util.ArrayList;
 
 public class TypeChecker extends Visitor<Void> {
     private Graph<String> classHierarchy;
@@ -58,7 +59,7 @@ public class TypeChecker extends Visitor<Void> {
     public Void visit(ClassDeclaration classDeclaration) {
         expressionTypeChecker.curr_class = classDeclaration;
         Identifier classIdentifier = classDeclaration.getClassName();
-        Type class_type = classIdentifier.accept(expressionTypeChecker);
+//        Type class_type = classIdentifier.accept(expressionTypeChecker);
         String nameIdentifier = classIdentifier.getName();
         boolean have_initialize = false;
         if (classDeclaration.getParentClassName() != null)
@@ -99,6 +100,7 @@ public class TypeChecker extends Visitor<Void> {
             variableDeclaration.accept(this);
         for (Statement statement : constructorDeclaration.getBody())
             statement.accept(this);
+        expressionTypeChecker.curr_method = null;
         return null;
     }
 
@@ -116,14 +118,16 @@ public class TypeChecker extends Visitor<Void> {
             variableDeclaration.accept(this);
         boolean have_add_unreach = false;
         for (Statement statement : methodDeclaration.getBody()) {
+            /*
             if(methodDeclaration.getDoesReturn() == true && !have_add_unreach)
             {
                 have_add_unreach = true;
                 statement.addError(new UnreachableStatements(statement));
             }
+             */
             statement.accept(this);
         }
-        if(!(return_type instanceof VoidType) && methodDeclaration.getDoesReturn() == false)
+        /*if(!(return_type instanceof VoidType) && methodDeclaration.getDoesReturn() == false)
         {
             methodDeclaration.addError(new MissingReturnStatement(methodDeclaration));
         }
@@ -131,6 +135,7 @@ public class TypeChecker extends Visitor<Void> {
         {
             methodDeclaration.addError(new VoidMethodHasReturn(methodDeclaration));
         }
+         */
         expressionTypeChecker.curr_method = null;
         return null;
     }
@@ -144,6 +149,18 @@ public class TypeChecker extends Visitor<Void> {
     @Override
     public Void visit(VariableDeclaration varDeclaration) {
         boolean temp = expressionTypeChecker.is_valid(varDeclaration.getType(), varDeclaration);
+        if(varDeclaration.getType() instanceof ArrayType)
+        {
+            for (Expression dim : ((ArrayType) varDeclaration.getType()).getDimensions()){
+                if (dim instanceof IntValue){
+                    if (((IntValue) dim).getConstant() == 0){
+                        varDeclaration.addError(new CannotHaveEmptyArray(varDeclaration.getLine()));
+                        varDeclaration.setType(new NoType());
+                        break;
+                    }
+                }
+            }
+        }
         return null;
     }
 
@@ -152,7 +169,7 @@ public class TypeChecker extends Visitor<Void> {
         Type l_value = assignmentStmt.getlValue().accept(expressionTypeChecker);
         Type r_value = assignmentStmt.getrValue().accept(expressionTypeChecker);
         boolean temp = expressionTypeChecker.is_lval(assignmentStmt.getlValue());
-        if(temp == false)
+        if(!temp)
         {
             assignmentStmt.addError(new LeftSideNotLvalue(assignmentStmt.getLine()));
         }
@@ -175,6 +192,8 @@ public class TypeChecker extends Visitor<Void> {
     @Override
     public Void visit(ConditionalStmt conditionalStmt) {
         Type cond_stm = conditionalStmt.getCondition().accept(expressionTypeChecker);
+        if(!(cond_stm instanceof BoolType || cond_stm instanceof NoType))
+            conditionalStmt.addError(new ConditionNotBool(conditionalStmt.getLine()));
         conditionalStmt.getThenBody().accept(this);
         for (Statement statement : conditionalStmt.getElsif())
             statement.accept(this);
@@ -185,6 +204,9 @@ public class TypeChecker extends Visitor<Void> {
 
     @Override
     public Void visit(ElsifStmt elsifStmt) {
+        Type cond_stm = elsifStmt.getCondition().accept(expressionTypeChecker);
+        if(!(cond_stm instanceof BoolType || cond_stm instanceof NoType))
+            elsifStmt.addError(new ConditionNotBool(elsifStmt.getLine()));
         elsifStmt.getCondition().accept(this);
         elsifStmt.getThenBody().accept(this);
         return null;
@@ -210,6 +232,9 @@ public class TypeChecker extends Visitor<Void> {
     @Override
     public Void visit(ReturnStmt returnStmt) {
         Type ret_type = returnStmt.getReturnedExpr().accept(expressionTypeChecker);
+        Type method_type = expressionTypeChecker.curr_method.getReturnType();
+        if(!expressionTypeChecker.is_subtype(ret_type, method_type))
+            returnStmt.addError(new ReturnValueNotMatchMethodReturnType(returnStmt));
         return null;
     }
 
