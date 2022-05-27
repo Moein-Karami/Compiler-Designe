@@ -30,11 +30,11 @@ public class SimpleLOOPCompiler {
 
         int numberOfErrors = program.accept(errorReporter);
 
-        if(numberOfErrors == 0) {
+//        if(numberOfErrors == 0) {
             Graph<String> classHierarchy = nameAnalyzer.getClassHierarchy();
             TypeChecker typeChecker = new TypeChecker(classHierarchy);
             program.accept(typeChecker);
-        }
+//        }
 
         numberOfErrors = program.accept(errorReporter) + numberOfErrors;
         if(numberOfErrors == 0)

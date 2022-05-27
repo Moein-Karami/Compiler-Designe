@@ -7,6 +7,7 @@ import main.ast.nodes.declaration.classDec.classMembersDec.FieldDeclaration;
 import main.ast.nodes.declaration.classDec.classMembersDec.MethodDeclaration;
 import main.ast.nodes.declaration.variableDec.VariableDeclaration;
 import main.ast.nodes.expression.*;
+import main.ast.nodes.expression.operators.BinaryOperator;
 import main.ast.nodes.expression.values.NullValue;
 import main.ast.nodes.expression.values.SetValue;
 import main.ast.nodes.expression.values.primitive.*;
@@ -15,7 +16,9 @@ import main.ast.nodes.statement.set.*;
 import main.ast.types.NoType;
 import main.ast.types.Type;
 import main.ast.types.primitives.BoolType;
+import main.ast.types.primitives.ClassType;
 import main.ast.types.primitives.IntType;
+import main.ast.types.primitives.VoidType;
 import main.ast.types.set.SetType;
 import main.compileError.typeError.*;
 import main.symbolTable.utils.graph.Graph;
@@ -53,15 +56,16 @@ public class TypeChecker extends Visitor<Void> {
 
     @Override
     public Void visit(ClassDeclaration classDeclaration) {
+        expressionTypeChecker.curr_class = classDeclaration;
         Identifier classIdentifier = classDeclaration.getClassName();
+        Type class_type = classIdentifier.accept(expressionTypeChecker);
         String nameIdentifier = classIdentifier.getName();
         boolean have_initialize = false;
         if (classDeclaration.getParentClassName() != null)
         {
-            classDeclaration.getParentClassName().accept(this);
-            String nameParent = classDeclaration.getParentClassName().getName();
-            if(!this.classHierarchy.doesGraphContainNode(nameParent))
-                classDeclaration.addError(new ClassNotDeclared(classDeclaration.getLine(), nameParent));
+            String nameParent = classDeclaration.getParentClassName().toString();
+            Type class_par_type = classDeclaration.getParentClassName().accept(expressionTypeChecker);
+            expressionTypeChecker.is_valid(class_par_type, classDeclaration);
             if(nameIdentifier.equals("Main"))
                 classDeclaration.addError(new MainClassCantInherit(classDeclaration.getLine()));
             if(nameParent.equals("Main"))
@@ -81,11 +85,14 @@ public class TypeChecker extends Visitor<Void> {
             methodDeclaration.accept(this);
         if(have_initialize == false && nameIdentifier.equals("Main"))
             classDeclaration.addError(new NoConstructorInMainClass(classDeclaration));
+        expressionTypeChecker.curr_class = null;
         return null;
     }
 
     @Override
     public Void visit(ConstructorDeclaration constructorDeclaration) {
+        expressionTypeChecker.curr_method = constructorDeclaration;
+        Type type_constructor = constructorDeclaration.getMethodName().accept(expressionTypeChecker);
         for (ArgPair argPair : constructorDeclaration.getArgs())
             argPair.getVariableDeclaration().accept(this);
         for (VariableDeclaration variableDeclaration : constructorDeclaration.getLocalVars())
@@ -97,8 +104,9 @@ public class TypeChecker extends Visitor<Void> {
 
     @Override
     public Void visit(MethodDeclaration methodDeclaration) {
+        expressionTypeChecker.curr_method = methodDeclaration;
         Type return_type = methodDeclaration.getReturnType();
-        this.expressionTypeChecker.isValidType(methodDeclaration, methodDeclaration.getReturnType());
+        expressionTypeChecker.is_valid(return_type, methodDeclaration);
         for (ArgPair argPair : methodDeclaration.getArgs()) {
             argPair.getVariableDeclaration().accept(this);
             if (argPair.getDefaultValue() != null)
@@ -106,9 +114,24 @@ public class TypeChecker extends Visitor<Void> {
         }
         for (VariableDeclaration variableDeclaration : methodDeclaration.getLocalVars())
             variableDeclaration.accept(this);
-        for (Statement statement : methodDeclaration.getBody())
+        boolean have_add_unreach = false;
+        for (Statement statement : methodDeclaration.getBody()) {
+            if(methodDeclaration.getDoesReturn() == true && !have_add_unreach)
+            {
+                have_add_unreach = true;
+                statement.addError(new UnreachableStatements(statement));
+            }
             statement.accept(this);
-        methodDeclaration.getReturnType();
+        }
+        if(!(return_type instanceof VoidType) && methodDeclaration.getDoesReturn() == false)
+        {
+            methodDeclaration.addError(new MissingReturnStatement(methodDeclaration));
+        }
+        if((return_type instanceof VoidType) && methodDeclaration.getDoesReturn() == true)
+        {
+            methodDeclaration.addError(new VoidMethodHasReturn(methodDeclaration));
+        }
+        expressionTypeChecker.curr_method = null;
         return null;
     }
 
@@ -120,7 +143,7 @@ public class TypeChecker extends Visitor<Void> {
 
     @Override
     public Void visit(VariableDeclaration varDeclaration) {
-        Type var_dec_type = varDeclaration.getVarName().accept(expressionTypeChecker);
+        boolean temp = expressionTypeChecker.is_valid(varDeclaration.getType(), varDeclaration);
         return null;
     }
 
@@ -128,6 +151,17 @@ public class TypeChecker extends Visitor<Void> {
     public Void visit(AssignmentStmt assignmentStmt) {
         Type l_value = assignmentStmt.getlValue().accept(expressionTypeChecker);
         Type r_value = assignmentStmt.getrValue().accept(expressionTypeChecker);
+        boolean temp = expressionTypeChecker.is_lval(assignmentStmt.getlValue());
+        if(temp == false)
+        {
+            assignmentStmt.addError(new LeftSideNotLvalue(assignmentStmt.getLine()));
+        }
+        boolean is_sub_ok = expressionTypeChecker.is_subtype(r_value, l_value);
+        if(!is_sub_ok)
+        {
+            assignmentStmt.addError(new UnsupportedOperandType(assignmentStmt.getLine()
+            , BinaryOperator.assign.name()));
+        }
         return null;
     }
 
@@ -187,7 +221,7 @@ public class TypeChecker extends Visitor<Void> {
         Type range_type = range_var.accept(expressionTypeChecker);
         if(!(range_type instanceof ArrayType || range_type instanceof NoType))
             eachStmt.addError(new EachCantIterateNoneArray(eachStmt.getLine()));
-        if(!expressionTypeChecker.have_equal_type(range_type, type_var))
+        else if(!expressionTypeChecker.is_subtype(range_type, type_var))
         {
             eachStmt.addError(new EachVarNotMatchList(eachStmt));
         }

@@ -82,6 +82,7 @@ public class ExpressionTypeChecker extends Visitor<Type> {
                 return true;
             if(!(second instanceof FptrType))
                 return false;
+            // momkene zir type (check bayad beshe)
             Type firstRetType = ((FptrType) first).getReturnType();
             Type secondRetType = ((FptrType) second).getReturnType();
             if(!is_subtype(firstRetType, secondRetType))
@@ -93,6 +94,7 @@ public class ExpressionTypeChecker extends Visitor<Type> {
         else if(first instanceof ArrayType) {
             if(!(second instanceof ArrayType))
                 return false;
+            //Zir class ham, ham bashan type ha ham ok hast(check bayad beshe)
             return ((ArrayType) first).getType().toString().equals(((ArrayType) second).getType().toString());
         }
         return false;
@@ -112,6 +114,7 @@ public class ExpressionTypeChecker extends Visitor<Type> {
             }
         }
         if(type instanceof ClassType) {
+            // fek konam node bayad bashe jaye type
             String className = ((ClassType)type).getClassName().getName();
             if(!this.classHierarchy.doesGraphContainNode(className)) {
                 node.addError(new ClassNotDeclared(node.getLine(), className));
@@ -268,6 +271,19 @@ public class ExpressionTypeChecker extends Visitor<Type> {
         SymbolTable method_table;
         LocalVariableSymbolTableItem local_item;
         Type tp;
+        if (curr_class == null){
+            try {
+                local_item = (LocalVariableSymbolTableItem) SymbolTable.root.getItem(LocalVariableSymbolTableItem.START_KEY + identifier.getName(), true);
+                tp = local_item.getType();
+                if (is_valid(tp, identifier))
+                    return tp;
+                else
+                    return new NoType();
+            } catch (ItemNotFoundException ignored) {
+                identifier.addError(new VarNotDeclared(identifier.getLine(), identifier.getName()));
+                return new NoType();
+            }
+        }
         try {
             class_item = (ClassSymbolTableItem) SymbolTable.root.getItem(ClassSymbolTableItem.START_KEY + this.curr_class.getClassName().getName(), true);
             class_table = class_item.getClassSymbolTable();
