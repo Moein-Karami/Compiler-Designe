@@ -157,6 +157,14 @@ public class ExpressionTypeChecker extends Visitor<Type> {
         BinaryOperator operator = binaryExpression.getBinaryOperator();
         Type first_type = binaryExpression.getFirstOperand().accept(this);
         Type second_type = binaryExpression.getSecondOperand().accept(this);
+        if (first_type instanceof VoidType) {
+            if (catch_error)
+                binaryExpression.addError(new CantUseValueOfVoidMethod(binaryExpression.getLine()));
+        }
+        if (second_type instanceof VoidType) {
+            if (catch_error)
+                binaryExpression.addError(new CantUseValueOfVoidMethod(binaryExpression.getLine()));
+        }
         if (operator.equals(BinaryOperator.eq)) {
             if ((first_type instanceof ArrayType) || (first_type instanceof SetType) || (second_type instanceof ArrayType)
                     || (second_type instanceof SetType)) {
@@ -242,6 +250,10 @@ public class ExpressionTypeChecker extends Visitor<Type> {
     @Override
     public Type visit(UnaryExpression unaryExpression) {
         Type operand = unaryExpression.getOperand().accept(this);
+        if (operand instanceof VoidType) {
+            if (catch_error)
+                unaryExpression.addError(new CantUseValueOfVoidMethod(unaryExpression.getLine()));
+        }
         if (operand instanceof NoType)
             return new NoType();
         UnaryOperator operator = unaryExpression.getOperator();

@@ -1,15 +1,11 @@
 class Main {
 
-    public int tmp() {
-        int b;
-        if(b)
-            return 0;
-        elsif(true)
-            b = tmp();
-        else
-            return 2;
+    public void tmp() {
+		 int x
     }
     public initialize() {
-        int a;
+        int x
+        if (x == self.tmp())
+            x = 3
     }
 }
