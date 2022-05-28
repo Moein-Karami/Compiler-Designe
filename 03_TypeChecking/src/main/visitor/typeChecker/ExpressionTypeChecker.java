@@ -33,6 +33,7 @@ import main.symbolTable.utils.graph.Graph;
 import main.util.ArgPair;
 import main.visitor.Visitor;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -229,7 +230,17 @@ public class ExpressionTypeChecker extends Visitor<Type> {
             ClassSymbolTableItem class_item = (ClassSymbolTableItem) SymbolTable.root.getItem(ClassSymbolTableItem.START_KEY + class_name, true);
             MethodSymbolTableItem init_item = (MethodSymbolTableItem) class_item.getClassSymbolTable().getItem(MethodSymbolTableItem.START_KEY + "initialize", true);
             ArrayList<Type> init_args = init_item.getArgTypes();
-            if (is_subtype_multiple(given_args, init_args))
+            ArrayList<Type> args = new ArrayList<Type>(init_args);
+
+            int defs = this.get_number_of_defaults_constructor(newClassInstance.getClassType());
+            boolean check = is_subtype_multiple(given_args, args);
+            while (defs > 0) {
+                defs--;
+                args.remove(args.size() - 1);
+                check |= is_subtype_multiple(given_args, args);
+            }
+
+            if (check)
                 return newClassInstance.getClassType();
             else {
                 if (catch_error)
@@ -449,7 +460,7 @@ public class ExpressionTypeChecker extends Visitor<Type> {
                 MethodDeclaration method = method_item.getMethodDeclaration();
                 int ret = 0;
                 for (ArgPair arg_pair : method.getArgs()) {
-                    if (arg_pair.getDefaultValue() == null)
+                    if (arg_pair.getDefaultValue() != null)
                         ret++;
                 }
                 return ret;
@@ -459,6 +470,30 @@ public class ExpressionTypeChecker extends Visitor<Type> {
                 } else {
                     return 0;
                 }
+            }
+        } catch (ItemNotFoundException e) {
+            return 0;
+        }
+    }
+
+    public int get_number_of_defaults_constructor(ClassType cls) {
+        String class_name = cls.getClassName().getName();
+        ClassSymbolTableItem class_item;
+        SymbolTable class_table;
+        try {
+            class_item = (ClassSymbolTableItem) SymbolTable.root.getItem(ClassSymbolTableItem.START_KEY + class_name, true);
+            class_table = class_item.getClassSymbolTable();
+            try {
+                MethodSymbolTableItem method_item = (MethodSymbolTableItem) class_table.getItem(MethodSymbolTableItem.START_KEY + "initialize", true);
+                MethodDeclaration method = method_item.getMethodDeclaration();
+                int ret = 0;
+                for (ArgPair arg_pair : method.getArgs()) {
+                    if (arg_pair.getDefaultValue() != null)
+                        ret++;
+                }
+                return ret;
+            } catch (ItemNotFoundException no_method) {
+                return 0;
             }
         } catch (ItemNotFoundException e) {
             return 0;

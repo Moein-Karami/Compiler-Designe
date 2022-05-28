@@ -1,12 +1,18 @@
-class Main {
+class Cls {
+	public initialize(int a = 5) {
+		int x
+	}
+}
 
-<<<<<<< HEAD
-    public void tmp() {
-		 int x
+class Main {
+    public int tmp(int a, int b, int c = 5) {
+
+		 return 5
     }
     public initialize() {
-        int x
-        if (x == self.tmp())
-            x = 3
+        Set <int> st, st2
+        st = Set.new()
+        st2 = Set.new()
+		st.merge(1, 3)
     }
 }
