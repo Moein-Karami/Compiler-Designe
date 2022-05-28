@@ -324,7 +324,7 @@ public class TypeChecker extends Visitor<Void> {
         {
             Expression input_arg = setMerge.getElementArgs().get(0);
             Type type_merge = input_arg.accept(expressionTypeChecker);
-            if(!(type_merge instanceof IntType || type_merge instanceof NoType))
+            if(!(type_merge instanceof SetType || type_merge instanceof NoType))
                 setMerge.addError(new MergeInputNotSet(setMerge.getLine()));
         }
         return null;

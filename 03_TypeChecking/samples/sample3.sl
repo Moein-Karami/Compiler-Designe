@@ -1,8 +1,8 @@
-class Main {
-
-<<<<<<< HEAD
-    public void tmp() {
-		 int x
+class T{
+    public Set <int>  y;
+    public int tmp() {
+        x = 2
+        y = Set.new(2)
     }
     public initialize() {
         int x
@@ -10,3 +10,4 @@ class Main {
             x = 3
     }
 }
+
