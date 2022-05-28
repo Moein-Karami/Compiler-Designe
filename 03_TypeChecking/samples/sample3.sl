@@ -14,7 +14,7 @@ class Main {
         Set <int> st, st2
         st = Set.new()
         st2 = Set.new()
-		st.merge(1, 3)
+		st.merge(true, false)
     }
 }
 
