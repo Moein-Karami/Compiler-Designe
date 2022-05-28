@@ -210,6 +210,10 @@ public class TypeChecker extends Visitor<Void> {
     public Void visit(AssignmentStmt assignmentStmt) {
         Type l_value = assignmentStmt.getlValue().accept(expressionTypeChecker);
         Type r_value = assignmentStmt.getrValue().accept(expressionTypeChecker);
+        if (r_value instanceof VoidType)
+            assignmentStmt.addError(new CantUseValueOfVoidMethod(assignmentStmt.getLine()));
+        if(l_value instanceof NoType)
+            return null;
         boolean temp = expressionTypeChecker.is_lval(assignmentStmt.getlValue());
         if(!temp)
         {

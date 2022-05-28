@@ -1,5 +1,6 @@
 class Main {
 
+<<<<<<< HEAD
     public void tmp() {
 		 int x
     }
