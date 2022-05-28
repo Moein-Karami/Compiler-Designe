@@ -37,6 +37,45 @@ public class TypeChecker extends Visitor<Void> {
         this.expressionTypeChecker = new ExpressionTypeChecker(classHierarchy);
     }
 
+    boolean is_return(Statement statement)
+    {
+        if(statement instanceof AssignmentStmt || statement instanceof PrintStmt ||
+        statement instanceof MethodCallStmt)
+            return false;
+        if(statement instanceof ReturnStmt)
+            return true;
+        if(statement instanceof EachStmt)
+        {
+            Statement body_each = ((EachStmt) statement).getBody();
+            return is_return(body_each);
+        }
+        if(statement instanceof BlockStmt)
+        {
+            for(Statement stmt: ((BlockStmt) statement).getStatements())
+            {
+                if(is_return(stmt) == true)
+                    return true;
+            }
+            return false;
+        }
+        if(statement instanceof ConditionalStmt)
+        {
+            if(((ConditionalStmt) statement).getElseBody() == null)
+                return false;
+            if(!is_return(((ConditionalStmt) statement).getThenBody()))
+                return false;
+            for(ElsifStmt cond:((ConditionalStmt) statement).getElsif())
+            {
+                if(!is_return(cond.getThenBody()))
+                    return false;
+            }
+            if(!is_return(((ConditionalStmt) statement).getElseBody()))
+                return false;
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public Void visit(Program program) {
         boolean seenMain = false;
@@ -62,11 +101,12 @@ public class TypeChecker extends Visitor<Void> {
 //        Type class_type = classIdentifier.accept(expressionTypeChecker);
         String nameIdentifier = classIdentifier.getName();
         boolean have_initialize = false;
-        if (classDeclaration.getParentClassName() != null)
-        {
-            String nameParent = classDeclaration.getParentClassName().toString();
-            Type class_par_type = classDeclaration.getParentClassName().accept(expressionTypeChecker);
-            expressionTypeChecker.is_valid(class_par_type, classDeclaration);
+        if (classDeclaration.getParentClassName() != null) {
+            String nameParent = classDeclaration.getParentClassName().getName();
+            if (!nameParent.equals("Main")) {
+                Type class_par_type = classDeclaration.getParentClassName().accept(expressionTypeChecker);
+                expressionTypeChecker.is_valid(class_par_type, classDeclaration);
+            }
             if(nameIdentifier.equals("Main"))
                 classDeclaration.addError(new MainClassCantInherit(classDeclaration.getLine()));
             if(nameParent.equals("Main"))
@@ -93,7 +133,7 @@ public class TypeChecker extends Visitor<Void> {
     @Override
     public Void visit(ConstructorDeclaration constructorDeclaration) {
         expressionTypeChecker.curr_method = constructorDeclaration;
-        Type type_constructor = constructorDeclaration.getMethodName().accept(expressionTypeChecker);
+//        Type type_constructor = constructorDeclaration.getMethodName().accept(expressionTypeChecker);
         for (ArgPair argPair : constructorDeclaration.getArgs())
             argPair.getVariableDeclaration().accept(this);
         for (VariableDeclaration variableDeclaration : constructorDeclaration.getLocalVars())
@@ -118,16 +158,19 @@ public class TypeChecker extends Visitor<Void> {
             variableDeclaration.accept(this);
         boolean have_add_unreach = false;
         for (Statement statement : methodDeclaration.getBody()) {
-            /*
             if(methodDeclaration.getDoesReturn() == true && !have_add_unreach)
             {
                 have_add_unreach = true;
                 statement.addError(new UnreachableStatements(statement));
             }
-             */
-            statement.accept(this);
+            if(is_return(statement))
+            {
+                expressionTypeChecker.curr_method.setDoesReturn(true);
+            }
+            if(!have_add_unreach)
+                statement.accept(this);
         }
-        /*if(!(return_type instanceof VoidType) && methodDeclaration.getDoesReturn() == false)
+        if(!(return_type instanceof VoidType) && methodDeclaration.getDoesReturn() == false)
         {
             methodDeclaration.addError(new MissingReturnStatement(methodDeclaration));
         }
@@ -135,7 +178,6 @@ public class TypeChecker extends Visitor<Void> {
         {
             methodDeclaration.addError(new VoidMethodHasReturn(methodDeclaration));
         }
-         */
         expressionTypeChecker.curr_method = null;
         return null;
     }
