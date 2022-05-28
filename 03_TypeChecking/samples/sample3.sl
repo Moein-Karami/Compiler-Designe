@@ -5,7 +5,7 @@ class Main {
         if(b)
             return 0;
         elsif(true)
-            b = tmp();
+            x = 2
         else
             return 2;
     }
