@@ -311,13 +311,16 @@ public class TypeChecker extends Visitor<Void> {
 
     @Override
     public Void visit(SetMerge setMerge) {
+        boolean have_add_error = false;
         Expression set_arg = setMerge.getSetArg();
         Type type_arg = set_arg.accept(expressionTypeChecker);
         if(setMerge.getElementArgs().size() > 1) {
             for (Expression set_expr : setMerge.getElementArgs()) {
                 Type type_merge = set_expr.accept(expressionTypeChecker);
-                if (!(type_merge instanceof IntType || type_merge instanceof NoType))
+                if (!(type_merge instanceof IntType || type_merge instanceof NoType) && !have_add_error) {
                     setMerge.addError(new MergeInputNotSet(setMerge.getLine()));
+                    have_add_error = true;
+                }
             }
         }
         else if(setMerge.getElementArgs().size() == 1)
