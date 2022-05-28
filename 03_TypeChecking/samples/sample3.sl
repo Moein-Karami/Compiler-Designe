@@ -1,13 +1,20 @@
-class T{
-    public Set <int>  y;
-    public int tmp() {
-        x = 2
-        y = Set.new(2)
+
+class Cls {
+	public initialize(int a = 5) {
+		int x
+	}
+}
+
+class Main {
+    public int tmp(int a, int b, int c = 5) {
+
+		 return 5
     }
     public initialize() {
-        int x
-        if (x == self.tmp())
-            x = 3
+        Set <int> st, st2
+        st = Set.new()
+        st2 = Set.new()
+		st.merge(1, 3)
     }
 }
 
