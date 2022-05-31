@@ -22,6 +22,9 @@ import main.ast.types.primitives.IntType;
 import main.ast.types.primitives.VoidType;
 import main.ast.types.set.SetType;
 import main.compileError.typeError.*;
+import main.symbolTable.SymbolTable;
+import main.symbolTable.exceptions.ItemNotFoundException;
+import main.symbolTable.items.*;
 import main.symbolTable.utils.graph.Graph;
 import main.util.ArgPair;
 import main.visitor.*;
@@ -104,6 +107,7 @@ public class TypeChecker extends Visitor<Void> {
         if (classDeclaration.getParentClassName() != null) {
             String nameParent = classDeclaration.getParentClassName().getName();
             if (!nameParent.equals("Main")) {
+                System.out.println(nameParent);
                 Type class_par_type = classDeclaration.getParentClassName().accept(expressionTypeChecker);
                 expressionTypeChecker.is_valid(class_par_type, classDeclaration);
             }
@@ -203,7 +207,49 @@ public class TypeChecker extends Visitor<Void> {
                 }
             }
         }
+        else if (!temp) {
+            set_no_type(varDeclaration);
+        }
+
         return null;
+    }
+
+    public void set_no_type(VariableDeclaration var) {
+        var.setType(new NoType());
+        ClassSymbolTableItem class_item;
+        SymbolTable class_table;
+        MethodSymbolTableItem method_item;
+        SymbolTable method_table;
+        LocalVariableSymbolTableItem local_item;
+        if (expressionTypeChecker.curr_class == null)
+        {
+            try {
+                local_item = (LocalVariableSymbolTableItem) SymbolTable.root.getItem(LocalVariableSymbolTableItem.START_KEY + var.getVarName(), true);
+                local_item.setType(new NoType());
+            } catch (ItemNotFoundException ignored) {}
+
+        }
+        else {
+            try {
+                class_item = (ClassSymbolTableItem) SymbolTable.root.getItem(ClassSymbolTableItem.START_KEY + expressionTypeChecker.curr_class.getClassName().getName(), true);
+                class_table = class_item.getClassSymbolTable();
+                if (expressionTypeChecker.curr_method == null) {
+                    try {
+                        FieldSymbolTableItem field = (FieldSymbolTableItem) class_table.getItem(FieldSymbolTableItem.START_KEY + var.getVarName().getName(), true);
+                        field.setType(new NoType());
+                    } catch (ItemNotFoundException ignored) {
+                    }
+                } else {
+                    try {
+                        method_item = (MethodSymbolTableItem) class_table.getItem(MethodSymbolTableItem.START_KEY + this.expressionTypeChecker.curr_method.getMethodName().getName(), true);
+                        method_table = method_item.getMethodSymbolTable();
+                        local_item = (LocalVariableSymbolTableItem) method_table.getItem(LocalVariableSymbolTableItem.START_KEY + var.getVarName().getName(), true);
+                        local_item.setType(new NoType());
+                    } catch (ItemNotFoundException ignored) {
+                    }
+                }
+            } catch (ItemNotFoundException ignored) {}
+        }
     }
 
     @Override
@@ -272,6 +318,8 @@ public class TypeChecker extends Visitor<Void> {
             UnsupportedTypeForPrint exception = new UnsupportedTypeForPrint(print.getLine());
             print.addError(exception);
         }
+        if (argType instanceof VoidType)
+            print.addError(new CantUseValueOfVoidMethod(print.getLine()));
         return null;
     }
 
