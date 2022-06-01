@@ -387,14 +387,14 @@ public class ExpressionTypeChecker extends Visitor<Type> {
         Type instance_type = instance.accept(this);
         Type index_type = index.accept(this);
         boolean err = false;
-        if (!(instance_type instanceof ArrayType || instance_type instanceof NoType)) {
-            if (catch_error)
-                arrayAccessByIndex.addError(new AccessByIndexOnNoneArray(arrayAccessByIndex.getLine()));
-            err = true;
-        }
         if (!is_subtype(index_type, new IntType())) {
             if (catch_error)
                 arrayAccessByIndex.addError(new ArrayIndexNotInt(arrayAccessByIndex.getLine()));
+            err = true;
+        }
+        if (!(instance_type instanceof ArrayType || instance_type instanceof NoType)) {
+            if (catch_error)
+                arrayAccessByIndex.addError(new AccessByIndexOnNoneArray(arrayAccessByIndex.getLine()));
             err = true;
         }
         if (err)

@@ -1,0 +1,451 @@
+Line 11: Variable x1 is not declared
+Line 19: Return value does not match with method return type
+Line 22: Return value does not match with method return type
+Line 31: Class C is not declared
+Line 37: Class C is not declared
+Line 42: Cannot have empty array
+Line 43: Redefinition of local variable aa
+Line 43: Cannot have empty array
+Line 44: Redefinition of local variable aa
+Line 44: Cannot have empty array
+Line 45: Redefinition of local variable aa
+Line 45: Cannot have empty array
+Line 51: Variable x1 is not declared
+Line 52: Variable x1 is not declared
+Line 53: Variable x1 is not declared
+Line 54: Variable x1 is not declared
+Line 54: Variable x2 is not declared
+Line 55: Variable x1 is not declared
+Line 56: Variable x1 is not declared
+Line 56: Variable x2 is not declared
+Line 57: Variable x1 is not declared
+Line 58: Variable x1 is not declared
+Line 59: There is no member named x1 in class Student
+Line 61: Variable x1 is not declared
+Line 62: There is no member named x1 in class Student
+Line 63: Variable x2 is not declared
+Line 64: There is no member named x1 in class Student
+Line 65: There is no member named x1 in class Student
+Line 66: There is no member named x1 in class Student
+Line 66: Variable x1 is not declared
+Line 68: New on non-Set
+Line 69: Class S is not declared
+Line 69: Variable x1 is not declared
+Line 70: Class s is not declared
+Line 70: Variable x1 is not declared
+Line 71: Variable x1 is not declared
+Line 72: Unsupported operand type for operator assign
+Line 72: Variable x1 is not declared
+Line 74: Unsupported operand type for operator assign
+Line 74: Variable x1 is not declared
+Line 75: Unsupported operand type for operator assign
+Line 75: Variable x1 is not declared
+Line 76: Unsupported operand type for operator assign
+Line 77: Variable x1 is not declared
+Line 78: Variable x1 is not declared
+Line 79: Unsupported operand type for operator assign
+Line 79: Variable x1 is not declared
+Line 80: Variable i1 is not declared
+Line 80: Variable x1 is not declared
+Line 82: Variable x1 is not declared
+Line 84: Variable x1 is not declared
+Line 84: Variable x1 is not declared
+Line 88: Variable x1 is not declared
+Line 90: Variable x2 is not declared
+Line 90: Variable x1 is not declared
+Line 92: There is no member named x1 in class Student
+Line 94: There is no member named x1 in class Student
+Line 96: Variable x1 is not declared
+Line 97: Variable x1 is not declared
+Line 101: Calling a non-callable
+Line 102: Calling a non-callable
+Line 104: Left side of assignment must be a valid lvalue
+Line 104: Variable v is not declared
+Line 108: Class c1 is not declared
+Line 109: Class C is not declared
+Line 110: Variable C is not declared
+Line 111: Variable C is not declared
+Line 112: Variable C is not declared
+Line 113: Variable C is not declared
+Line 114: Variable C is not declared
+Line 115: Variable C is not declared
+Line 116: Class C is not declared
+Line 119: There is no member named ab in class Student
+Line 120: There is no member named ab in class Student
+Line 121: There is no member named ab in class Student
+Line 122: There is no member named ab in class Student
+Line 123: There is no member named ab in class Student
+Line 123: Variable v1 is not declared
+Line 123: Variable v2 is not declared
+Line 125: There is no member named ab in class Main
+Line 133: Unsupported operand type for operator and
+Line 134: Unsupported operand type for operator and
+Line 136: Condition must be bool
+Line 137: Condition must be bool
+Line 139: Condition must be bool
+Line 143: Condition must be bool
+Line 150: Variable a is not declared
+Line 150: Unsupported operand type for operator eq
+Line 155: Unsupported operand type for operator gt
+Line 156: Unsupported operand type for operator eq
+Line 157: Unsupported operand type for operator postinc
+Line 158: Unsupported operand type for operator postdec
+Line 159: Unsupported operand type for operator and
+Line 160: Unsupported operand type for operator not
+Line 161: Condition must be bool
+Line 162: Condition must be bool
+Line 163: Condition must be bool
+Line 164: Unsupported operand type for operator not
+Line 167: Unsupported operand type for operator not
+Line 168: Condition must be bool
+Line 169: Condition must be bool
+Line 171: Unsupported operand type for operator eq
+Line 172: Unsupported operand type for operator postinc
+Line 174: Variable a is not declared
+Line 174: Unsupported operand type for operator eq
+Line 176: Unsupported operand type for operator or
+Line 177: Unsupported operand type for operator eq
+Line 180: Unsupported operand type for operator or
+Line 181: Unsupported operand type for operator eq
+Line 184: Unsupported operand type for operator assign
+Line 187: Unsupported operand type for operator mult
+Line 187: There is no member named ac in class Main
+Line 188: Unsupported operand type for operator div
+Line 188: There is no member named ac in class Main
+Line 189: There is no member named ac in class Main
+Line 191: Unsupported operand type for operator sub
+Line 191: There is no member named ac in class Main
+Line 192: Unsupported operand type for operator add
+Line 192: There is no member named ac in class Main
+Line 193: Unsupported operand type for operator mult
+Line 193: There is no member named ac in class Main
+Line 194: Unsupported operand type for operator mult
+Line 194: Unsupported operand type for operator postinc
+Line 195: Unsupported operand type for operator mult
+Line 195: There is no member named ac in class Main
+Line 197: There is no member named ac in class Main
+Line 198: Unsupported operand type for operator mult
+Line 198: There is no member named ac in class Main
+Line 199: There is no member named ac in class Main
+Line 203: Left side of assignment must be a valid lvalue
+Line 204: Left side of assignment must be a valid lvalue
+Line 204: Unsupported operand type for operator mult
+Line 205: Left side of assignment must be a valid lvalue
+Line 206: Left side of assignment must be a valid lvalue
+Line 207: Left side of assignment must be a valid lvalue
+Line 208: Left side of assignment must be a valid lvalue
+Line 218: Lvalue is required as the operand of postinc
+Line 219: Lvalue is required as the operand of postinc
+Line 220: Unsupported operand type for operator postinc
+Line 221: Lvalue is required as the operand of postinc
+Line 222: There is no member named x in class Main
+Line 223: There is no member named x in class Main
+Line 230: Args in method call do not match with definition
+Line 233: Args in method call do not match with definition
+Line 234: There is no member named fp in class Student
+Line 240: Unsupported type for print
+Line 242: There is no member named x in class Main
+Line 243: There is no member named c1 in class Main
+Line 249: Cannot use return value of a method having void return type
+Line 249: Args in method call do not match with definition
+Line 250: Args in method call do not match with definition
+Line 251: Args in method call do not match with definition
+Line 252: Cannot use return value of a method having void return type
+Line 252: Args in method call do not match with definition
+Line 253: Args in method call do not match with definition
+Line 254: Cannot use return value of a method having void return type
+Line 254: Args in method call do not match with definition
+Line 254: Variable x1 is not declared
+Line 255: Args in method call do not match with definition
+Line 255: Variable x1 is not declared
+Line 256: Cannot use return value of a method having void return type
+Line 256: Args in method call do not match with definition
+Line 258: Cannot use return value of a method having void return type
+Line 258: Args in method call do not match with definition
+Line 259: Args in method call do not match with definition
+Line 260: Args in method call do not match with definition
+Line 262: Cannot use return value of a method having void return type
+Line 262: Args in method call do not match with definition
+Line 262: Variable x1 is not declared
+Line 263: Args in method call do not match with definition
+Line 263: Variable x1 is not declared
+Line 265: Cannot use return value of a method having void return type
+Line 265: Args in method call do not match with definition
+Line 265: Variable x1 is not declared
+Line 266: Args in method call do not match with definition
+Line 266: Variable x1 is not declared
+Line 267: Args in method call do not match with definition
+Line 267: Variable x1 is not declared
+Line 269: Cannot use return value of a method having void return type
+Line 269: Args in method call do not match with definition
+Line 269: Cannot use return value of a method having void return type
+Line 269: Args in method call do not match with definition
+Line 269: Variable x1 is not declared
+Line 270: Cannot use return value of a method having void return type
+Line 270: Args in method call do not match with definition
+Line 271: Cannot use return value of a method having void return type
+Line 271: Args in method call do not match with definition
+Line 273: Cannot use return value of a method having void return type
+Line 273: Args in method call do not match with definition
+Line 273: Args in method call do not match with definition
+Line 273: Variable x1 is not declared
+Line 274: Cannot use return value of a method having void return type
+Line 274: Args in method call do not match with definition
+Line 275: Cannot use return value of a method having void return type
+Line 275: Args in method call do not match with definition
+Line 277: Cannot use return value of a method having void return type
+Line 277: Args in method call do not match with definition
+Line 277: Args in method call do not match with definition
+Line 278: Cannot use return value of a method having void return type
+Line 278: Args in method call do not match with definition
+Line 279: Cannot use return value of a method having void return type
+Line 279: Args in method call do not match with definition
+Line 281: Args in method call do not match with definition
+Line 281: Args in method call do not match with definition
+Line 281: Variable x1 is not declared
+Line 282: Cannot use return value of a method having void return type
+Line 282: Args in method call do not match with definition
+Line 283: Cannot use return value of a method having void return type
+Line 283: Args in method call do not match with definition
+Line 285: Args in method call do not match with definition
+Line 285: Args in method call do not match with definition
+Line 285: Variable x1 is not declared
+Line 286: Cannot use return value of a method having void return type
+Line 286: Args in method call do not match with definition
+Line 287: Cannot use return value of a method having void return type
+Line 287: Args in method call do not match with definition
+Line 289: Cannot use return value of a method having void return type
+Line 289: Args in method call do not match with definition
+Line 290: Args in method call do not match with definition
+Line 291: Args in method call do not match with definition
+Line 293: Unsupported operand type for operator ternary
+Line 293: Cannot use return value of a method having void return type
+Line 293: Args in method call do not match with definition
+Line 294: Unsupported operand type for operator ternary
+Line 294: Args in method call do not match with definition
+Line 295: Unsupported operand type for operator ternary
+Line 295: Args in method call do not match with definition
+Line 297: Cannot use return value of a method having void return type
+Line 297: Args in method call do not match with definition
+Line 298: Args in method call do not match with definition
+Line 299: Args in method call do not match with definition
+Line 301: Unsupported operand type for operator ternary
+Line 301: Cannot use return value of a method having void return type
+Line 301: Args in method call do not match with definition
+Line 302: Unsupported operand type for operator ternary
+Line 302: Args in method call do not match with definition
+Line 303: Unsupported operand type for operator ternary
+Line 303: Args in method call do not match with definition
+Line 305: Unsupported operand type for operator or
+Line 305: Cannot use return value of a method having void return type
+Line 305: Args in method call do not match with definition
+Line 305: Cannot use return value of a method having void return type
+Line 305: Args in method call do not match with definition
+Line 305: Cannot use return value of a method having void return type
+Line 305: Args in method call do not match with definition
+Line 305: Unsupported operand type for operator and
+Line 305: Cannot use return value of a method having void return type
+Line 305: Args in method call do not match with definition
+Line 305: Unsupported operand type for operator or
+Line 305: Cannot use return value of a method having void return type
+Line 305: Args in method call do not match with definition
+Line 305: Cannot use return value of a method having void return type
+Line 305: Args in method call do not match with definition
+Line 308: Args in method call do not match with definition
+Line 309: Args in method call do not match with definition
+Line 311: Args in method call do not match with definition
+Line 312: Args in method call do not match with definition
+Line 313: Args in method call do not match with definition
+Line 314: Args in method call do not match with definition
+Line 315: Args in method call do not match with definition
+Line 316: Args in method call do not match with definition
+Line 317: Args in method call do not match with definition
+Line 318: Args in method call do not match with definition
+Line 320: Args in method call do not match with definition
+Line 322: Args in method call do not match with definition
+Line 323: Args in method call do not match with definition
+Line 324: Args in method call do not match with definition
+Line 325: Args in method call do not match with definition
+Line 326: Args in method call do not match with definition
+Line 327: Args in method call do not match with definition
+Line 0: There is no member named [@2291,6603:6612='initialize',<5>,330:9] in class Student
+Line 0: There is no member named [@2298,6630:6639='initialize',<5>,331:9] in class Student
+Line 0: There is no member named [@2305,6655:6664='initialize',<5>,332:9] in class Student
+Line 0: There is no member named [@2314,6684:6693='initialize',<5>,333:9] in class Student
+Line 333: There is no member named x in class Main
+Line 0: There is no member named [@2323,6713:6722='initialize',<5>,334:9] in class Student
+Line 334: There is no member named x1 in class Main
+Line 0: There is no member named [@2332,6743:6752='initialize',<5>,335:9] in class Student
+Line 335: Variable x1 is not declared
+Line 0: There is no member named [@2339,6768:6777='initialize',<5>,336:9] in class Student
+Line 339: There is no member named x in class Student
+Line 341: There is no member named x1 in class Student
+Line 343: Each cannot iterate over a non-array
+Line 345: Variable x1 is not declared
+Line 349: Each cannot iterate over a non-array
+Line 357: Each cannot iterate over a non-array
+Line 359: There is no member named fp in class Student
+Line 361: Each cannot iterate over a non-array
+Line 363: Each cannot iterate over a non-array
+Line 370: Each range expression is not an integer
+Line 374: Each range expression is not an integer
+Line 376: Each range expression is not an integer
+Line 378: Variable x1 is not declared
+Line 380: Variable x1 is not declared
+Line 382: Each range expression is not an integer
+Line 382: Variable x1 is not declared
+Line 384: Each range expression is not an integer
+Line 386: Each range expression is not an integer
+Line 388: Each range expression is not an integer
+Line 390: Each range expression is not an integer
+Line 392: Each range expression is not an integer
+Line 394: Each range expression is not an integer
+Line 403: Variable x1 is not declared
+Line 405: Each variable main is not same type as range input
+Line 412: Variable x1 is not declared
+Line 414: Each variable main is not same type as range input
+Line 421: Variable x1 is not declared
+Line 423: Each variable main is not same type as range input
+Line 426: Each variable i is not same type as range input
+Line 428: Each variable x is not same type as range input
+Line 430: Variable x1 is not declared
+Line 439: Variable x1 is not declared
+Line 445: Access on non-class
+Line 448: Variable x1 is not declared
+Line 451: Access by index on a non-array
+Line 451: Variable a is not declared
+Line 452: Access by index on a non-array
+Line 453: Access by index on a non-array
+Line 454: Access by index on a non-array
+Line 454: Array index is not an integer
+Line 455: Access by index on a non-array
+Line 455: Array index is not an integer
+Line 456: Access by index on a non-array
+Line 456: Array index is not an integer
+Line 457: Access by index on a non-array
+Line 457: Variable a is not declared
+Line 458: Access by index on a non-array
+Line 459: Access by index on a non-array
+Line 460: Access by index on a non-array
+Line 460: Array index is not an integer
+Line 461: Access by index on a non-array
+Line 461: Array index is not an integer
+Line 462: Access by index on a non-array
+Line 462: Array index is not an integer
+Line 463: Variable a is not declared
+Line 466: Array index is not an integer
+Line 467: Array index is not an integer
+Line 468: Array index is not an integer
+Line 469: Variable x1 is not declared
+Line 469: Variable a is not declared
+Line 470: Variable x1 is not declared
+Line 471: Variable x1 is not declared
+Line 472: Array index is not an integer
+Line 472: Variable x1 is not declared
+Line 473: Array index is not an integer
+Line 473: Variable x1 is not declared
+Line 474: Array index is not an integer
+Line 474: Variable x1 is not declared
+Line 482: Merge on non-Set
+Line 483: Merge on non-Set
+Line 484: Merge on non-Set
+Line 485: Merge on non-Set
+Line 486: Merge on non-Set
+Line 487: Variable x1 is not declared
+Line 488: Variable x1 is not declared
+Line 489: Variable x1 is not declared
+Line 490: Variable x1 is not declared
+Line 491: Variable x1 is not declared
+Line 497: Merge on non-Set
+Line 498: Merge on non-Set
+Line 499: Merge on non-Set
+Line 500: Merge on non-Set
+Line 501: Merge on non-Set
+Line 502: Merge on non-Set
+Line 503: Merge on non-Set
+Line 504: Merge on non-Set
+Line 506: Merge on non-Set
+Line 510: Unsupported operand type for operator assign
+Line 511: New on non-Set
+Line 512: New on non-Set
+Line 513: New on non-Set
+Line 514: New on non-Set
+Line 515: New on non-Set
+Line 516: New on non-Set
+Line 517: New on non-Set
+Line 518: New on non-Set
+Line 519: New on non-Set
+Line 520: New on non-Set
+Line 521: New on non-Set
+Line 522: New on non-Set
+Line 523: New on non-Set
+Line 524: New on non-Set
+Line 525: New on non-Set
+Line 526: New on non-Set
+Line 527: New on non-Set
+Line 528: New on non-Set
+Line 529: New on non-Set
+Line 530: New on non-Set
+Line 531: Unsupported operand type for operator assign
+Line 532: New on non-Set
+Line 533: Unsupported operand type for operator assign
+Line 533: Variable x1 is not declared
+Line 534: Unsupported operand type for operator assign
+Line 535: New on non-Set
+Line 536: Unsupported operand type for operator assign
+Line 537: New on non-Set
+Line 538: Unsupported operand type for operator assign
+Line 538: Variable x1 is not declared
+Line 539: Unsupported operand type for operator assign
+Line 540: New on non-Set
+Line 541: Unsupported operand type for operator assign
+Line 541: Variable x1 is not declared
+Line 542: New on non-Set
+Line 542: Variable x1 is not declared
+Line 543: Unsupported operand type for operator assign
+Line 543: Variable x1 is not declared
+Line 543: Variable x1 is not declared
+Line 544: Unsupported operand type for operator assign
+Line 544: Variable x1 is not declared
+Line 545: New on non-Set
+Line 545: Variable x1 is not declared
+Line 546: Unsupported operand type for operator assign
+Line 546: There is no member named x in class Student
+Line 547: New on non-Set
+Line 547: There is no member named x in class Student
+Line 548: Unsupported operand type for operator assign
+Line 548: There is no member named x in class Student
+Line 548: Variable x1 is not declared
+Line 549: Unsupported operand type for operator assign
+Line 549: There is no member named x in class Student
+Line 550: New on non-Set
+Line 550: There is no member named x in class Student
+Line 554: Set add method input is not an integer
+Line 555: Set add method input is not an integer
+Line 556: Set add method input is not an integer
+Line 557: Set add method input is not an integer
+Line 558: Set add method input is not an integer
+Line 561: Variable x1 is not declared
+Line 562: There is no member named x in class Student
+Line 565: Unsupported operand type for operator assign
+Line 566: Set include method input is not an integer
+Line 567: Set include method input is not an integer
+Line 568: Set include method input is not an integer
+Line 569: Set include method input is not an integer
+Line 570: Set include method input is not an integer
+Line 571: Unsupported operand type for operator assign
+Line 572: Unsupported operand type for operator assign
+Line 573: Unsupported operand type for operator assign
+Line 573: Variable x1 is not declared
+Line 574: Unsupported operand type for operator assign
+Line 574: There is no member named x in class Student
+Line 588: Each cannot iterate over a non-array
+Line 594: Each variable id is not same type as range input
+Line 595: Return value does not match with method return type
+Line 596: Return value does not match with method return type
+Line 601: Constructor args do not match with definition of class Course
+Line 605: Classes cannot extend from Main class
+Line 608: Redefinition of method initialize
+Line 620: Redefinition of field a
+Line 623: Unsupported operand type for operator add
+Line 624: New on non-Set

@@ -30,6 +30,7 @@ import main.util.ArgPair;
 import main.visitor.*;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class TypeChecker extends Visitor<Void> {
     private Graph<String> classHierarchy;
@@ -343,6 +344,11 @@ public class TypeChecker extends Visitor<Void> {
         Type range_type = range_var.accept(expressionTypeChecker);
         if(!(range_type instanceof ArrayType || range_type instanceof NoType))
             eachStmt.addError(new EachCantIterateNoneArray(eachStmt.getLine()));
+        else if(range_type instanceof ArrayType)
+        {
+            if(!expressionTypeChecker.is_subtype(((ArrayType) range_type).getType(), type_var))
+                eachStmt.addError(new EachVarNotMatchList(eachStmt));
+        }
         else if(!expressionTypeChecker.is_subtype(range_type, type_var))
         {
             eachStmt.addError(new EachVarNotMatchList(eachStmt));
@@ -370,7 +376,7 @@ public class TypeChecker extends Visitor<Void> {
                 Type type_merge = set_expr.accept(expressionTypeChecker);
                 if (!(type_merge instanceof IntType || type_merge instanceof NoType) && !have_add_error) {
                     setMerge.addError(new MergeInputNotSet(setMerge.getLine()));
-                    have_add_error = true;
+                    return null;
                 }
             }
         }
