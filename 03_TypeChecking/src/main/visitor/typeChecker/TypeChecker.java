@@ -8,16 +8,14 @@ import main.ast.nodes.declaration.classDec.classMembersDec.MethodDeclaration;
 import main.ast.nodes.declaration.variableDec.VariableDeclaration;
 import main.ast.nodes.expression.*;
 import main.ast.nodes.expression.operators.BinaryOperator;
-import main.ast.nodes.expression.values.NullValue;
-import main.ast.nodes.expression.values.SetValue;
 import main.ast.nodes.expression.values.primitive.*;
 import main.ast.nodes.statement.*;
 import main.ast.nodes.statement.set.*;
 import main.ast.types.NoType;
 import main.ast.types.Type;
 import main.ast.types.array.ArrayType;
+import main.ast.types.functionPointer.FptrType;
 import main.ast.types.primitives.BoolType;
-import main.ast.types.primitives.ClassType;
 import main.ast.types.primitives.IntType;
 import main.ast.types.primitives.VoidType;
 import main.ast.types.set.SetType;
@@ -30,7 +28,6 @@ import main.util.ArgPair;
 import main.visitor.*;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 public class TypeChecker extends Visitor<Void> {
     private Graph<String> classHierarchy;
@@ -260,6 +257,7 @@ public class TypeChecker extends Visitor<Void> {
     public Void visit(AssignmentStmt assignmentStmt) {
         Type l_value = assignmentStmt.getlValue().accept(expressionTypeChecker);
         Type r_value = assignmentStmt.getrValue().accept(expressionTypeChecker);
+
         if (r_value instanceof VoidType)
             assignmentStmt.addError(new CantUseValueOfVoidMethod(assignmentStmt.getLine()));
         if(l_value instanceof NoType)
@@ -269,6 +267,26 @@ public class TypeChecker extends Visitor<Void> {
         {
             assignmentStmt.addError(new LeftSideNotLvalue(assignmentStmt.getLine()));
         }
+
+        if (l_value instanceof FptrType && r_value instanceof FptrType) {
+            if (assignmentStmt.getrValue() instanceof ObjectMemberAccess) {
+                int defs = this.expressionTypeChecker.get_number_of_defaults((ObjectMemberAccess) assignmentStmt.getrValue());
+                boolean check = expressionTypeChecker.is_subtype(r_value, l_value);
+                if (!this.expressionTypeChecker.is_subtype(((FptrType) l_value).getReturnType(), ((FptrType) r_value).getReturnType()))
+                    assignmentStmt.addError(new UnsupportedOperandType(assignmentStmt.getLine()
+                            , BinaryOperator.assign.name()));
+                ArrayList<Type> args = new ArrayList<Type>(((FptrType) r_value).getArgumentsTypes());
+                ArrayList<Type> given_args = new ArrayList<Type>(((FptrType) l_value).getArgumentsTypes());
+                while (defs > 0) {
+                    defs--;
+                    args.remove(args.size() - 1);
+                    check |= this.expressionTypeChecker.is_subtype_multiple(given_args, args);
+                }
+                if (check)
+                    return null;
+            }
+        }
+
         boolean is_sub_ok = expressionTypeChecker.is_subtype(r_value, l_value);
         if(!is_sub_ok)
         {
