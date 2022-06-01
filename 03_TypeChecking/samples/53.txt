@@ -1,0 +1,9 @@
+Line 20: Unsupported operand type for operator assign
+Line 21: Set include method input is not an integer
+Line 23: Set include method input is not an integer
+Line 25: Set include method input is not an integer
+Line 27: Set include method input is not an integer
+Line 29: Set include method input is not an integer
+Line 30: Set include method input is not an integer
+Line 31: Set include method input is not an integer
+Line 32: Set include method input is not an integer

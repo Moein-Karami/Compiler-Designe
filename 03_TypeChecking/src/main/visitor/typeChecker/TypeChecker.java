@@ -107,9 +107,12 @@ public class TypeChecker extends Visitor<Void> {
         if (classDeclaration.getParentClassName() != null) {
             String nameParent = classDeclaration.getParentClassName().getName();
             if (!nameParent.equals("Main")) {
-                System.out.println(nameParent);
-                Type class_par_type = classDeclaration.getParentClassName().accept(expressionTypeChecker);
-                expressionTypeChecker.is_valid(class_par_type, classDeclaration);
+                String par_name = classDeclaration.getParentClassName().getName();
+                if(!this.classHierarchy.doesGraphContainNode(par_name))
+                {
+                    classDeclaration.addError(new ClassNotDeclared(classDeclaration.getLine(),
+                            par_name));
+                }
             }
             if(nameIdentifier.equals("Main"))
                 classDeclaration.addError(new MainClassCantInherit(classDeclaration.getLine()));

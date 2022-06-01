@@ -93,8 +93,8 @@ public class ExpressionTypeChecker extends Visitor<Type> {
             if (second instanceof NullType)
                 return true;
             if (!(second instanceof ClassType)){
-                if (second instanceof ArrayType)
-                    return is_subtype(first, ((ArrayType) second).getType());
+//                if (second instanceof ArrayType)
+//                    return is_subtype(first, ((ArrayType) second).getType());
                 return false;
             }
 
@@ -113,7 +113,8 @@ public class ExpressionTypeChecker extends Visitor<Type> {
             return is_subtype_multiple(secondArgsTypes, firstArgsTypes);
         } else if (first instanceof ArrayType) {
             if (!(second instanceof ArrayType))
-                return is_subtype(((ArrayType) first).getType(), second);
+//                return is_subtype(((ArrayType) first).getType(), second);
+                return false;
             return is_subtype(((ArrayType) first).getType(), ((ArrayType) second).getType());
         }
         return false;
@@ -398,6 +399,13 @@ public class ExpressionTypeChecker extends Visitor<Type> {
         }
         if (err)
             return new NoType();
+        if(instance_type instanceof ArrayType)
+        {
+            if(((ArrayType) instance_type).getDimensions().size() == 1)
+            {
+                instance_type = ((ArrayType) instance_type).getType();
+            }
+        }
         return instance_type;
     }
 
@@ -577,7 +585,7 @@ public class ExpressionTypeChecker extends Visitor<Type> {
         } else {
             err = true;
             if (catch_error)
-                ternaryExpression.addError(new UnsupportedOperandType(ternaryExpression.getLine(), TernaryOperator.ternary.name()));
+                ternaryExpression.addError(new ConditionNotBool(ternaryExpression.getLine()));
         }
         if (err)
             return new NoType();
