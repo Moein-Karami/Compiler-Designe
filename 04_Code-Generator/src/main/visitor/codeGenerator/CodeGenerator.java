@@ -22,6 +22,7 @@ import main.ast.types.primitives.BoolType;
 import main.ast.types.primitives.ClassType;
 import main.ast.types.primitives.IntType;
 import main.ast.types.primitives.VoidType;
+import main.compileError.typeError.NoConstructorInMainClass;
 import main.symbolTable.SymbolTable;
 import main.symbolTable.exceptions.ItemNotFoundException;
 import main.symbolTable.items.ClassSymbolTableItem;
@@ -125,6 +126,13 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(Program program) {
+        if(program.getGlobalVariables().size() != 0)
+        {
+            createFile("Glob@l");
+            addCommand(".class public " + "Glob@l");
+            addCommand(".super java/lang/Object\n ");
+
+        }
         //todo
         //generate new class for global variables
         //using .field, add global variables as static fields to the class
@@ -141,7 +149,31 @@ public class CodeGenerator extends Visitor<String> {
     public String visit(ClassDeclaration classDeclaration) {
         String name = classDeclaration.getClassName().getName();
         createFile(name);
-        //todo
+        addCommand(".class public " + name);
+        Identifier par_name = classDeclaration.getParentClassName();
+        if(par_name != null)
+            addCommand(".super " + par_name.getName());
+        else
+            addCommand(".super java/lang/Object\n ");
+        /*for(FieldDeclaration fieldDeclaration : classDeclaration.getFields()) {
+            fieldDeclaration.accept(this);
+        }
+        if(classDeclaration.getConstructor() != null) {
+            this.expressionTypeChecker.setCurrentMethod(classDeclaration.getConstructor());
+            this.currentMethod = classDeclaration.getConstructor();
+            classDeclaration.getConstructor().accept(this);
+        }
+        else if(classDeclaration.getClassName().getName().equals("Main")) {
+            NoConstructorInMainClass exception = new NoConstructorInMainClass(classDeclaration);
+            classDeclaration.addError(exception);
+        }
+        for(MethodDeclaration methodDeclaration : classDeclaration.getMethods()) {
+            this.expressionTypeChecker.setCurrentMethod(methodDeclaration);
+            this.currentMethod = methodDeclaration;
+            methodDeclaration.accept(this);
+        }
+
+         */
         return null;
     }
 
@@ -295,4 +327,10 @@ public class CodeGenerator extends Visitor<String> {
         return null;
     }
 
+    public void addDefaultConstructor()
+    {
+        addCommand(".method public <init>()V");
+        addCommand(".limit stack 120");
+        addCommand(".limit locals 120");
+    }
 }
