@@ -1,13 +1,26 @@
+class C {
+	public initialize()
+        	{
+        		int x
+        	}
+}
+
+class D < C {
+	public int shit() {
+	return 5
+	}
+}
+
 class Main {
-	public int tmp(int a, int b, int c = 3)
+	public D tmp(int a, int b, int c = 3)
 	{
-		int x
-		return x
+		D d
+		return d
 	}
 
 	public initialize()
 	{
-		fptr <int, int -> int> fp
+		fptr <int, int -> C> fp
 		fp = self.tmp
 	}
 }

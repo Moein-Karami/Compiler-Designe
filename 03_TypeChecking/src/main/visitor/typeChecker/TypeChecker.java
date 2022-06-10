@@ -272,9 +272,10 @@ public class TypeChecker extends Visitor<Void> {
             if (assignmentStmt.getrValue() instanceof ObjectMemberAccess) {
                 int defs = this.expressionTypeChecker.get_number_of_defaults((ObjectMemberAccess) assignmentStmt.getrValue());
                 boolean check = expressionTypeChecker.is_subtype(r_value, l_value);
-                if (!this.expressionTypeChecker.is_subtype(((FptrType) l_value).getReturnType(), ((FptrType) r_value).getReturnType()))
+                if (!this.expressionTypeChecker.is_subtype(((FptrType) l_value).getReturnType(), ((FptrType) r_value).getReturnType())) {
                     assignmentStmt.addError(new UnsupportedOperandType(assignmentStmt.getLine()
                             , BinaryOperator.assign.name()));
+                }
                 ArrayList<Type> args = new ArrayList<Type>(((FptrType) r_value).getArgumentsTypes());
                 ArrayList<Type> given_args = new ArrayList<Type>(((FptrType) l_value).getArgumentsTypes());
                 while (defs > 0) {
