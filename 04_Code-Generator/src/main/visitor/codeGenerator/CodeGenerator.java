@@ -131,7 +131,6 @@ public class CodeGenerator extends Visitor<String> {
             createFile("Glob@l");
             addCommand(".class public " + "Glob@l");
             addCommand(".super java/lang/Object\n ");
-
         }
         //todo
         //generate new class for global variables
@@ -332,5 +331,16 @@ public class CodeGenerator extends Visitor<String> {
         addCommand(".method public <init>()V");
         addCommand(".limit stack 120");
         addCommand(".limit locals 120");
+        addCommand("aload 0");
+        if(this.currentClass.getClassName() == null || this.currentClass.getParentClassName() == null)
+        {
+            addCommand("invokespecial java/lang/Object/<init>()V");
+        }
+        else
+        {
+            addCommand("invokespecial " + this.currentClass.getParentClassName() + "/<init>()V");
+        }
+        addCommand("return");
+        addCommand(".end method\n ");
     }
 }
