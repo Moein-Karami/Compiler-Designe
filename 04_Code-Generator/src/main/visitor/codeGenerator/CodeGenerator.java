@@ -40,6 +40,7 @@ public class CodeGenerator extends Visitor<String> {
     Graph<String> classHierarchy;
     private String outputPath;
     private FileWriter currentFile;
+
     private ClassDeclaration currentClass;
     private MethodDeclaration currentMethod;
 
@@ -47,6 +48,27 @@ public class CodeGenerator extends Visitor<String> {
         this.classHierarchy = classHierarchy;
         this.expressionTypeChecker = new ExpressionTypeChecker(classHierarchy);
         this.prepareOutputFolder();
+    }
+
+    public String get_class(Type tp) {
+        if (tp instanceof  BoolType)
+            return "java/lang/Boolean";
+        if (tp instanceof IntType)
+            return "java/lang/Integer";
+        if (tp instanceof ArrayType)
+            return "Array";
+        if (tp instanceof ClassType)
+            return ((ClassType) tp).getClassName().getName();
+        if (tp instanceof FptrType)
+            return "Fptr";
+        return "";
+    }
+
+    public String get_type_sig(Type tp) {
+        if (!(tp instanceof NullType))
+            return "L" + get_class(tp) + ";";
+        else
+            return "V";
     }
 
     private void prepareOutputFolder() {
@@ -131,10 +153,10 @@ public class CodeGenerator extends Visitor<String> {
             createFile("Glob@l");
             addCommand(".class public " + "Glob@l");
             addCommand(".super java/lang/Object\n ");
+            for (VariableDeclaration variableDeclaration : program.getGlobalVariables()) {
+                variableDeclaration.accept(this);
+            }
         }
-        //todo
-        //generate new class for global variables
-        //using .field, add global variables as static fields to the class
 
         for(ClassDeclaration classDeclaration : program.getClasses()) {
             this.expressionTypeChecker.setCurrentClass(classDeclaration);
@@ -150,11 +172,11 @@ public class CodeGenerator extends Visitor<String> {
         createFile(name);
         addCommand(".class public " + name);
         Identifier par_name = classDeclaration.getParentClassName();
-        if(par_name != null)
-            addCommand(".super " + par_name.getName());
-        else
+        if(par_name == null)
             addCommand(".super java/lang/Object\n ");
-        /*for(FieldDeclaration fieldDeclaration : classDeclaration.getFields()) {
+        else
+            addCommand(".super " + par_name.getName() + "\n");
+        for(FieldDeclaration fieldDeclaration : classDeclaration.getFields()) {
             fieldDeclaration.accept(this);
         }
         if(classDeclaration.getConstructor() != null) {
@@ -162,29 +184,56 @@ public class CodeGenerator extends Visitor<String> {
             this.currentMethod = classDeclaration.getConstructor();
             classDeclaration.getConstructor().accept(this);
         }
-        else if(classDeclaration.getClassName().getName().equals("Main")) {
-            NoConstructorInMainClass exception = new NoConstructorInMainClass(classDeclaration);
-            classDeclaration.addError(exception);
+        else{
+            addDefaultConstructor();
         }
         for(MethodDeclaration methodDeclaration : classDeclaration.getMethods()) {
             this.expressionTypeChecker.setCurrentMethod(methodDeclaration);
             this.currentMethod = methodDeclaration;
             methodDeclaration.accept(this);
         }
-
-         */
         return null;
     }
 
+
     @Override
     public String visit(ConstructorDeclaration constructorDeclaration) {
-        //todo
+        if(!(constructorDeclaration.getArgs().size() == 0))
+        {
+            addDefaultConstructor();
+        }
+        if(constructorDeclaration.getMethodName().getName().equals("Main"))
+        {
+            addStaticMainMethod();
+        }
+        visit((MethodDeclaration) constructorDeclaration);
         return null;
     }
 
     @Override
     public String visit(MethodDeclaration methodDeclaration) {
-        //todo
+        String args_command = "";
+        for(ArgPair arg_pair: methodDeclaration.getArgs())
+        {
+            VariableDeclaration arg = arg_pair.getVariableDeclaration();
+            args_command += get_type_sig(arg.getType());
+        }
+        if(methodDeclaration instanceof  ConstructorDeclaration)
+            addCommand(".method public <init>(" + args_command + ")V");
+        else
+            addCommand(".method public <init>(" + args_command + ")V");
+        addCommand(".method public " + "")
+        for(ArgPair arg_pair: methodDeclaration.getArgs())
+        {
+            Expression arg_val = arg_pair.getDefaultValue();
+            String command = arg_val.accept(this);
+            addCommand(command);
+            addCommand("astore " + slotOf(arg_pair.getVariableDeclaration().getVarName().getName()));
+        }
+        if(methodDeclaration instanceof ConstructorDeclaration)
+        {
+            addCommand(".method public <init>(");
+        }
         return null;
     }
 
@@ -329,18 +378,67 @@ public class CodeGenerator extends Visitor<String> {
     public void addDefaultConstructor()
     {
         addCommand(".method public <init>()V");
-        addCommand(".limit stack 120");
-        addCommand(".limit locals 120");
+        addCommand(".limit locals 128");
+        addCommand(".limit stack 128");
         addCommand("aload 0");
-        if(this.currentClass.getClassName() == null || this.currentClass.getParentClassName() == null)
+        Identifier par_name = this.currentClass.getParentClassName();
+        //for global change
+        if(par_name != null)
         {
-            addCommand("invokespecial java/lang/Object/<init>()V");
+            addCommand("invokespecial " + par_name.getName() + "/<init>()V");
         }
         else
         {
-            addCommand("invokespecial " + this.currentClass.getParentClassName() + "/<init>()V");
+            addCommand("invokespecial java/lang/Object/<init>()V");
         }
+
+        for(FieldDeclaration fieldDeclaration : currentClass.getFields()){
+            init_variables_field(fieldDeclaration.getVarDeclaration());
+        }
+
         addCommand("return");
         addCommand(".end method\n ");
+    }
+
+    public int slotOf(String id_name)
+    {
+
+    }
+
+
+    public void init_variables_field(VariableDeclaration variable_input)
+    {
+        String name_var = variable_input.getVarName().getName();
+        Type type_var = variable_input.getType();
+        addCommand("aload 0");
+        addCommand(value_command(type_var));
+        if(type_var instanceof BoolType)
+            addCommand("invokestatic java/lang/Boolean/valueOf(Z)Ljava/lang/Boolean;");
+        if(type_var instanceof IntType)
+            addCommand("invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;");
+        addCommand("putfield " + currentClass.getClassName().getName() + "/" + name_var + " " + get_type_sig(type_var));
+    }
+
+    public String value_command(Type type_var)
+    {
+        if(type_var instanceof BoolType)
+        {
+            return visit(new BoolValue(false));
+        }
+        if(type_var instanceof IntType)
+        {
+            return visit(new IntValue(0));
+        }
+        if(type_var instanceof FptrType || type_var instanceof ClassType
+            || type_var instanceof NullType || type_var instanceof ArrayType)
+        {
+            return "aconst_null";
+        }
+        return null;
+    }
+
+    public void init_variables_local_var(VariableDeclaration variable_input)
+    {
+
     }
 }
