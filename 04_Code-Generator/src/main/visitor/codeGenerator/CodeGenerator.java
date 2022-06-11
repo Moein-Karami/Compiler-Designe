@@ -44,6 +44,8 @@ public class CodeGenerator extends Visitor<String> {
     private ClassDeclaration currentClass;
     private MethodDeclaration currentMethod;
 
+    public int last_label = 0;
+
     public CodeGenerator(Graph<String> classHierarchy) {
         this.classHierarchy = classHierarchy;
         this.expressionTypeChecker = new ExpressionTypeChecker(classHierarchy);
@@ -146,6 +148,12 @@ public class CodeGenerator extends Visitor<String> {
         addCommand(".end method");
     }
 
+    public String get_new_line_label(){
+        String ret = "Label_" + this.last_label;
+        last_label++;
+        return ret;
+    }
+
     @Override
     public String visit(Program program) {
         if(program.getGlobalVariables().size() != 0)
@@ -218,11 +226,13 @@ public class CodeGenerator extends Visitor<String> {
             VariableDeclaration arg = arg_pair.getVariableDeclaration();
             args_command += get_type_sig(arg.getType());
         }
-        if(methodDeclaration instanceof  ConstructorDeclaration)
-            addCommand(".method public <init>(" + args_command + ")V");
+        if(!(methodDeclaration instanceof  ConstructorDeclaration))
+            addCommand(".method public " + methodDeclaration.getMethodName().getName() + "(" + args_command + ")" + get_type_sig(methodDeclaration.getReturnType()));
         else
             addCommand(".method public <init>(" + args_command + ")V");
-        addCommand(".method public " + "")
+        addCommand(".limit stack 128");
+        addCommand(".limit locals 128");
+
         for(ArgPair arg_pair: methodDeclaration.getArgs())
         {
             Expression arg_val = arg_pair.getDefaultValue();
@@ -232,38 +242,64 @@ public class CodeGenerator extends Visitor<String> {
         }
         if(methodDeclaration instanceof ConstructorDeclaration)
         {
-            addCommand(".method public <init>(");
+            addCommand("aload 0");
+            if(currentClass.getParentClassName() != null)
+                addCommand("invokespecial " + currentClass.getParentClassName().getName() + "/<init>()V");
+            else
+                addCommand("invokespecial java/lang/Object/<init>()V");
+            for (FieldDeclaration fieldDeclaration : currentClass.getFields())
+                this.init_variables_field(fieldDeclaration.getVarDeclaration());
         }
+        for (VariableDeclaration var : methodDeclaration.getLocalVars())
+            var.accept(this);
+        for (Statement statement : methodDeclaration.getBody())
+            statement.accept(this);
+        if(methodDeclaration.getDoesReturn() == false)
+            addCommand("return");
+        addCommand(".end method\n ");
         return null;
     }
 
     @Override
     public String visit(FieldDeclaration fieldDeclaration) {
-        //todo
+        addCommand(".field " + fieldDeclaration.getVarDeclaration().getVarName().getName()
+                + " " + get_type_sig(fieldDeclaration.getVarDeclaration().getType()));
         return null;
     }
 
     @Override
     public String visit(VariableDeclaration variableDeclaration) {
-        //todo
+        this.init_variables_local_var(variableDeclaration);
         return null;
     }
 
     @Override
     public String visit(AssignmentStmt assignmentStmt) {
-        //todo
+        String commands = this.visit(new BinaryExpression(assignmentStmt.getlValue(), assignmentStmt.getrValue(), BinaryOperator.assign));
+        addCommand(commands);
+        addCommand("pop");
         return null;
     }
 
     @Override
     public String visit(BlockStmt blockStmt) {
-        //todo
+        for (Statement stmt : blockStmt.getStatements())
+            stmt.accept(this);
         return null;
     }
 
     @Override
     public String visit(ConditionalStmt conditionalStmt) {
-        //todo
+        String next_sec;
+        String exit_label = get_new_line_label();
+        addCommand(conditionalStmt.getCondition().accept(this));
+        addCommand("ifeq " + next_sec);
+        conditionalStmt.getThenBody().accept(this);
+        // We can optimize
+        for (ElsifStmt elsif : conditionalStmt.getElsif())
+        if(conditionalStmt.getElseBody() != null)
+            conditionalStmt.getElseBody().accept(this);
+        addCommand(exit_label + ":");
         return null;
     }
 
