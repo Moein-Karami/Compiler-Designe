@@ -149,7 +149,7 @@ public class CodeGenerator extends Visitor<String> {
     }
 
     public String get_new_line_label(){
-        String ret = "Label_" + this.last_label;
+        String ret = "label-new" + this.last_label;
         last_label++;
         return ret;
     }
@@ -275,7 +275,9 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(AssignmentStmt assignmentStmt) {
-        String commands = this.visit(new BinaryExpression(assignmentStmt.getlValue(), assignmentStmt.getrValue(), BinaryOperator.assign));
+        BinaryExpression binary_expr = new BinaryExpression(assignmentStmt.getlValue(), assignmentStmt.getrValue(),
+                BinaryOperator.assign);
+        String commands = this.visit(binary_expr);
         addCommand(commands);
         addCommand("pop");
         return null;
@@ -290,64 +292,137 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(ConditionalStmt conditionalStmt) {
-        String next_sec;
+        Expression cond = conditionalStmt.getCondition();
+        String command_expr_cond = cond.accept(this);
+        addCommand(command_expr_cond);
         String exit_label = get_new_line_label();
-        addCommand(conditionalStmt.getCondition().accept(this));
+
+        String next_sec = get_new_line_label();
+
         addCommand("ifeq " + next_sec);
         conditionalStmt.getThenBody().accept(this);
-        // We can optimize
-        for (ElsifStmt elsif : conditionalStmt.getElsif())
+        addCommand("goto " + exit_label);
+
+        addCommand(next_sec + ":");
+
+        for (ElsifStmt elsifStmt : conditionalStmt.getElsif()) {
+            Expression expr_cond_elsif = elsifStmt.getCondition();
+            String command_elsif = expr_cond_elsif.accept(this);
+            next_sec = get_new_line_label();
+            addCommand(command_elsif);
+            addCommand("ifeq " + next_sec);
+            elsifStmt.accept(this);
+            addCommand("goto " + exit_label);
+            addCommand(next_sec + ":");
+        }
+
         if(conditionalStmt.getElseBody() != null)
+        {
             conditionalStmt.getElseBody().accept(this);
+        }
+
         addCommand(exit_label + ":");
+
         return null;
     }
 
     @Override
     public String visit(ElsifStmt elsifStmt) {
-        //todo
+        elsifStmt.getThenBody().accept(this);
         return null;
     }
 
     @Override
     public String visit(MethodCallStmt methodCallStmt) {
-        //todo
+        expressionTypeChecker.setIsInMethodCallStmt(true);
+        String command_method = methodCallStmt.getMethodCall().accept(this);
+        addCommand(command_method);
+        expressionTypeChecker.setIsInMethodCallStmt(false);
+        addCommand("pop");
         return null;
     }
 
     @Override
     public String visit(PrintStmt print) {
-        //todo
+        addCommand("getstatic java/lang/System/out Ljava/io/PrintStream");
+        Expression arg_print = print.getArg();
+        String print_command = arg_print.accept(this);
+        addCommand(print_command);
+        Type type_arg = arg_print.accept(expressionTypeChecker);
+        if(type_arg instanceof BoolType)
+            addCommand("invokevirtual java/io/PrintStream/print(Z)V");
+        if(type_arg instanceof IntType)
+            addCommand("invokevirtual java/io/PrintStream/print(I)V;");
         return null;
     }
 
     @Override
     public String visit(ReturnStmt returnStmt) {
-        //todo
+        Expression ret_expr = returnStmt.getReturnedExpr();
+        Type ret_type = ret_expr.accept(expressionTypeChecker);
+        Type ret_type_method = currentMethod.getReturnType();
+        if(!(ret_type instanceof NullType || ret_type instanceof VoidType))
+        {
+            String command_ret = ret_expr.accept(this);
+            addCommand(command_ret);
+            if(ret_type instanceof IntType)
+                addCommand("invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;");
+            if(ret_type instanceof BoolType)
+                addCommand("invokestatic java/lang/Boolean/valueOf(Z)Ljava/lang/Boolean;");
+            addCommand("areturn");
+        }
+        else {
+            if (ret_type_method instanceof NullType || ret_type instanceof VoidType)
+                addCommand("return");
+            else
+            {
+                String command_ret = ret_expr.accept(this);
+                addCommand(command_ret);
+                addCommand("areturn");
+            }
+        }
         return null;
     }
 
     @Override
     public String visit(EachStmt eachStmt) {
-        //todo
+        String for_start_label = get_new_line_label();
+        String end_for_label = get_new_line_label();
+        String command_each = eachStmt.getList().accept(this);
+        addCommand(command_each);
+        String var_each_command = eachStmt.getVariable().accept(this);
+        addCommand(var_each_command);
+
         return null;
     }
 
     @Override
     public String visit(TernaryExpression ternaryExpression) {
-        //todo
+        Expression ternary_cond = ternaryExpression.getCondition();
+        String command_cond = ternary_cond.accept(this);
+        addCommand(command_cond);
+        String next_sec = get_new_line_label();
+        String end_ternary = get_new_line_label();
+        addCommand("ifeq " + next_sec);
+        String true_expr = ternaryExpression.getTrueExpression().accept(this);
+        addCommand(true_expr);
+        addCommand("goto " + end_ternary);
+        addCommand(next_sec + ":");
+        String false_expr = ternaryExpression.getFalseExpression().accept(this);
+        addCommand(false_expr);
+        addCommand(end_ternary + ":");
         return null;
     }
 
     @Override
     public String visit(RangeExpression rangeExpression) {
-        //todo
+
         return null;
     }
 
     @Override
     public String visit(BinaryExpression binaryExpression) {
-        //todo
+
         return null;
     }
 
@@ -359,7 +434,7 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(ObjectMemberAccess objectMemberAccess) {
-        //todo
+
         return null;
     }
 
@@ -438,7 +513,18 @@ public class CodeGenerator extends Visitor<String> {
 
     public int slotOf(String id_name)
     {
-
+        int slot_num = 0;
+        for(ArgPair variable_dec : currentMethod.getArgs())
+        {
+            if(variable_dec.getVariableDeclaration().getVarName().getName().equals(id_name))
+                return slot_num;
+            slot_num++;
+        }
+        for (VariableDeclaration varDeclaration : currentMethod.getLocalVars()) {
+            if (varDeclaration.getVarName().getName().equals(id_name))
+                return slot_num;
+            slot_num++;
+        }
     }
 
 
