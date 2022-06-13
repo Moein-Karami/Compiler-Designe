@@ -864,6 +864,14 @@ public class CodeGenerator extends Visitor<String> {
             addCommand(exp_command);
             init_type(((ArrayType) type_var).getType());
             addCommand("invokespecial Array/<init>(ILjava/lang/Object;)V");
+            for(int t = 1; t < ((ArrayType) type_var).getDimensions().size(); t++)
+            {
+                addCommand("new Array");
+                addCommand("dup");
+                exp_command = ((ArrayType) type_var).getDimensions().get(t).accept(this);
+                addCommand(exp_command);
+                addCommand("invokespecial Array/<init>(ILjava/lang/Object;)V");
+            }
         }
     }
 
