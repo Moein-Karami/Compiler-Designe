@@ -169,6 +169,8 @@ public class CodeGenerator extends Visitor<String> {
         if(tp instanceof IntType){
             return "java/lang/Integer";
         }
+        if (tp instanceof ArrayType)
+            return "Array";
         return "";
     }
 
@@ -526,7 +528,7 @@ public class CodeGenerator extends Visitor<String> {
             String exit_label = get_new_line_label();
             commands += binaryExpression.getFirstOperand().accept(this) + "\n" + "ifeq " + zero_label + "\n";
             commands += binaryExpression.getSecondOperand().accept(this) + "\n" + "ifeq " + zero_label + "\n";
-            commands += "ldc 1\n" + "goto " + zero_label + "\n" + zero_label + ":\n" + "ldc 0\n" + exit_label + ":";
+            commands += "ldc 1\n" + "goto " + exit_label + "\n" + zero_label + ":\n" + "ldc 0\n" + exit_label + ":";
         }
         if (operator == BinaryOperator.assign){
             String next_commands = binaryExpression.getSecondOperand().accept(this);
@@ -712,13 +714,13 @@ public class CodeGenerator extends Visitor<String> {
         instructions += methodCall.getInstance().accept(this) + "\n" + "aload " + tmp + "\n";
         instructions += "invokevirtual Fptr/invoke(Ljava/util/ArrayList;)Ljava/lang/Object;\n";
         Type type = methodCall.accept(expressionTypeChecker);
-        if(!(type instanceof NullType))
+        if(!(type instanceof NullType || type instanceof VoidType))
             instructions += "\ncheckcast " + get_jasmin_type(type);
         if(type instanceof IntType)
             instructions += "\ninvokevirtual java/lang/Integer/intValue()I";
         if(type instanceof  BoolType)
             instructions += "\ninvokevirtual java/lang/Boolean/booleanValue()Z";
-        --(this.num_extra_vars);
+//        --(this.num_extra_vars);
         return instructions;
     }
 
@@ -742,8 +744,7 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(SelfClass selfClass) {
-        //todo
-        return "";
+        return "aload 0";
     }
 
     @Override
@@ -797,6 +798,7 @@ public class CodeGenerator extends Visitor<String> {
                 return slot_num;
             slot_num++;
         }
+
         for (VariableDeclaration varDeclaration : currentMethod.getLocalVars()) {
             if (varDeclaration.getVarName().getName().equals(id_name))
                 return slot_num;
