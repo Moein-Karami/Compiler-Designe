@@ -22,7 +22,10 @@ public class Array {
     }
 
     public Array(int leftVal, int rightVal) {
-        this.elements = new ArrayList<>(List.of(IntStream.rangeClosed(leftVal, rightVal).toArray()));
+        this.elements = new ArrayList<>();
+        for (int i = leftVal; i <= rightVal; i++) {
+            this.elements.add(i);
+        }
     }
 
     public Array(Array that) {
