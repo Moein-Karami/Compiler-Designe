@@ -69,7 +69,7 @@ public class CodeGenerator extends Visitor<String> {
     }
 
     public String get_type_sig(Type tp) {
-        if (!(tp instanceof NullType))
+        if (!(tp instanceof NullType || tp instanceof VoidType))
             return "L" + get_class(tp) + ";";
         else
             return "V";
@@ -423,17 +423,17 @@ public class CodeGenerator extends Visitor<String> {
 
         //check conditions for
         addCommand("iload "+ idx_loop);
-        addCommand("astore " + slot_array);
-        addCommand("invokevirtual getSize()I");
+        addCommand("aload " + slot_array);
+        addCommand("invokevirtual Array/getSize()I");
         addCommand("isub");
         addCommand("ifeq " + end_for_label);
 
         //assign loop variable
 
-        addCommand("iload " + idx_loop);
-
         addCommand("aload " + slot_array);
-        addCommand("invokevirtual getElement(I)Ljava/lang/Object;");
+        addCommand("iload " + idx_loop);
+        addCommand("invokevirtual Array/getElement(I)Ljava/lang/Object;");
+        addCommand("checkcast " + get_jasmin_type(eachStmt.getVariable().accept(expressionTypeChecker)));
         addCommand("astore " + slotOf(eachStmt.getVariable().getName()));
         addCommand("iinc " + idx_loop + " 1");
 
@@ -468,11 +468,13 @@ public class CodeGenerator extends Visitor<String> {
     @Override
     public String visit(RangeExpression rangeExpression) {
         String command_range = "";
+        command_range += "new Array" + "\n";
+        command_range += "dup" + "\n";
         String left_command = rangeExpression.getLeftExpression().accept(this);
         command_range += left_command;
         String right_command = rangeExpression.getRightExpression().accept(this);
         command_range += right_command;
-        command_range += "invokevirtual <init>(II)V\n";
+        command_range += "invokespecial Array/<init>(II)V\n";
         return command_range;
     }
 
@@ -665,15 +667,31 @@ public class CodeGenerator extends Visitor<String> {
         Type type_id = identifier.accept(expressionTypeChecker);
         if(type_id instanceof BoolType)
             command_identifier += "invokevirtual java/lang/Boolean/booleanValue()Z\n";
-        else
+        if(type_id instanceof IntType)
             command_identifier += "invokevirtual java/lang/Integer/intValue()I\n";
         return command_identifier;
     }
 
     @Override
     public String visit(ArrayAccessByIndex arrayAccessByIndex) {
-        //todo
-        return "";
+        String command_array = "";
+        String command_ins = arrayAccessByIndex.getInstance().accept(this);
+
+        command_array += command_ins;
+
+        command_array += arrayAccessByIndex.getIndex().accept(this);
+
+        command_array += "invokevirtual Array/getElement(I)Ljava/lang/Object;" + "\n";
+
+        Type type_list = arrayAccessByIndex.accept(expressionTypeChecker);
+
+        command_array +=  "checkcast " + get_jasmin_type(type_list) + "\n";
+
+        if(type_list instanceof IntType)
+            command_array += "\ninvokevirtual java/lang/Integer/intValue()I";
+        else if(type_list instanceof BoolType)
+            command_array += "\ninvokevirtual java/lang/Boolean/booleanValue()Z";
+        return command_array;
     }
 
     @Override
@@ -799,6 +817,17 @@ public class CodeGenerator extends Visitor<String> {
             addCommand("invokestatic java/lang/Boolean/valueOf(Z)Ljava/lang/Boolean;");
         if(type_var instanceof IntType)
             addCommand("invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;");
+        if(type_var instanceof ArrayType)
+        {
+            for(Expression exp: ((ArrayType) type_var).getDimensions())
+            {
+                addCommand("new Array");
+                addCommand("dup");
+                String exp_command = exp.accept(this);
+                addCommand(exp_command);
+                addCommand("invokespecial Array/<init>(ILjava/lang/Object;)V");
+            }
+        }
         addCommand("putfield " + currentClass.getClassName().getName() + "/" + name_var + " " + get_type_sig(type_var));
     }
 
@@ -820,15 +849,29 @@ public class CodeGenerator extends Visitor<String> {
         return null;
     }
 
-    public void init_variables_local_var(VariableDeclaration variable_input)
+    public void init_type(Type type_var)
     {
-        String name_var = variable_input.getVarName().getName();
-        Type type_var = variable_input.getType();
         addCommand(value_command(type_var));
         if(type_var instanceof BoolType)
             addCommand("invokestatic java/lang/Boolean/valueOf(Z)Ljava/lang/Boolean;");
         if(type_var instanceof IntType)
             addCommand("invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;");
+        if(type_var instanceof ArrayType)
+        {
+            addCommand("new Array");
+            addCommand("dup");
+            String exp_command = ((ArrayType) type_var).getDimensions().get(0).accept(this);
+            addCommand(exp_command);
+            init_type(((ArrayType) type_var).getType());
+            addCommand("invokespecial Array/<init>(ILjava/lang/Object;)V");
+        }
+    }
+
+    public void init_variables_local_var(VariableDeclaration variable_input)
+    {
+        String name_var = variable_input.getVarName().getName();
+        Type type_var = variable_input.getType();
+        init_type(type_var);
         addCommand("astore " + slotOf(name_var));
     }
 }

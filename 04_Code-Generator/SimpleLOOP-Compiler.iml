@@ -18,5 +18,17 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Cappuccino" type="Objective-J Library">
+        <CLASSES />
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$APPLICATION_PLUGINS_DIR$/Objective-J/lib/Objective-J-2021.08.21.jar!/definitions/AppKit" />
+          <root url="jar://$APPLICATION_PLUGINS_DIR$/Objective-J/lib/Objective-J-2021.08.21.jar!/definitions/Foundation" />
+          <root url="jar://$APPLICATION_PLUGINS_DIR$/Objective-J/lib/Objective-J-2021.08.21.jar!/definitions/AppKit" />
+          <root url="jar://$APPLICATION_PLUGINS_DIR$/Objective-J/lib/Objective-J-2021.08.21.jar!/definitions/Foundation" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>
