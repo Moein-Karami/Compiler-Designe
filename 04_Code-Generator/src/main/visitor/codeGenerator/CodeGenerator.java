@@ -156,6 +156,22 @@ public class CodeGenerator extends Visitor<String> {
         return ret;
     }
 
+    private String get_jasmin_type(Type tp) {
+        if(tp instanceof FptrType){
+            return "Fptr";
+        }
+        if(tp instanceof BoolType){
+            return "java/lang/Boolean";
+        }
+        if(tp instanceof ClassType){
+            return ((ClassType) tp).getClassName().getName();
+        }
+        if(tp instanceof IntType){
+            return "java/lang/Integer";
+        }
+        return "";
+    }
+
     @Override
     public String visit(Program program) {
         if(program.getGlobalVariables().size() != 0)
@@ -557,7 +573,7 @@ public class CodeGenerator extends Visitor<String> {
                     commands += "putfield " + className + "/" + member_name + " " + get_type_sig(member_type);
                 }
                 if(instance_type instanceof ArrayType) {
-                    String array_name = ((ClassType) instance_type).get
+//                    String array_name = ((ClassType) instance_type).get
                 }
             }
         }
@@ -596,7 +612,7 @@ public class CodeGenerator extends Visitor<String> {
                 Type instance_type = instance.accept(expressionTypeChecker);
                 Type member_type = unaryExpression.getOperand().accept(expressionTypeChecker);
                 String className = ((ClassType) instance_type).getClassName().getName();
-                commands += instance.accept(this) + "\n" + "dup\n" + "getfield " + className + "/" + memberName + " " + makeTypeSignature(memberType) + "\n";
+                commands += instance.accept(this) + "\n" + "dup\n" + "getfield " + className + "/" + member_name + " " + get_type_sig(member_type) + "\n";
                 commands += "invokevirtual java/lang/Integer/intValue()I\n" + "dup_x1\n" + "ldc 1\n";
                 if(operator == UnaryOperator.postinc)
                     commands += "iadd\n";
@@ -679,14 +695,13 @@ public class CodeGenerator extends Visitor<String> {
         instructions += "invokevirtual Fptr/invoke(Ljava/util/ArrayList;)Ljava/lang/Object;\n";
         Type type = methodCall.accept(expressionTypeChecker);
         if(!(type instanceof NullType))
-            instructions += "\ncheckcast " + getClass(type);
+            instructions += "\ncheckcast " + get_jasmin_type(type);
         if(type instanceof IntType)
             instructions += "\ninvokevirtual java/lang/Integer/intValue()I";
         if(type instanceof  BoolType)
             instructions += "\ninvokevirtual java/lang/Boolean/booleanValue()Z";
         --(this.num_extra_vars);
         return instructions;
-        return "";
     }
 
     @Override
