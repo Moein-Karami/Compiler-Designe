@@ -48,6 +48,8 @@ public class CodeGenerator extends Visitor<String> {
 
     public int num_extra_vars = 0;
 
+    public int non_exist_var = 0;
+
     public CodeGenerator(Graph<String> classHierarchy) {
         this.classHierarchy = classHierarchy;
         this.expressionTypeChecker = new ExpressionTypeChecker(classHierarchy);
@@ -178,12 +180,26 @@ public class CodeGenerator extends Visitor<String> {
     public String visit(Program program) {
         if(program.getGlobalVariables().size() != 0)
         {
-            createFile("Glob@l");
-            addCommand(".class public " + "Glob@l");
+            createFile("Global");
+            addCommand(".class public " + "Global");
             addCommand(".super java/lang/Object\n ");
+
+            addCommand(".method public <init>()V");
+            addCommand(".limit locals 128");
+            addCommand(".limit stack 128");
+            addCommand("aload 0");
+
+            addCommand("invokespecial java/lang/Object/<init>()V");
+
+
             for (VariableDeclaration variableDeclaration : program.getGlobalVariables()) {
-                variableDeclaration.accept(this);
+                initialize_global(variableDeclaration);
+                addCommand("putstatic " + "Global" + "/" + variableDeclaration.getVarName().getName() + " "
+                        + get_type_sig(variableDeclaration.getType()));
             }
+
+            addCommand("return");
+            addCommand(".end method\n ");
         }
         createFile("Main");
         for(ClassDeclaration classDeclaration : program.getClasses()) {
@@ -204,6 +220,7 @@ public class CodeGenerator extends Visitor<String> {
             addCommand(".super java/lang/Object\n ");
         else
             addCommand(".super " + par_name.getName() + "\n");
+
         for(FieldDeclaration fieldDeclaration : classDeclaration.getFields()) {
             fieldDeclaration.accept(this);
         }
@@ -626,9 +643,27 @@ public class CodeGenerator extends Visitor<String> {
                 commands += "putfield " + className + "/" + member_name + " " + get_type_sig(member_type);
             }
             if(unaryExpression.getOperand() instanceof ArrayAccessByIndex) {
-                /////!!!!!!!!!!!!!!
-                ////!!!!!!!!!!!!
-                ///!!!!!!!!!
+                String command_arr_ins = ((ArrayAccessByIndex) unaryExpression.getOperand()).getInstance().accept(this) + "\n";
+                String command_index_ins =  ((ArrayAccessByIndex) unaryExpression.getOperand()).getIndex().accept(this) + "\n";
+
+                commands += command_arr_ins;
+                commands += command_index_ins;
+                commands += command_arr_ins;
+                commands += command_index_ins;
+                commands += "invokevirtual Array/getElement(I)Ljava/lang/Object;\n";
+
+                commands += "checkcast java/lang/Integer\n";
+                commands += "invokevirtual java/lang/Integer/intValue()I\n";
+                commands += "dup_x2\n";
+
+
+                commands += "ldc 1\n";
+                if(operator == UnaryOperator.postinc)
+                    commands += "iadd\n";
+                else
+                    commands += "isub\n";
+                commands += "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;\n";
+                commands += "invokevirtual Array/setElement(ILjava/lang/Object;)V";
             }
         }
         return commands;
@@ -665,7 +700,16 @@ public class CodeGenerator extends Visitor<String> {
     @Override
     public String visit(Identifier identifier) {
         String command_identifier = "";
-        command_identifier += "aload " + slotOf(identifier.getName()) + '\n';
+        Type id_type = identifier.accept(expressionTypeChecker);
+        non_exist_var = 0;
+        int id_identifier = slotOf(identifier.getName());
+        if(non_exist_var == 1)
+        {
+            command_identifier += "getstatic " + "Global" + "/" + identifier.getName()
+                    + " " + get_type_sig(id_type) + "\n";
+        }
+        else
+            command_identifier += "aload " + slotOf(identifier.getName()) + '\n';
         Type type_id = identifier.accept(expressionTypeChecker);
         if(type_id instanceof BoolType)
             command_identifier += "invokevirtual java/lang/Boolean/booleanValue()Z\n";
@@ -770,7 +814,11 @@ public class CodeGenerator extends Visitor<String> {
         addCommand(".limit locals 128");
         addCommand(".limit stack 128");
         addCommand("aload 0");
-        Identifier par_name = this.currentClass.getParentClassName();
+        Identifier par_name;
+        if(this.currentClass != null)
+            par_name = this.currentClass.getParentClassName();
+        else
+            par_name = null;
         //for global change
         if(par_name != null)
         {
@@ -781,8 +829,10 @@ public class CodeGenerator extends Visitor<String> {
             addCommand("invokespecial java/lang/Object/<init>()V");
         }
 
-        for(FieldDeclaration fieldDeclaration : currentClass.getFields()){
-            init_variables_field(fieldDeclaration.getVarDeclaration());
+        if(currentClass != null) {
+            for (FieldDeclaration fieldDeclaration : currentClass.getFields()) {
+                init_variables_field(fieldDeclaration.getVarDeclaration());
+            }
         }
 
         addCommand("return");
@@ -804,6 +854,7 @@ public class CodeGenerator extends Visitor<String> {
                 return slot_num;
             slot_num++;
         }
+        non_exist_var = 1;
         num_extra_vars += 1;
         return num_extra_vars + slot_num;
     }
@@ -815,21 +866,7 @@ public class CodeGenerator extends Visitor<String> {
         Type type_var = variable_input.getType();
         addCommand("aload 0");
         addCommand(value_command(type_var));
-        if(type_var instanceof BoolType)
-            addCommand("invokestatic java/lang/Boolean/valueOf(Z)Ljava/lang/Boolean;");
-        if(type_var instanceof IntType)
-            addCommand("invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;");
-        if(type_var instanceof ArrayType)
-        {
-            for(Expression exp: ((ArrayType) type_var).getDimensions())
-            {
-                addCommand("new Array");
-                addCommand("dup");
-                String exp_command = exp.accept(this);
-                addCommand(exp_command);
-                addCommand("invokespecial Array/<init>(ILjava/lang/Object;)V");
-            }
-        }
+        init_type(type_var);
         addCommand("putfield " + currentClass.getClassName().getName() + "/" + name_var + " " + get_type_sig(type_var));
     }
 
@@ -883,5 +920,12 @@ public class CodeGenerator extends Visitor<String> {
         Type type_var = variable_input.getType();
         init_type(type_var);
         addCommand("astore " + slotOf(name_var));
+    }
+
+    public void initialize_global(VariableDeclaration variable_input)
+    {
+        String name_var = variable_input.getVarName().getName();
+        Type type_var = variable_input.getType();
+        init_type(type_var);
     }
 }
