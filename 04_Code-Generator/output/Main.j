@@ -14,22 +14,25 @@
 		aload 0
 		invokespecial java/lang/Object/<init>()V
 		aconst_null
-		new Array
-		dup
-		ldc 5
-		ldc 0
-		invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
-		invokespecial Array/<init>(ILjava/lang/Object;)V
 		astore 1
+		new Shit
+		dup
+		invokespecial Shit/<init>()V
+		dup
+		astore 1
+		pop
+		aload 1
+		
+		ldc 3
+		
+		dup_x1
+		invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+		putfield Shit/t Ljava/lang/Integer;
+		pop
 		getstatic java/lang/System/out Ljava/io/PrintStream;
 		aload 1
-		ldc 2
-		invokevirtual Array/getElement(I)Ljava/lang/Object;
-		checkcast 
-		ldc 1
-		invokevirtual Array/getElement(I)Ljava/lang/Object;
-		checkcast java/lang/Integer
 		
+		getfield Shit/t Ljava/lang/Integer;
 		invokevirtual java/lang/Integer/intValue()I
 		invokevirtual java/io/PrintStream/print(I)V
 		return
