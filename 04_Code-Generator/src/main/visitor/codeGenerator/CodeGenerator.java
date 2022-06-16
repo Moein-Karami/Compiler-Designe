@@ -46,6 +46,8 @@ public class CodeGenerator extends Visitor<String> {
 
     public int last_label = 0;
 
+    public int have_global = 0;
+
     public int num_extra_vars = 0;
 
     public int non_exist_var = 0;
@@ -57,7 +59,7 @@ public class CodeGenerator extends Visitor<String> {
     }
 
     public String get_class(Type tp) {
-        if (tp instanceof  BoolType)
+        if (tp instanceof BoolType)
             return "java/lang/Boolean";
         if (tp instanceof IntType)
             return "java/lang/Integer";
@@ -82,15 +84,14 @@ public class CodeGenerator extends Visitor<String> {
         String jasminPath = "utilities/jarFiles/jasmin.jar";
         String arrayClassPath = "utilities/codeGenerationUtilityClasses/Array.j";
         String fptrClassPath = "utilities/codeGenerationUtilityClasses/Fptr.j";
-        try{
+        try {
             File directory = new File(this.outputPath);
             File[] files = directory.listFiles();
-            if(files != null)
+            if (files != null)
                 for (File file : files)
                     file.delete();
             directory.mkdir();
-        }
-        catch(SecurityException e) {
+        } catch (SecurityException e) {
             e.printStackTrace();
         }
         copyFile(jasminPath, this.outputPath + "jasmin.jar");
@@ -130,9 +131,9 @@ public class CodeGenerator extends Visitor<String> {
     private void addCommand(String command) {
         try {
             command = String.join("\n\t\t", command.split("\n"));
-            if(command.startsWith("Label_"))
+            if (command.startsWith("Label_"))
                 this.currentFile.write("\t" + command + "\n");
-            else if(command.startsWith("."))
+            else if (command.startsWith("."))
                 this.currentFile.write(command + "\n");
             else
                 this.currentFile.write("\t\t" + command + "\n");
@@ -146,29 +147,33 @@ public class CodeGenerator extends Visitor<String> {
         addCommand(".method public static main([Ljava/lang/String;)V");
         addCommand(".limit stack 128");
         addCommand(".limit locals 128");
+        if(have_global == 1) {
+            addCommand("new " + "Global");
+            addCommand("invokespecial " + "Global" + "/<init>()V");
+        }
         addCommand("new Main");
         addCommand("invokespecial Main/<init>()V");
         addCommand("return");
         addCommand(".end method");
     }
 
-    public String get_new_line_label(){
+    public String get_new_line_label() {
         String ret = "label-new" + this.last_label;
         last_label++;
         return ret;
     }
 
     private String get_jasmin_type(Type tp) {
-        if(tp instanceof FptrType){
+        if (tp instanceof FptrType) {
             return "Fptr";
         }
-        if(tp instanceof BoolType){
+        if (tp instanceof BoolType) {
             return "java/lang/Boolean";
         }
-        if(tp instanceof ClassType){
+        if (tp instanceof ClassType) {
             return ((ClassType) tp).getClassName().getName();
         }
-        if(tp instanceof IntType){
+        if (tp instanceof IntType) {
             return "java/lang/Integer";
         }
         if (tp instanceof ArrayType)
@@ -178,31 +183,27 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(Program program) {
-        if(program.getGlobalVariables().size() != 0)
-        {
+        if (program.getGlobalVariables().size() != 0) {
+            have_global = 1;
+            currentClass = new ClassDeclaration(new Identifier("Global"));
+
             createFile("Global");
             addCommand(".class public " + "Global");
-            addCommand(".super java/lang/Object\n ");
-
-            addCommand(".method public <init>()V");
-            addCommand(".limit locals 128");
-            addCommand(".limit stack 128");
-            addCommand("aload 0");
-
-            addCommand("invokespecial java/lang/Object/<init>()V");
+            addCommand(".super java/lang/Object ");
 
 
             for (VariableDeclaration variableDeclaration : program.getGlobalVariables()) {
-                initialize_global(variableDeclaration);
-                addCommand("putstatic " + "Global" + "/" + variableDeclaration.getVarName().getName() + " "
+                this.currentClass.addField(new FieldDeclaration(variableDeclaration, false));
+                addCommand(".field static " + variableDeclaration.getVarName().getName() + " "
                         + get_type_sig(variableDeclaration.getType()));
+//                initialize_global(variableDeclaration);
             }
 
-            addCommand("return");
-            addCommand(".end method\n ");
+            addDefaultConstructor();
+
         }
         createFile("Main");
-        for(ClassDeclaration classDeclaration : program.getClasses()) {
+        for (ClassDeclaration classDeclaration : program.getClasses()) {
             this.expressionTypeChecker.setCurrentClass(classDeclaration);
             this.currentClass = classDeclaration;
             classDeclaration.accept(this);
@@ -216,23 +217,22 @@ public class CodeGenerator extends Visitor<String> {
         createFile(name);
         addCommand(".class public " + name);
         Identifier par_name = classDeclaration.getParentClassName();
-        if(par_name == null)
+        if (par_name == null)
             addCommand(".super java/lang/Object\n ");
         else
             addCommand(".super " + par_name.getName() + "\n");
 
-        for(FieldDeclaration fieldDeclaration : classDeclaration.getFields()) {
+        for (FieldDeclaration fieldDeclaration : classDeclaration.getFields()) {
             fieldDeclaration.accept(this);
         }
-        if(classDeclaration.getConstructor() != null) {
+        if (classDeclaration.getConstructor() != null) {
             this.expressionTypeChecker.setCurrentMethod(classDeclaration.getConstructor());
             this.currentMethod = classDeclaration.getConstructor();
             classDeclaration.getConstructor().accept(this);
-        }
-        else{
+        } else {
             addDefaultConstructor();
         }
-        for(MethodDeclaration methodDeclaration : classDeclaration.getMethods()) {
+        for (MethodDeclaration methodDeclaration : classDeclaration.getMethods()) {
             this.expressionTypeChecker.setCurrentMethod(methodDeclaration);
             this.currentMethod = methodDeclaration;
             methodDeclaration.accept(this);
@@ -243,12 +243,10 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(ConstructorDeclaration constructorDeclaration) {
-        if(!(constructorDeclaration.getArgs().size() == 0))
-        {
+        if (!(constructorDeclaration.getArgs().size() == 0)) {
             addDefaultConstructor();
         }
-        if(currentClass.getClassName().getName().equals("Main"))
-        {
+        if (currentClass.getClassName().getName().equals("Main")) {
             addStaticMainMethod();
         }
         visit((MethodDeclaration) constructorDeclaration);
@@ -258,31 +256,28 @@ public class CodeGenerator extends Visitor<String> {
     @Override
     public String visit(MethodDeclaration methodDeclaration) {
         String args_command = "";
-        for(ArgPair arg_pair: methodDeclaration.getArgs())
-        {
+        for (ArgPair arg_pair : methodDeclaration.getArgs()) {
             VariableDeclaration arg = arg_pair.getVariableDeclaration();
             args_command += get_type_sig(arg.getType());
         }
-        if(!(methodDeclaration instanceof  ConstructorDeclaration))
+        if (!(methodDeclaration instanceof ConstructorDeclaration))
             addCommand(".method public " + methodDeclaration.getMethodName().getName() + "(" + args_command + ")" + get_type_sig(methodDeclaration.getReturnType()));
         else
             addCommand(".method public <init>(" + args_command + ")V");
         addCommand(".limit stack 128");
         addCommand(".limit locals 128");
 
-        for(ArgPair arg_pair: methodDeclaration.getArgs())
-        {
+        for (ArgPair arg_pair : methodDeclaration.getArgs()) {
             Expression arg_val = arg_pair.getDefaultValue();
-            if(arg_val != null) {
+            if (arg_val != null) {
                 String command = arg_val.accept(this);
                 addCommand(command);
             }
-            addCommand("astore " + slotOf(arg_pair.getVariableDeclaration().getVarName().getName()));
+//            addCommand("astore " + slotOf(arg_pair.getVariableDeclaration().getVarName().getName()));
         }
-        if(methodDeclaration instanceof ConstructorDeclaration)
-        {
+        if (methodDeclaration instanceof ConstructorDeclaration) {
             addCommand("aload 0");
-            if(currentClass.getParentClassName() != null)
+            if (currentClass.getParentClassName() != null)
                 addCommand("invokespecial " + currentClass.getParentClassName().getName() + "/<init>()V");
             else
                 addCommand("invokespecial java/lang/Object/<init>()V");
@@ -293,7 +288,7 @@ public class CodeGenerator extends Visitor<String> {
             var.accept(this);
         for (Statement statement : methodDeclaration.getBody())
             statement.accept(this);
-        if(methodDeclaration.getDoesReturn() == false)
+        if (methodDeclaration.getDoesReturn() == false)
             addCommand("return");
         addCommand(".end method\n ");
         return null;
@@ -355,8 +350,7 @@ public class CodeGenerator extends Visitor<String> {
             addCommand(next_sec + ":");
         }
 
-        if(conditionalStmt.getElseBody() != null)
-        {
+        if (conditionalStmt.getElseBody() != null) {
             conditionalStmt.getElseBody().accept(this);
         }
 
@@ -388,9 +382,9 @@ public class CodeGenerator extends Visitor<String> {
         String print_command = arg_print.accept(this);
         addCommand(print_command);
         Type type_arg = arg_print.accept(expressionTypeChecker);
-        if(type_arg instanceof BoolType)
+        if (type_arg instanceof BoolType)
             addCommand("invokevirtual java/io/PrintStream/print(Z)V");
-        if(type_arg instanceof IntType)
+        if (type_arg instanceof IntType)
             addCommand("invokevirtual java/io/PrintStream/print(I)V");
         return null;
     }
@@ -400,21 +394,18 @@ public class CodeGenerator extends Visitor<String> {
         Expression ret_expr = returnStmt.getReturnedExpr();
         Type ret_type = ret_expr.accept(expressionTypeChecker);
         Type ret_type_method = currentMethod.getReturnType();
-        if(!(ret_type instanceof NullType || ret_type instanceof VoidType))
-        {
+        if (!(ret_type instanceof NullType || ret_type instanceof VoidType)) {
             String command_ret = ret_expr.accept(this);
             addCommand(command_ret);
-            if(ret_type instanceof IntType)
+            if (ret_type instanceof IntType)
                 addCommand("invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;");
-            if(ret_type instanceof BoolType)
+            if (ret_type instanceof BoolType)
                 addCommand("invokestatic java/lang/Boolean/valueOf(Z)Ljava/lang/Boolean;");
             addCommand("areturn");
-        }
-        else {
+        } else {
             if (ret_type_method instanceof NullType || ret_type instanceof VoidType)
                 addCommand("return");
-            else
-            {
+            else {
                 String command_ret = ret_expr.accept(this);
                 addCommand(command_ret);
                 addCommand("areturn");
@@ -441,7 +432,7 @@ public class CodeGenerator extends Visitor<String> {
         addCommand(for_start_label + ":");
 
         //check conditions for
-        addCommand("iload "+ idx_loop);
+        addCommand("iload " + idx_loop);
         addCommand("aload " + slot_array);
         addCommand("invokevirtual Array/getSize()I");
         addCommand("isub");
@@ -449,11 +440,14 @@ public class CodeGenerator extends Visitor<String> {
 
         //assign loop variable
 
+        Type each_type_var = eachStmt.getVariable().accept(expressionTypeChecker);
+
         addCommand("aload " + slot_array);
         addCommand("iload " + idx_loop);
         addCommand("invokevirtual Array/getElement(I)Ljava/lang/Object;");
         addCommand("checkcast " + get_jasmin_type(eachStmt.getVariable().accept(expressionTypeChecker)));
-        addCommand("astore " + slotOf(eachStmt.getVariable().getName()));
+
+        addCommand(dynamic_astore2(eachStmt.getVariable().getName(), each_type_var));
         addCommand("iinc " + idx_loop + " 1");
 
         //body
@@ -501,26 +495,26 @@ public class CodeGenerator extends Visitor<String> {
     public String visit(BinaryExpression binaryExpression) {
         String commands = "";
         BinaryOperator operator = binaryExpression.getBinaryOperator();
-        if (operator != BinaryOperator.and && operator != BinaryOperator.or && operator != BinaryOperator.assign){
+        if (operator != BinaryOperator.and && operator != BinaryOperator.or && operator != BinaryOperator.assign) {
             commands += binaryExpression.getFirstOperand().accept(this) + '\n';
             commands += binaryExpression.getSecondOperand().accept(this) + '\n';
         }
 
         if (operator == BinaryOperator.mult)
-            commands += "imul";
+            commands += "imul\n";
         if (operator == BinaryOperator.add)
-            commands += "iadd";
+            commands += "iadd\n";
         if (operator == BinaryOperator.sub)
-            commands += "isub";
+            commands += "isub\n";
         if (operator == BinaryOperator.div)
-            commands += "idiv";
-        if (operator == BinaryOperator.gt || operator == BinaryOperator.lt){
+            commands += "idiv\n";
+        if (operator == BinaryOperator.gt || operator == BinaryOperator.lt) {
             String zero_label = get_new_line_label();
             commands += ((operator == BinaryOperator.lt) ? "if_icmpge " : "if_icmple") + zero_label + '\n';
             String end_label = get_new_line_label();
-            commands += "ldc 1\n" + "goto " +  end_label + "\n" + zero_label + ":\n" + "ldc 0\n" + end_label + ":";
+            commands += "ldc 1\n" + "goto " + end_label + "\n" + zero_label + ":\n" + "ldc 0\n" + end_label + ":";
         }
-        if (operator == BinaryOperator.eq){
+        if (operator == BinaryOperator.eq) {
             Type second_type = binaryExpression.getSecondOperand().accept(expressionTypeChecker);
             Type first_type = binaryExpression.getFirstOperand().accept(expressionTypeChecker);
             if (!(first_type instanceof IntType) && !(first_type instanceof BoolType))
@@ -531,74 +525,167 @@ public class CodeGenerator extends Visitor<String> {
             String zero_label = get_new_line_label();
             String exit_label = get_new_line_label();
 
-            commands += zero_label + "\n" + "ldc 1" + "\n" + "goto " + exit_label + "\n" + zero_label + ":\n" + "ldc 0\n" + exit_label +":";
+            commands += zero_label + "\n" + "ldc 1" + "\n" + "goto " + exit_label + "\n" + zero_label + ":\n" + "ldc 0\n" + exit_label + ":";
         }
-        if (operator == BinaryOperator.or){
+        if (operator == BinaryOperator.or) {
             String true_label = get_new_line_label();
             String exit_label = get_new_line_label();
             commands += binaryExpression.getFirstOperand().accept(this) + "\n" + "ifne " + true_label + "\n";
             commands += binaryExpression.getSecondOperand().accept(this) + "\n" + "ifne " + true_label + "\n";
             commands += "ldc 0\n" + "goto " + exit_label + "\n" + true_label + ":\n" + "ldc 1\n" + exit_label + ":";
         }
-        if (operator == BinaryOperator.and){
+        if (operator == BinaryOperator.and) {
             String zero_label = get_new_line_label();
             String exit_label = get_new_line_label();
             commands += binaryExpression.getFirstOperand().accept(this) + "\n" + "ifeq " + zero_label + "\n";
             commands += binaryExpression.getSecondOperand().accept(this) + "\n" + "ifeq " + zero_label + "\n";
             commands += "ldc 1\n" + "goto " + exit_label + "\n" + zero_label + ":\n" + "ldc 0\n" + exit_label + ":";
         }
-        if (operator == BinaryOperator.assign){
+        if (operator == BinaryOperator.assign) {
             String next_commands = binaryExpression.getSecondOperand().accept(this);
             Type first_type = binaryExpression.getFirstOperand().accept(expressionTypeChecker);
-            if(first_type instanceof ArrayType) {
+            if (first_type instanceof ArrayType) {
                 next_commands = "new Array" + "\n";
                 next_commands += "dup\n";
                 next_commands += binaryExpression.getSecondOperand().accept(this) + "\n";
                 next_commands += "invokespecial Array/<init>(LArray;)V";
             }
-            if(binaryExpression.getFirstOperand() instanceof Identifier) {
-                commands += next_commands + "\n";
-                commands += "dup\n";
-                if(first_type instanceof BoolType)
-                    commands += "invokestatic java/lang/Boolean/valueOf(Z)Ljava/lang/Boolean;\n";
-                if(first_type instanceof IntType)
-                    commands += "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;\n";
+            if (binaryExpression.getFirstOperand() instanceof Identifier) {
+
                 int varSlot = slotOf(((Identifier) binaryExpression.getFirstOperand()).getName());
-                commands += "astore " + varSlot;
-            }
-            else if(binaryExpression.getFirstOperand() instanceof ArrayAccessByIndex) {
+                int tmp = non_exist_var;
+                if(tmp == 0) {
+                    commands += next_commands + "\n";
+                    commands += "dup\n";
+                    if (first_type instanceof BoolType)
+                        commands += "invokestatic java/lang/Boolean/valueOf(Z)Ljava/lang/Boolean;\n";
+                    if (first_type instanceof IntType)
+                        commands += "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;\n";
+                }
+                else
+                {
+                    for(FieldDeclaration variableDeclaration: currentClass.getFields())
+                    {
+                        if(variableDeclaration.getVarDeclaration().getVarName().getName().equals(
+                                ((Identifier) binaryExpression.getFirstOperand()).getName()))
+                        {
+                            non_exist_var = 0;
+                            commands += next_commands;
+                            commands += "aload 0" + "\n";
+                            commands += next_commands;
+                            if (first_type instanceof BoolType)
+                                commands += "invokestatic java/lang/Boolean/valueOf(Z)Ljava/lang/Boolean;\n";
+                            if (first_type instanceof IntType)
+                                commands += "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;\n";
+                        }
+                    }
+                    if(non_exist_var == 1)
+                    {
+                        commands += next_commands;
+                        commands += "new " + "Global" + "\n";
+//                        commands += "dup" + "\n";
+                        commands += "ldc 0" + "\n";
+                        commands += "invokespecial " + "Global" + "/<init>(I)V" + "\n";
+                        commands += next_commands;
+                        if (first_type instanceof BoolType)
+                            commands += "invokestatic java/lang/Boolean/valueOf(Z)Ljava/lang/Boolean;\n";
+                        if (first_type instanceof IntType)
+                            commands += "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;\n";
+                    }
+                }
+//                int varSlot = slotOf(((Identifier) binaryExpression.getFirstOperand()).getName());
+
+//                commands += "astore " + varSlot;
+                Type binary_expr = binaryExpression.getFirstOperand().accept(expressionTypeChecker);
+                commands += dynamic_astore(((Identifier) binaryExpression.getFirstOperand()).getName(),
+                        binary_expr);
+            } else if (binaryExpression.getFirstOperand() instanceof ArrayAccessByIndex) {
                 commands += ((ArrayAccessByIndex) binaryExpression.getFirstOperand()).getInstance().accept(this) + "\n";
                 commands += ((ArrayAccessByIndex) binaryExpression.getFirstOperand()).getIndex().accept(this) + "\n";
                 commands += next_commands + "\n";
                 commands += "dup_x2\n";
 
-                if(first_type instanceof BoolType)
+                if (first_type instanceof BoolType)
                     commands += "invokestatic java/lang/Boolean/valueOf(Z)Ljava/lang/Boolean;\n";
-                if(first_type instanceof IntType)
+                if (first_type instanceof IntType)
                     commands += "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;\n";
 
                 commands += "invokevirtual Array/setElement(ILjava/lang/Object;)V";
-            }
-            else if(binaryExpression.getFirstOperand() instanceof ObjectMemberAccess) {
+            } else if (binaryExpression.getFirstOperand() instanceof ObjectMemberAccess) {
                 Expression instance = ((ObjectMemberAccess) binaryExpression.getFirstOperand()).getInstance();
                 Type instance_type = instance.accept(expressionTypeChecker);
                 String member_name = ((ObjectMemberAccess) binaryExpression.getFirstOperand()).getMemberName().getName();
                 Type member_type = binaryExpression.getFirstOperand().accept(expressionTypeChecker);
-                if(instance_type instanceof ClassType) {
+                if (instance_type instanceof ClassType) {
                     String className = ((ClassType) instance_type).getClassName().getName();
                     commands += instance.accept(this) + "\n" + next_commands + "\n" + "dup_x1\n";
-                    if(first_type instanceof BoolType)
+                    if (first_type instanceof BoolType)
                         commands += "invokestatic java/lang/Boolean/valueOf(Z)Ljava/lang/Boolean;\n";
-                    if(first_type instanceof IntType)
+                    if (first_type instanceof IntType)
                         commands += "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;\n";
                     commands += "putfield " + className + "/" + member_name + " " + get_type_sig(member_type);
                 }
-                if(instance_type instanceof ArrayType) {
-//                    String array_name = ((ClassType) instance_type).get
+                if (instance_type instanceof ArrayType) {
                 }
             }
         }
         return commands;
+    }
+
+    public String dynamic_astore2(String name_id, Type type_var)
+    {
+        String command_identifier = "";
+        int varSlot = slotOf(name_id);
+        if(non_exist_var == 0)
+            return "astore " + varSlot + "\n";
+        if(non_exist_var == 1)
+        {
+            for(FieldDeclaration variableDeclaration: currentClass.getFields())
+            {
+                if(variableDeclaration.getVarDeclaration().getVarName().getName().equals(name_id))
+                {
+                    non_exist_var = 0;
+                    command_identifier += "aload 0\n";
+                    command_identifier += "putfield " + currentClass.getClassName().getName() + "/" + name_id
+                            + " " + get_type_sig(type_var) + "\n";
+                }
+            }
+            if(non_exist_var == 1)
+            {
+                command_identifier += "new " + "Global" + "\n";
+                command_identifier += "ldc 0" + "\n";
+                command_identifier += "invokespecial " + "Global" + "/<init>(I)V" + "\n";
+                command_identifier += "putstatic " + "Global" + "/" + name_id
+                        + " " + get_type_sig(type_var) + "\n";
+            }
+        }
+        return command_identifier;
+    }
+
+    public String dynamic_astore(String name_id, Type type_var)
+    {
+        String command_identifier = "";
+        int varSlot = slotOf(name_id);
+        if(non_exist_var == 0)
+            return "astore " + varSlot + "\n";
+        if(non_exist_var == 1)
+        {
+            for(FieldDeclaration variableDeclaration: currentClass.getFields())
+            {
+                if(variableDeclaration.getVarDeclaration().getVarName().getName().equals(name_id))
+                {
+                    non_exist_var = 0;
+                    command_identifier += "putfield " + currentClass.getClassName().getName() + "/" + name_id
+                            + " " + get_type_sig(type_var) + "\n";
+                }
+            }
+            if(non_exist_var == 1)
+            {
+                command_identifier += "putstatic " + "Global" + "/" + name_id
+                        + " " + get_type_sig(type_var) + "\n";
+            }
+        }
+        return command_identifier;
     }
 
     @Override
@@ -625,7 +712,9 @@ public class CodeGenerator extends Visitor<String> {
                 else {
                     commands += "isub\n";
                 }
-                commands += "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;\n" + "astore " + var_slot;
+                commands += "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;\n";
+                Type temp_type = unaryExpression.getOperand().accept(expressionTypeChecker);
+                commands += dynamic_astore2(((Identifier) unaryExpression.getOperand()).getName(), temp_type);
             }
             if(unaryExpression.getOperand() instanceof ObjectMemberAccess) {
                 String member_name = ((ObjectMemberAccess) unaryExpression.getOperand()).getMemberName().getName();
@@ -682,7 +771,7 @@ public class CodeGenerator extends Visitor<String> {
             try {
                 class_table.getItem(FieldSymbolTableItem.START_KEY + member_name, true);
                 instructions += objectMemberAccess.getInstance().accept(this) + "\n";
-                instructions += "getfield " + class_name + "/" + member_name + " " + get_type_sig(member_type);
+                instructions += "getfield " + class_name + "/" + member_name + " " + get_type_sig(member_type) + "\n";
                 if(member_type instanceof  BoolType)
                     instructions += "\ninvokevirtual java/lang/Boolean/booleanValue()Z";
                 if(member_type instanceof IntType)
@@ -705,8 +794,24 @@ public class CodeGenerator extends Visitor<String> {
         int id_identifier = slotOf(identifier.getName());
         if(non_exist_var == 1)
         {
-            command_identifier += "getstatic " + "Global" + "/" + identifier.getName()
-                    + " " + get_type_sig(id_type) + "\n";
+            for(FieldDeclaration variableDeclaration: currentClass.getFields())
+            {
+                if(variableDeclaration.getVarDeclaration().getVarName().getName().equals(identifier.getName()))
+                {
+                    non_exist_var = 0;
+                    command_identifier += "aload 0" + "\n";
+                    command_identifier += "getfield " + currentClass.getClassName().getName() + "/" + identifier.getName()
+                        + " " + get_type_sig(id_type) + "\n";
+                }
+            }
+            if(non_exist_var == 1)
+            {
+                command_identifier += "new " + "Global" + "\n";
+                command_identifier += "ldc 0" + "\n";
+                command_identifier += "invokespecial " + "Global" + "/<init>(I)V" + "\n";
+                command_identifier += "getstatic " + "Global" + "/" + identifier.getName()
+                        + " " + get_type_sig(id_type) + "\n";
+            }
         }
         else
             command_identifier += "aload " + slotOf(identifier.getName()) + '\n';
@@ -829,6 +934,7 @@ public class CodeGenerator extends Visitor<String> {
             addCommand("invokespecial java/lang/Object/<init>()V");
         }
 
+
         if(currentClass != null) {
             for (FieldDeclaration fieldDeclaration : currentClass.getFields()) {
                 init_variables_field(fieldDeclaration.getVarDeclaration());
@@ -837,10 +943,23 @@ public class CodeGenerator extends Visitor<String> {
 
         addCommand("return");
         addCommand(".end method\n ");
+
+        if(currentClass.getClassName().getName().equals("Global"))
+        {
+            addCommand(".method public <init>(I)V");
+            addCommand(".limit locals 128");
+            addCommand(".limit stack 128");
+            addCommand("aload 0");
+            addCommand("invokespecial java/lang/Object/<init>()V");
+            addCommand("return");
+            addCommand(".end method\n ");
+        }
+
     }
 
     public int slotOf(String id_name)
     {
+        non_exist_var = 0;
         int slot_num = 1;
         for(ArgPair variable_dec : currentMethod.getArgs())
         {
@@ -862,12 +981,14 @@ public class CodeGenerator extends Visitor<String> {
 
     public void init_variables_field(VariableDeclaration variable_input)
     {
+        addCommand("aload 0");
         String name_var = variable_input.getVarName().getName();
         Type type_var = variable_input.getType();
-        addCommand("aload 0");
-        addCommand(value_command(type_var));
         init_type(type_var);
-        addCommand("putfield " + currentClass.getClassName().getName() + "/" + name_var + " " + get_type_sig(type_var));
+        if(currentClass.getClassName().getName().equals("Global"))
+            addCommand("putstatic " + currentClass.getClassName().getName() + "/" + name_var + " " + get_type_sig(type_var));
+        else
+            addCommand("putfield " + currentClass.getClassName().getName() + "/" + name_var + " " + get_type_sig(type_var));
     }
 
     public String value_command(Type type_var)
@@ -911,6 +1032,12 @@ public class CodeGenerator extends Visitor<String> {
                 addCommand(exp_command);
                 addCommand("invokespecial Array/<init>(ILjava/lang/Object;)V");
             }
+        }
+        if(type_var instanceof ClassType)
+        {
+            addCommand("new " + ((ClassType) type_var).getClassName().getName());
+            addCommand("dup");
+            addCommand("invokespecial " + ((ClassType) type_var).getClassName().getName() + "/<init>()V");
         }
     }
 
